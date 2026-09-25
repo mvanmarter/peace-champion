@@ -17,6 +17,19 @@
     </script>
     <!-- Start of headStart -->
 
+    <script>
+      (function () {
+        Object.defineProperty(document, "title", {
+          configurable: true,
+          get: function () {
+            var el = document.querySelector("title");
+            return el ? el.textContent : "";
+          },
+          set: function () {},
+        });
+      })();
+    </script>
+
     <!-- Snippet: legacy-headStart-N5J0YRRfS -->
     <script
       async
@@ -26,10 +39,10 @@
     <!-- End of headStart -->
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content="Framer 27b79d7" />
-    <title>Donate — GLOBAL PEACE YES</title>
+    <title>Donate — PEACE CHAMPION</title>
     <meta
       name="description"
-      content="Join the journey to a billion votes for peace — for yourself and the world. GLOBAL PEACE YES is a modern movement to make global peace a daily practice for people and governments worldwide."
+      content="Join the journey to a billion votes for peace — for yourself and the world. PEACE CHAMPION is a modern movement to make global peace a daily practice for people and governments worldwide."
     />
     <meta
       name="framer-search-index"
@@ -55,10 +68,10 @@
     />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Donate — GLOBAL PEACE YES" />
+    <meta property="og:title" content="Donate — PEACE CHAMPION" />
     <meta
       property="og:description"
-      content="Join the journey to a billion votes for peace — for yourself and the world. GLOBAL PEACE YES is a modern movement to make global peace a daily practice for people and governments worldwide."
+      content="Join the journey to a billion votes for peace — for yourself and the world. PEACE CHAMPION is a modern movement to make global peace a daily practice for people and governments worldwide."
     />
     <meta
       property="og:image"
@@ -66,10 +79,10 @@
     />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Donate — GLOBAL PEACE YES" />
+    <meta name="twitter:title" content="Donate — PEACE CHAMPION" />
     <meta
       name="twitter:description"
-      content="Join the journey to a billion votes for peace — for yourself and the world. GLOBAL PEACE YES is a modern movement to make global peace a daily practice for people and governments worldwide."
+      content="Join the journey to a billion votes for peace — for yourself and the world. PEACE CHAMPION is a modern movement to make global peace a daily practice for people and governments worldwide."
     />
     <meta
       name="twitter:image"
