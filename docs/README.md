@@ -12,6 +12,9 @@ privacy-policy.html (Privacy Policy)
 volunteer.html      (Volunteer)
 404.html            (not-found page)
 assets/
+  css/              (site.css — the shared stylesheet every page links)
+  js/               (site.js loaded in <head>, site-end.js at the tail of <body>)
+  svg/              (sprite.svg with the shared <svg> defs, uri_1..3.svg artwork)
   images/           (33 images, incl. favicon + og-image)
   fonts/            (41 font faces, all @font-face blocks point here)
   scripts/          (35 ES-module .mjs files, incl. lazy chunks)
@@ -86,6 +89,10 @@ No build step, no package.json, no bundler — the folder is the deploy unit.
   "Made in Framer" / "Published ..." comments.
 - Verified locally over HTTP: all 7 pages, scripts, fonts, images, video, and
   animations respond 200.
+
+> The inline-CSS / inline-SVG / inline-script cleanup described in
+> `docs/HTML_ANALYSIS.md` §7 happened after this list was written and is documented
+> there, not here.
 
 ## Notes
 
