@@ -1,0 +1,3 @@
+### Prompts
+
+There is a website hosted on Framer that I'd like to pull down to this local folder: https://globalpeaceyes.org/. I want to move the site off of Framer and move to another hosting provider and development workflow. Specifically, can you pull down the relevant HTML, CSS, JavaScript, images, and any other requisite assets. The 7 pages to migrate can be found in the /docs/SITEMAP.md file, and are in the "Pages to migrate" section. I will be making modifications to these files and then ultimately publishing a "new" site to a new hosting provider. Since I'm not sure where the new site will be hosted, as part of planning, can you suggest some options for a local tech stack and local web server on which this site can run locally while I'm making modifications?
