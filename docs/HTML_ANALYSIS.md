@@ -92,16 +92,18 @@ runtime entry bundle.
 
 ## 4. Where the bytes go (ranked, current state)
 
-Across the 7 pages now (totals ~3.29 MB of HTML):
+Across the 7 pages now (totals **~1.25 MB** of HTML; see §7.5 for how it got here):
 
-1. **Inline `style` attributes** — ~1.81 MB total (~55%). A large part of this (~1.4 MB) is
-   URL-encoded SVG artwork these attributes carry as `background-image`.
-2. **Inline `<svg>` / data-URI artwork** — ~1.48 MB (overlaps the item above).
-3. **Whitespace / formatting** — removing indentation + blank lines saves ~985 kB
-   total (≈30%) with zero behavior change.
-4. **Framer editor attributes** (`data-framer-name`, `data-framer-*`, presets) — ~98 kB.
+1. **Inline `style` attributes** — ~1.05 MB remaining (down from ~1.81 MB; repeated
+   static values moved to `.pc-i-…` classes in `site.css` — §7.5). The remaining
+   inline styles are unique per element and/or animation-driven.
+2. **Inline `<svg>`** — ~0 (all `<use>` shells now point at `assets/svg/sprite.svg`;
+   defs were shipped to the sprite — §7.5).
+3. **Whitespace / formatting** — removing indentation + blank lines still saves ~985 kB
+   total (≈30%) with zero behavior change (est. total would drop to ~0.3 MB).
+4. **Framer editor attributes** — now 0 (removed in §7.5; runtime-required attrs kept).
 5. **Inline scripts** — ~78 kB (mostly duplicated on every page).
-6. **Inline `<style>` blocks** — **now 0** (moved to `assets/css/site.css`, §7).
+6. **`<style>` blocks** — **0** (moved to `assets/css/site.css`, §7).
 7. Everything else (meta, comments, nav duplication) — small.
 
 ---
@@ -131,7 +133,7 @@ Run the export through a post-processor each time it's generated:
 - `html-minifier-terser` (or `minify`) with `collapseWhitespace: true`,
   `removeComments: true`, `minifyCSS: true`, `minifyJS: true`.
 - Currently removable whitespace: ~985 kB total across pages.
-- Expected: ~3.29 MB → ~2.5 MB.
+- Expected: currently ~1.25 MB (post §7.5); ~985 kB of it is removable whitespace.
 
 ### 6.2 Extract the inline CSS into one shared file (✅ done — see §7)
 Was: move `data-framer-css-ssr-minified` + `data-framer-breakpoint-css` (+ the tiny
@@ -140,23 +142,24 @@ Was: move `data-framer-css-ssr-minified` + `data-framer-breakpoint-css` (+ the t
 still contains some repeated rules across the per-page sections and is not minified —
 a minify + rule-level dedupe step would drop `site.css` from ~1.27 MB down further.
 
-### 6.3 Externalize the inline SVG artwork (☐)
-- Static icons → `assets/icons/sprite.svg` referenced with
-  `<svg><use href="sprite.svg#id"/></svg>` or → `<img src="logo.svg">`.
-- `background-image: url("data:image/svg+xml,…")` → move the same source into the
-  external CSS (§6.2) so it lives once, not per element.
-- Potential: removes ~1.4 MB from the HTML.
+### 6.3 Externalize the inline SVG artwork (✅ done — see §7.5)
+- Static icons → `assets/svg/sprite.svg` referenced with `<svg><use href="sprite.svg#id"/></svg>`.
+- `background-image: url("data:image/svg+xml,…")` → three payloads extracted to
+  `assets/svg/uri_1.svg`, `uri_2.svg`, `uri_3.svg`.
+- Result: removed ~1.46 MB from the HTML.
 
-### 6.4 Push inline layout out of `style="…"` attributes into CSS (☐)
-- Move layout declarations into the shared CSS using the existing `framer-…` classes.
-- Elements with JS-driven dynamic states (appear/hover) must keep animated properties
-  inline; static layout can be external.
-- Targets the ~1.81 MB #1 cost.
+### 6.4 Push inline layout out of `style="…"` attributes into CSS (✅ done — see §7.5)
+- Repeated identical inline values → generated `.pc-i-NNN { … }` classes appended to
+  `site.css` (~470 kB removed).
+- Elements with JS-driven dynamic states (appear/hover) keep animated properties
+  inline; only statically-repeated declarations were moved.
 
-### 6.5 Remove Framer-editor-only metadata (☐)
-- Strip `data-framer-name`, `data-framer-component-type`, `data-styles-preset`,
-  `data-framer-appear-id`, and the verbose `data-framer-hydrate-v2` JSON after load.
-- Saves ~10–34 kB/page (~98 kB total).
+### 6.5 Remove Framer-editor-only metadata (✅ done — see §7.5)
+- Stripped `data-framer-name`, `data-styles-preset`, `data-framer-bundle`,
+  `data-framer-page-optimized-at`, `data-fid`, `data-redirect-timezone`,
+  `data-framer-ssr-released-at` (~116 kB). Runtime-required attrs
+  (`data-framer-hydrate-v2` JSON, `data-framer-component-type`, appear/border/link
+  attrs) were intentionally **kept**.
 
 ### 6.6 De-duplicate the inline scripts (☐)
 - Move the identical script blocks (§2.3) to `assets/js/site.js` (one cacheable file).
@@ -227,10 +230,11 @@ Executed: the giant inline CSS was extracted out of all 7 HTML pages into one fi
 ### 7.3 What this addresses
 
 - ✅ Recommendation **6.2** (externalize inline CSS) — fully implemented.
-- ◑ Partially related: it also removes the duplicate CSS *transfer* per page-load.
+- ✅ Recommendations **6.3, 6.4, 6.5** (SVG externalization, inline layout styles to
+  classes, editor metadata removal) — implemented; see §7.5.
+- ◑ Partially related: those changes also remove duplicate CSS *transfer* per page-load.
 - ☐ Not included (future work): CSS minification/rule-level dedupe (6.1/6.2 polish),
-  whitespace minification, SVG/style/script extraction (6.3–6.6), and template
-  generation (6.8).
+  whitespace minification, script dedupe (6.6), and template generation (6.8).
 - + N/A: a repeatable post-publish pipeline (6.9) — the Framer site is frozen; this is
   a one-time cleanup (see `AGENTS.md`).
 
@@ -247,6 +251,74 @@ re-run:
 3. Saved files (UTF-8, no BOM) and verified `0 <style>` remain with exactly one link
    per page before `</head>`.
 
+### 7.5 SVG externalization, inline-style classes, metadata removal — done ✅
+
+Three passes applied on top of §7.1–7.4, each verified for render parity. Current
+HTML total: **1,249,552 bytes (~1.25 MB)** across the 7 pages.
+
+#### 6.5 — editor metadata removed (−116,297 chars)
+- Stripped `data-framer-name`, `data-styles-preset`, `data-framer-bundle`,
+  `data-framer-page-optimized-at`, `data-fid`, `data-redirect-timezone`,
+  `data-framer-ssr-released-at` from all 7 pages (verified `0`/file).
+- **Kept** (still read by the Framer runtime/pre-render CSS):
+  `data-framer-hydrate-v2` (parsed by `script_main`), `data-framer-component-type`
+  (hooks in `site.css`), `data-framer-page-link-current` (active-nav CSS),
+  `data-framer-appear-id`/`-animation` (scroll animations), `data-border` (runtime
+  `::after` measurement), `data-highlight`, `data-nested-link`, and the form
+  attrs on the volunteer page.
+
+#### 6.3a — data-URI `background-image` SVGs extracted (−1,179,177 chars)
+- 3 distinct URL-encoded SVG payloads moved to `assets/svg/uri_1.svg` (34,172 B /
+  34 uses), `uri_2.svg` (403 B / 6), `uri_3.svg` (2,860 B / 1); `url(&quot;data:image/svg+xml,…&quot;)`
+  rewritten to `url(&quot;assets/svg/uri_N.svg&quot;)`. `data:image/svg+xml` count now `0` everywhere.
+
+#### 6.4 — repeated inline `style="…"` moved to classes (−470,185 chars)
+- Across pages there were only **128 distinct** inline-style values among 2,557
+  occurrences. 63 values repeated ≥2× were converted to generated
+  `.pc-i-NNN { … }` rules (appended at the **end** of `site.css` so they keep the
+  "inline style wins" cascade) and applied as classes; 1,738 occurrences converted.
+- Excluded (kept inline): any value containing `transform`, `opacity`, `filter`,
+  `animation`, `transition`, `will-change`, or `var(` (animation/hover-driven
+  properties must stay inline).
+- `srcdoc='…'` iframe payloads were masked so their inner HTML was untouched.
+
+#### 6.3b — duplicated inline SVG defs externalized (−269,532 chars HTML)
+- 16 distinct `<svg id="svg-…">` definitions (total 271,821 B across pages; the two
+  logo defs were repeated on all 7 pages) moved into a single
+  `assets/svg/sprite.svg` (75,648 B). All `<use href="#svg-…">` shells now point at
+  `assets/svg/sprite.svg#svg-…`. No non-`<use>` references existed (verified).
+
+#### Result
+
+| Step | HTML before | HTML after | Saved |
+|---|---|---|---|
+| §7.1 CSS extraction | 4,554,965 | 3,285,211 | 1,269,754 (→ `site.css`) |
+| 6.5 metadata | 3,285,211 | 3,168,914 | 116,297 |
+| 6.3a data-URI SVG | 3,168,914 | 1,989,737 | 1,179,177 |
+| 6.4 inline styles | 1,989,737 | 1,519,084 | 470,653 |
+| 6.3b sprite | 1,519,084 | 1,249,552 | 269,532 |
+| **Total** | **4,554,965** | **1,249,552** | **3,305,413** |
+
+- Assets added: `site.css` +18,381 B (63 class rules); `assets/svg/` +113,083 B.
+  Net transfer saving ≈ **3.17 MB**.
+- New per-file sizes: `index` 360,822 · `about` 200,641 · `films` 192,137 ·
+  `volunteer` 136,299 · `404` 137,676 · `donate` 134,850 · `privacy-policy` 87,127.
+
+#### Verification (how parity was proven)
+- **Headless Chrome** (1440×1800) screenshots after each pass: `404`, `about`,
+  `films`, `volunteer` are **byte-identical (MD5)** to the pre-optimization baseline;
+  `index`, `donate`, `privacy-policy` differ only in known dynamic regions (hero
+  animations, Termly consent banner, video-embed `loadStart` timestamps, iframe
+  resize) — the same three pages do not even hash-stabilize against themselves.
+- **Hydration parity:** because the Framer JS rebuilds the DOM on load (re-inserts
+  defs, reverts sprite `<use>` hrefs to local `#id`, and re-applies inline styles),
+  post-hydration DOM dumps match the pre-change dumps byte-for-byte apart from
+  timing noise. The served-HTML savings are pure transfer savings; rendering is
+  unchanged.
+- **Gotcha:** two stale `python -m http.server` processes from an earlier session
+  shared port 8123 and intermittently served the **old** files, causing phantom
+  screenshot diffs — always verify only one server holds the port before comparing.
+
 ---
 
 ## 8. Realistic expected totals
@@ -254,10 +326,12 @@ re-run:
 | Step | Per-page saving | Site-wide |
 |---|---|---|
 | ✅ Extract inline CSS (done) | 134–221 kB out of HTML | ~1.27 MB out of HTML (now cacheable) |
-| Minify whitespace/comments (6.1) | 80–180 kB | ~985 kB |
-| Externalize SVG (6.3) + layout styles (6.4) | 150–450 kB | ~2.5 MB |
-| Editor metadata (6.5) | 10–34 kB | ~98 kB |
+| ✅ Editor metadata (6.5, done) | 5–37 kB | ~116 kB |
+| ✅ Externalize SVG (6.3, done) | 26–157 kB | ~1.45 MB |
+| ✅ Layout styles → classes (6.4, done) | 27–243 kB | ~471 kB |
+| Minify whitespace/comments (6.1) | 40–180 kB | ~985 kB |
 | Script dedupe (6.6) | 5–40 kB | ~78 kB |
 
-With all steps applied, the HTML total can realistically go from the current
-**~3.29 MB → below ~0.8 MB** (plus the shared, cached `site.css` and sprite/JS files).
+With the done steps applied, the HTML total went from **~4.55 MB → ~1.25 MB**. The
+remaining open items (whitespace minify + script dedupe) could bring it to
+**below ~0.3 MB** (plus the shared, cached `site.css` and sprite files).

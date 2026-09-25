@@ -36392,3 +36392,434 @@ html,
         top: 0;
         left: 0;
       }
+.pc-i-001 { 
+                          --border-bottom-width: 0.5px;
+                          --border-color: rgb(0, 0, 0);
+                          --border-left-width: 0.5px;
+                          --border-right-width: 0.5px;
+                          --border-style: solid;
+                          --border-top-width: 0.5px;
+                         }
+.pc-i-002 { 
+                          --font-selector: R0Y7TWFucm9wZS01MDA=;
+                          --framer-font-family:
+                            &quot;Manrope&quot;,
+                            &quot;Manrope Placeholder&quot;, sans-serif;
+                          --framer-font-weight: 500;
+                         }
+.pc-i-003 { 
+                            --font-selector: R0Y7TWFucm9wZS01MDA=;
+                            --framer-font-family:
+                              &quot;Manrope&quot;,
+                              &quot;Manrope Placeholder&quot;, sans-serif;
+                            --framer-font-weight: 500;
+                            --framer-line-height: 120%;
+                           }
+.pc-i-004 { 
+                              --font-selector: R0Y7TWFucm9wZS01MDA=;
+                              --framer-font-family:
+                                &quot;Manrope&quot;,
+                                &quot;Manrope Placeholder&quot;, sans-serif;
+                              --framer-font-weight: 500;
+                              --framer-line-height: 120%;
+                             }
+.pc-i-005 { 
+                          --border-bottom-width: 0px;
+                          --border-color: rgba(0, 0, 0, 0);
+                          --border-left-width: 0px;
+                          --border-right-width: 0px;
+                          --border-style: solid;
+                          --border-top-width: 0px;
+                          background-color: rgb(0, 107, 212);
+                          border-bottom-left-radius: 52px;
+                          border-bottom-right-radius: 52px;
+                          border-top-left-radius: 52px;
+                          border-top-right-radius: 52px;
+                         }
+.pc-i-006 { 
+                        --border-bottom-width: 0px;
+                        --border-color: rgba(0, 0, 0, 0);
+                        --border-left-width: 0px;
+                        --border-right-width: 0px;
+                        --border-style: solid;
+                        --border-top-width: 0px;
+                        background-color: rgb(0, 107, 212);
+                        border-bottom-left-radius: 52px;
+                        border-bottom-right-radius: 52px;
+                        border-top-left-radius: 52px;
+                        border-top-right-radius: 52px;
+                       }
+.pc-i-007 { 
+                  --border-bottom-width: 1px;
+                  --border-color: rgb(34, 34, 34);
+                  --border-left-width: 0px;
+                  --border-right-width: 0px;
+                  --border-style: solid;
+                  --border-top-width: 0px;
+                 }
+.pc-i-008 { 
+                      image-rendering: pixelated;
+                      flex-shrink: 0;
+                      fill: rgba(0, 0, 0, 1);
+                      color: rgba(0, 0, 0, 1);
+                     }
+.pc-i-009 { 
+                    image-rendering: pixelated;
+                    flex-shrink: 0;
+                    fill: rgba(0, 0, 0, 1);
+                    color: rgba(0, 0, 0, 1);
+                   }
+.pc-i-010 { 
+                --border-bottom-width: 0px;
+                --border-color: rgb(0, 0, 0);
+                --border-left-width: 0px;
+                --border-right-width: 0px;
+                --border-style: solid;
+                --border-top-width: 1px;
+                width: 100%;
+               }
+.pc-i-011 { width: 100%; height: 100%; aspect-ratio: inherit }
+.pc-i-012 { 
+                    image-rendering: pixelated;
+                    flex-shrink: 0;
+                    background-size: 100% 100%;
+                    background-image: url(&quot;assets/svg/uri_1.svg&quot;);
+                   }
+.pc-i-013 { 
+                        --font-selector: R0Y7TWFucm9wZS03MDA=;
+                        --framer-font-family:
+                          &quot;Manrope&quot;, &quot;Manrope Placeholder&quot;,
+                          sans-serif;
+                        --framer-font-size: 18px;
+                        --framer-font-weight: 700;
+                        --framer-line-height: 120%;
+                       }
+.pc-i-014 { 
+                        image-rendering: pixelated;
+                        flex-shrink: 0;
+                        fill: rgba(0, 0, 0, 1);
+                        color: rgba(0, 0, 0, 1);
+                       }
+.pc-i-015 { 
+                              display: block;
+                              width: 100%;
+                              height: 100%;
+                              border-radius: inherit;
+                              corner-shape: inherit;
+                              object-position: center;
+                              object-fit: fill;
+                             }
+.pc-i-016 { 
+                        --font-selector: R0Y7TWFucm9wZS01MDA=;
+                        --framer-font-family:
+                          &quot;Manrope&quot;, &quot;Manrope Placeholder&quot;,
+                          sans-serif;
+                        --framer-font-weight: 500;
+                        --framer-line-height: 120%;
+                       }
+.pc-i-017 { 
+                            --border-bottom-width: 1px;
+                            --border-color: rgb(0, 0, 0);
+                            --border-left-width: 1px;
+                            --border-right-width: 1px;
+                            --border-style: solid;
+                            --border-top-width: 1px;
+                            background-color: rgb(250, 249, 246);
+                           }
+.pc-i-018 { 
+                                --font-selector: R0Y7TWFucm9wZS01MDA=;
+                                --framer-font-family:
+                                  &quot;Manrope&quot;,
+                                  &quot;Manrope Placeholder&quot;, sans-serif;
+                                --framer-font-weight: 500;
+                                --framer-line-height: 120%;
+                               }
+.pc-i-019 { 
+                      position: absolute;
+                      border-radius: inherit;
+                      corner-shape: inherit;
+                      top: 0;
+                      right: 0;
+                      bottom: 0;
+                      left: 0;
+                     }
+.pc-i-020 { 
+                            position: absolute;
+                            border-radius: inherit;
+                            corner-shape: inherit;
+                            top: 0;
+                            right: 0;
+                            bottom: 0;
+                            left: 0;
+                           }
+.pc-i-021 { 
+                  --border-bottom-width: 0px;
+                  --border-color: rgb(0, 0, 0);
+                  --border-left-width: 0px;
+                  --border-right-width: 0px;
+                  --border-style: solid;
+                  --border-top-width: 1px;
+                  width: 100%;
+                 }
+.pc-i-022 { 
+                                --font-selector: R0Y7TWFucm9wZS03MDA=;
+                                --framer-font-family:
+                                  &quot;Manrope&quot;,
+                                  &quot;Manrope Placeholder&quot;, sans-serif;
+                                --framer-font-size: 18px;
+                                --framer-font-weight: 700;
+                                --framer-line-height: 120%;
+                               }
+.pc-i-023 { width: 100%; height: 100% }
+.pc-i-024 { 
+                      --border-bottom-width: 0px;
+                      --border-color: rgba(0, 0, 0, 0);
+                      --border-left-width: 0px;
+                      --border-right-width: 0px;
+                      --border-style: solid;
+                      --border-top-width: 0px;
+                      background-color: rgb(0, 107, 212);
+                      border-bottom-left-radius: 52px;
+                      border-bottom-right-radius: 52px;
+                      border-top-left-radius: 52px;
+                      border-top-right-radius: 52px;
+                     }
+.pc-i-025 { 
+                      image-rendering: pixelated;
+                      flex-shrink: 0;
+                      background-size: 100% 100%;
+                      background-image: url(&quot;assets/svg/uri_1.svg&quot;);
+                     }
+.pc-i-026 { 
+                        --font-selector: R0Y7TWFucm9wZS03MDA=;
+                        --framer-font-family:
+                          &quot;Manrope&quot;, &quot;Manrope Placeholder&quot;,
+                          sans-serif;
+                        --framer-font-size: 18px;
+                        --framer-font-weight: 700;
+                        --framer-line-height: 100%;
+                       }
+.pc-i-027 { 
+                          --border-bottom-width: 0.5px;
+                          --border-color: rgb(0, 0, 0);
+                          --border-left-width: 0.5px;
+                          --border-right-width: 0px;
+                          --border-style: solid;
+                          --border-top-width: 0.5px;
+                         }
+.pc-i-028 { 
+                          --border-bottom-width: 0.5px;
+                          --border-color: rgb(0, 0, 0);
+                          --border-left-width: 0px;
+                          --border-right-width: 0.5px;
+                          --border-style: solid;
+                          --border-top-width: 0.5px;
+                         }
+.pc-i-029 { 
+                          image-rendering: pixelated;
+                          flex-shrink: 0;
+                          fill: rgba(0, 0, 0, 1);
+                          color: rgba(0, 0, 0, 1);
+                         }
+.pc-i-030 { 
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        border-radius: inherit;
+                        corner-shape: inherit;
+                        object-position: center;
+                        object-fit: contain;
+                       }
+.pc-i-031 { 
+                        --font-selector: R0Y7TWFucm9wZS1yZWd1bGFy;
+                        --framer-font-family:
+                          &quot;Manrope&quot;, &quot;Manrope Placeholder&quot;,
+                          sans-serif;
+                       }
+.pc-i-032 { 
+                          --border-bottom-width: 1px;
+                          --border-color: rgb(0, 0, 0);
+                          --border-left-width: 1px;
+                          --border-right-width: 1px;
+                          --border-style: solid;
+                          --border-top-width: 1px;
+                          background-color: rgb(250, 249, 246);
+                         }
+.pc-i-033 { 
+                            width: 100%;
+                            height: 100%;
+                            aspect-ratio: inherit;
+                           }
+.pc-i-034 { 
+                    position: absolute;
+                    border-radius: inherit;
+                    corner-shape: inherit;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                   }
+.pc-i-035 { 
+                              --font-selector: R0Y7TWFucm9wZS03MDA=;
+                              --framer-font-family:
+                                &quot;Manrope&quot;,
+                                &quot;Manrope Placeholder&quot;, sans-serif;
+                              --framer-font-size: 18px;
+                              --framer-font-weight: 700;
+                              --framer-line-height: 120%;
+                             }
+.pc-i-036 { background-color: rgb(250, 249, 246); width: 100% }
+.pc-i-037 { 
+                      --font-selector: Q1VTVE9NO1BQIFN1cHBseSBNb25vIE1lZGl1bQ==;
+                      --framer-font-family:
+                        &quot;PP Supply Mono Medium&quot;,
+                        &quot;PP Supply Mono Medium Placeholder&quot;, monospace;
+                      --framer-font-size: 12px;
+                      --framer-text-color: rgb(136, 136, 136);
+                     }
+.pc-i-038 { 
+                        position: absolute;
+                        border-radius: inherit;
+                        corner-shape: inherit;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                       }
+.pc-i-039 { 
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        border-radius: inherit;
+                        corner-shape: inherit;
+                        object-position: center;
+                        object-fit: cover;
+                       }
+.pc-i-040 { 
+        position: absolute;
+        overflow: hidden;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        z-index: 0;
+        contain: strict;
+       }
+.pc-i-041 { 
+                image-rendering: pixelated;
+                flex-shrink: 0;
+                background-size: 100% 100%;
+                background-image: url(&quot;assets/svg/uri_2.svg&quot;);
+               }
+.pc-i-042 { 
+                      display: block;
+                      width: 100%;
+                      height: 100%;
+                      border-radius: inherit;
+                      corner-shape: inherit;
+                      object-position: center;
+                      object-fit: contain;
+                     }
+.pc-i-043 { display: contents }
+.pc-i-044 { 
+                image-rendering: pixelated;
+                flex-shrink: 0;
+                fill: rgba(0, 0, 0, 1);
+                color: rgba(0, 0, 0, 1);
+               }
+.pc-i-045 { 
+                          display: block;
+                          width: 100%;
+                          height: 100%;
+                          border-radius: inherit;
+                          corner-shape: inherit;
+                          object-position: center;
+                          object-fit: fill;
+                         }
+.pc-i-046 { 
+                          --font-selector: R0Y7TWFucm9wZS03MDA=;
+                          --framer-font-family:
+                            &quot;Manrope&quot;,
+                            &quot;Manrope Placeholder&quot;, sans-serif;
+                          --framer-font-size: 18px;
+                          --framer-font-weight: 700;
+                          --framer-line-height: 120%;
+                         }
+.pc-i-047 { 
+                      --font-selector: RlM7TWFucm9wZS1ib2xk;
+                      --framer-font-family:
+                        &quot;Manrope&quot;, &quot;Manrope Placeholder&quot;,
+                        sans-serif;
+                      --framer-font-size: 17px;
+                      --framer-font-weight: 700;
+                      --framer-line-height: 140%;
+                     }
+.pc-i-048 { 
+                        cursor: auto;
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 0px;
+                        display: block;
+                        object-fit: cover;
+                        background-color: rgba(0, 0, 0, 0);
+                        object-position: 50% 50%;
+                       }
+.pc-i-049 { 
+                          --font-selector: R0Y7TWFucm9wZS01MDA=;
+                          --framer-font-family:
+                            &quot;Manrope&quot;,
+                            &quot;Manrope Placeholder&quot;, sans-serif;
+                          --framer-font-weight: 500;
+                          --framer-line-height: 120%;
+                         }
+.pc-i-050 { 
+                          display: block;
+                          width: 100%;
+                          height: 100%;
+                          border-radius: inherit;
+                          corner-shape: inherit;
+                          object-position: center;
+                          object-fit: cover;
+                         }
+.pc-i-051 { 
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        border-radius: inherit;
+                        corner-shape: inherit;
+                        object-position: center;
+                        object-fit: fill;
+                       }
+.pc-i-052 { 
+                      display: block;
+                      width: 100%;
+                      height: 100%;
+                      border-radius: inherit;
+                      corner-shape: inherit;
+                      object-position: center;
+                      object-fit: fill;
+                     }
+.pc-i-053 { --framer-text-alignment: center }
+.pc-i-054 { 
+                position: absolute;
+                border-radius: inherit;
+                corner-shape: inherit;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+               }
+.pc-i-055 { --framer-text-alignment: left }
+.pc-i-056 { 
+              image-rendering: pixelated;
+              flex-shrink: 0;
+              fill: rgba(0, 0, 0, 1);
+              color: rgba(0, 0, 0, 1);
+             }
+.pc-i-057 { background-color: rgb(0, 0, 0) }
+.pc-i-058 { min-height: 100vh; width: auto }
+.pc-i-059 { height: 100%; width: 100% }
+.pc-i-060 { background-color: rgb(0, 107, 212) }
+.pc-i-061 { width: 100%; height: 100%; border: none }
+.pc-i-062 { background-color: rgb(0, 138, 23) }
+.pc-i-063 { width: 100% }
