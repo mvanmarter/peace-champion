@@ -101,12 +101,37 @@ in the editor-bar iframe URL the runtime builds).
 | `framer.com/edit/init.mjs` + `app.framerstatic.com/chunk-*.mjs` (×4) + `framer.com/edit?…`          | all 7          | **The Framer editor bar.** Always loads, always gives up.                                                   |
 | `framer.com/m/feather-icons/{instagram,linkedin}.js` + matching `framerusercontent` modules         | all 7          | the two footer social icons                                                                                 |
 | `total-votes-rzszi6ndna-uc.a.run.app`                                                               | index          | the live vote counter (**166** at time of testing). **Not in the HTML** — fetched by the remote page chunk. |
-| `challenges.cloudflare.com/turnstile/…`                                                             | index          | Cloudflare Turnstile, **2.15 MB**, pulled in by remote code                                                 |
+| `challenges.cloudflare.com/turnstile/…`                                                             | index          | Cloudflare Turnstile, **2.15 MB**, pulled in by remote code. **⚠️ Attribution corrected — see note below.**     |
 | `widgets.givebutter.com/latest.umd.cjs` (×5) + ~50 Givebutter/Stripe/Braintree/GA chunks            | donate         | the donation widget — **9.4 MB of JS**                                                                      |
 | `app.termly.io/*` + `cdn.weglot.com/*`                                                              | privacy-policy | Termly policy embed **and** an unexpected Weglot translation widget                                         |
 | `vimeo.com/api/oembed.json` + `player.vimeo.com/video/{1132612772,1054015738}`                      | index          | two video embeds                                                                                            |
 | `video.gumlet.io/…/download.mp4`                                                                    | index          | 3 `<video>` elements, one URL, **2.36 MB**                                                                  |
 | `framerusercontent.com/assets/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` + `dotlottie-player.BuSJ8xyR.mjs` | index          | **a Lottie animation really is used** — lazily, by the runtime                                              |
+
+### ⚠️ Correction: the Turnstile weight on `index` belongs to Vimeo, not to us
+
+The 2.15 MB attributed to `challenges.cloudflare.com` in the table above was **not**
+initiated by the page's own code. Verified by frame attribution: every one of those
+requests is issued from a `player.vimeo.com` frame — it is **Vimeo's own bot
+protection, one instance per embed**, not something the site loads.
+
+The check: `index2.html` contains **zero** Turnstile references (no
+`challenges.cloudflare.com`, no `turnstile/v0/api.js` anywhere in its HTML, CSS or JS)
+yet produces the **identical** set of Turnstile requests as the live site, because it
+embeds the same two `player.vimeo.com` iframes.
+
+Consequences:
+
+- Removing "Turnstile" from our code saves **nothing** — it was never ours. It is only
+  removable by not embedding Vimeo.
+- Do not use 2.15 MB as a saving anywhere, including `docs/NEW_SITE.md` §0, which
+  repeats the original attribution.
+- The two `hagen.challenges.cloudflare.com/cdn-cgi/challenge-platform` requests return
+  `204` *and then fail with `ERR_ABORTED`*. That failure is benign and also occurs on the
+  live site; do not chase it as a bug in our pages.
+
+Reproduce with `turnstile-origin.js` in `%TEMP%\opencode\`, which prints the initiating
+frame URL for every third-party request.
 
 ---
 
@@ -862,8 +887,12 @@ page, pulled in by remote code.
 | Page                  | Total        | doc  | css  | js       | media    | xhr  | font | img  | other | Largest remote hosts                                                                                  |
 | --------------------- | ------------ | ---- | ---- | -------- | -------- | ---- | ---- | ---- | ----- | ----------------------------------------------------------------------------------------------------- |
 | `donate.html`         | **11.50 MB** | 0.15 | 1.44 | **9.41** | 0        | 0.17 | 0.17 | 0.02 | 0.07  | givebuttercdn 3.84 · maps.googleapis 1.30 · js.stripe 1.07 · framercdn 0.98 · widgets.givebutter 0.77 |
-| `index.html`          | **8.58 MB**  | 0.84 | 1.24 | 1.86     | **2.36** | 1.51 | 0.08 | 0.61 | 0.07  | framercdn 4.56 · **challenges.cloudflare 2.15** · video.gumlet 0.12                                   |
+| `index.html`          | **8.58 MB**  | 0.84 | 1.24 | 1.86     | **2.36** | 1.51 | 0.08 | 0.61 | 0.07  | framercdn 4.56 · challenges.cloudflare 2.15 † · video.gumlet 0.12                                      |
 | `privacy-policy.html` | **3.73 MB**  | 0.08 | 1.34 | 1.70     | 0        | 0.25 | 0.28 | 0    | 0.07  | framercdn 0.88 · **app.termly 0.72** · **cdn.weglot 0.32**                                            |
+
+† `challenges.cloudflare 2.15` on `index.html` is **Vimeo's, not ours** — it is initiated
+inside the two `player.vimeo.com` iframes, not by the page's own code, and is therefore
+not removable short of dropping the Vimeo embeds. See the correction note in §1.
 | `films.html`          | **3.18 MB**  | 0.18 | 1.24 | 1.49     | 0        | 0.02 | 0.06 | 0.12 | 0.07  | framercdn 1.62                                                                                        |
 | `about.html`          | **2.87 MB**  | 0.19 | 1.24 | 1.03     | 0        | 0    | 0.06 | 0.28 | 0.07  | framercdn 1.30                                                                                        |
 | `volunteer.html`      | **2.60 MB**  | 0.13 | 1.24 | 1.01     | 0        | 0    | 0.06 | 0.09 | 0.07  | framercdn 1.09                                                                                        |

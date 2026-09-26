@@ -1,0 +1,1205 @@
+/* Global Peace Yes — static rebuild (index2.html)
+   Design tokens and geometry measured from https://globalpeaceyes.org/
+   Breakpoints mirror the Framer export: 809.98 / 1199.98 / 1439.98 / 1727.98 */
+
+/* ---------- fonts (all local, no external requests) ---------- */
+@font-face {
+  font-family: 'BN Rigidly';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/sXBI67311mAMz7vhdedM55wWik.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'PP Supply Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/BJ1rqeyHSI6GPMofez6OBzl6tI.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'PP Supply Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/eNuqXTvRPtKEzOhYkdRYJhylhz8.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk79FO_A87jxeN7B.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk7PFO_A87jxeN7B.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4jE-_A87jxeN7B.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4aE-_A87jxeN7B.woff2') format('woff2');
+}
+
+/* ---------- tokens ---------- */
+:root {
+  --bg: #faf9f6;
+  --ink: #000;
+  --accent: #0099ff;
+  --btn: #006bd4;
+  --dot-blue: #006bd4;
+  --dot-green: #008a17;
+  --muted: rgba(0, 0, 0, 0.4);
+
+  --display: 'BN Rigidly', 'Arial Narrow', sans-serif;
+  --mono: 'PP Supply Mono', ui-monospace, monospace;
+  --count: 'PP Supply Sans', var(--display);
+  --sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --pad: 24px;
+  --measure: 1152px;
+}
+
+/* ---------- reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 26px;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg,
+video,
+iframe {
+  display: block;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- layout primitives ---------- */
+.container {
+  width: 100%;
+  max-width: calc(var(--measure) + var(--pad) * 2);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+/* The live site renders every heading/eyebrow with text-transform:uppercase
+   while the source text stays mixed case. Reproduce that, otherwise the
+   glyph advance widths (and therefore every line break) differ. */
+.eyebrow,
+.vote-label,
+#hero-h1,
+.welcome h2,
+.declaration-copy h2,
+.change-grid h3,
+.variant-copy h2,
+.cta h2 {
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21.6px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: 52px;
+  background: var(--btn);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.2px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.embed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---------- header ---------- */
+.site-header {
+  position: relative;
+  padding-top: 16px;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  flex: none;
+  width: 127px;
+  height: 32px;
+}
+
+.brand svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  margin-left: auto;
+  font-size: 16px;
+  line-height: 19.2px;
+}
+
+.nav a {
+  white-space: nowrap;
+}
+
+.header-cta {
+  flex: none;
+}
+
+.nav-toggle {
+  display: none;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.nav-toggle svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile menu. The head script adds .js, so no-JS visitors keep the inline
+   nav and never see a button they cannot operate. */
+.js .nav-toggle {
+  display: block;
+}
+
+.js .nav {
+  display: none;
+}
+
+.js .nav-panel {
+  position: absolute;
+  z-index: 20;
+  top: 60px;
+  left: var(--pad);
+  right: var(--pad);
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg);
+  font-size: 16px;
+  line-height: 19.2px;
+}
+
+.js .nav-panel[data-open] {
+  display: flex;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  padding-top: 161px;
+}
+
+/* Two decorative illustrations that bleed off both edges. The offsets are a
+   pure function of viewport width, exactly as measured on the live site. */
+.hero-bleed {
+  position: absolute;
+  top: 67px;
+  left: calc(50% - 870px);
+  width: 580px;
+  height: 725px;
+  pointer-events: none;
+}
+
+.hero-bleed--right {
+  left: calc(50% + 290px);
+}
+
+.hero-bleed img {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-video {
+  width: 577px;
+  max-width: 100%;
+  aspect-ratio: 577 / 435;
+  margin-inline: auto;
+  object-fit: cover;
+}
+
+.hero-title {
+  margin-top: 225px;
+}
+
+.hero-display {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 24px;
+  overflow: visible;
+}
+
+.hero-display foreignObject {
+  overflow: visible;
+}
+
+.hero-display h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 164px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero-lower {
+  display: grid;
+  margin-top: 40px;
+}
+
+.vote {
+  align-self: start;
+}
+
+.vote-count {
+  width: fit-content;
+  font-family: var(--count);
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 64px;
+}
+
+.vote-label {
+  width: fit-content;
+  margin-top: 13px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 17.6px;
+}
+
+.vote .btn {
+  margin-top: 35px;
+}
+
+/* 760x604 composition: illustration + two columns of three icons + a
+   vertical video, all overlapping the illustration. */
+.cluster {
+  position: relative;
+  width: 760px;
+  height: 604px;
+}
+
+.cluster-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cluster-icons {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  display: grid;
+  gap: 22px;
+}
+
+.cluster-icons--right {
+  left: auto;
+  right: 40px;
+}
+
+.cluster-icon {
+  width: 160px;
+  height: 160px;
+  background: var(--dot-blue);
+}
+
+.cluster-icon:nth-child(2) {
+  background: var(--dot-green);
+}
+
+.cluster-icons--right .cluster-icon:nth-child(1),
+.cluster-icons--right .cluster-icon:nth-child(3) {
+  background: var(--dot-green);
+}
+
+.cluster-icons--right .cluster-icon:nth-child(2) {
+  background: var(--dot-blue);
+}
+
+.cluster-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cluster-video {
+  position: absolute;
+  top: 40px;
+  left: 232px;
+  width: 296px;
+  height: 524px;
+  object-fit: cover;
+}
+
+/* ---------- welcome ---------- */
+.welcome {
+  margin-top: 80px;
+  text-align: center;
+}
+
+.welcome h2 {
+  width: 556px;
+  max-width: 100%;
+  margin-inline: auto;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 52px;
+}
+
+.welcome p {
+  max-width: 800px;
+  margin: 16px auto 0;
+}
+
+.welcome .link {
+  color: var(--accent);
+}
+
+.welcome p + p {
+  margin-top: 32px;
+}
+
+/* ---------- declaration ---------- */
+.declaration {
+  margin-top: 200px;
+}
+
+.declaration-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.declaration-copy h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 52px;
+}
+
+.declaration-copy p {
+  margin-top: 16px;
+}
+
+.declaration-copy p + p {
+  margin-top: 34px;
+}
+
+.declaration-copy .btn {
+  margin-top: 32px;
+}
+
+.declaration-note {
+  width: fit-content;
+  max-width: 456px;
+  margin: 84px 32px 0 calc(50% + 88px);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.2px;
+}
+
+.declaration-note svg {
+  flex: none;
+  width: 20px;
+  height: 21px;
+  margin-top: 1px;
+}
+
+/* ---------- change ---------- */
+.change {
+  margin-top: 223px;
+}
+
+.change-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.change-grid h3 {
+  width: auto;
+  margin-top: 8px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 32px;
+}
+
+.change-copy p + p {
+  margin-top: 32px;
+}
+
+.change .embed {
+  margin-top: 80px;
+}
+
+.section-label {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: fit-content;
+  margin: 22px 0 0 26px;
+}
+
+.section-label .label-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26px;
+}
+
+.section-label .label-sub {
+  margin-top: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20.8px;
+}
+
+/* ---------- variants ---------- */
+.variant {
+  position: relative;
+  display: grid;
+  grid-template-columns: 536px 1fr;
+  gap: 96px;
+  align-items: start;
+}
+
+/* DotLottie backgrounds from the live site. Both are absolutely positioned and
+   pointer-transparent, so they never affect the measured section geometry.
+   >=810: a single 916x902 player in the crisis variant, centred on 75vw
+   (measured 150/292/441/442/622/838 at 810/1000/1199/1200/1440/1728).
+   <=809: both players scale with the viewport at 2.227x / 2.193x and are
+   centred on 50vw, bleeding off the left edge as the live ones do. */
+.lottie {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* The variants are the centred .container, so a percentage `left` resolves
+   against the container, not the viewport. The live centres the player on a
+   fraction of the *viewport*, so subtract the container's own offset.
+   Mobile y-offsets are the live's measured player tops minus our section tops
+   (crisis 325/-61/-303 and solution 276/-70/-329 at 390/600/800); the live
+   curve has a kink at 600, so it is two linear segments. */
+.lottie--crisis,
+.lottie--solution {
+  top: var(--lot-y);
+  left: calc(50vw - max(0px, (100vw - 1200px) / 2));
+  width: 222.7vw;
+  height: 219.3vw;
+  transform: translateX(-50%);
+}
+
+.lottie--crisis {
+  --lot-y: calc(325px - (100vw - 390px) * 1.838);
+}
+
+.lottie--solution {
+  --lot-y: calc(276px - (100vw - 390px) * 1.6476);
+}
+
+@media (min-width: 601px) and (max-width: 809.98px) {
+  .lottie--crisis {
+    --lot-y: calc(-61px - (100vw - 600px) * 1.21);
+  }
+
+  .lottie--solution {
+    --lot-y: calc(-70px - (100vw - 600px) * 1.295);
+  }
+}
+
+@media (min-width: 810px) {
+  .lottie--solution {
+    display: none;
+  }
+
+  .lottie--crisis {
+    --lot-y: 0px;
+    left: calc(75vw - max(0px, (100vw - 1200px) / 2));
+    width: 916px;
+    height: 902px;
+  }
+}
+
+/* At >=1200 our variants are not the 900px centred boxes the live tablet range
+   uses, so the live's player sits above our top-aligned copy by half of
+   (900 - 264), the offset the live's own centring produces. */
+@media (min-width: 1200px) {
+  .lottie--crisis {
+    --lot-y: -318px;
+  }
+}
+
+.variant-copy .eyebrow {
+  margin-top: 0;
+}
+
+.variant-copy h2 {
+  margin-top: 16px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 52px;
+}
+
+.variant-copy p {
+  margin-top: 16px;
+}
+
+.variant--crisis {
+  margin-top: 423px;
+}
+
+.variant--solution {
+  margin-top: 546px;
+}
+
+.variant--voice {
+  margin-top: 625px;
+}
+
+/* Two independent columns that deliberately overlap by 312px, matching the
+   measured design. Kept as flow content (not absolute) so it still reflows. */
+.cards {
+  display: flex;
+  align-items: flex-start;
+  margin-top: -112px;
+}
+
+.cards-col {
+  --card-gap: 191px;
+  flex: none;
+  width: 392px;
+}
+
+.cards-col--b {
+  --card-gap: 173px;
+  margin-top: 147px;
+  margin-left: -312px;
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 21.6px;
+}
+
+.card p {
+  margin-top: 4px;
+  font-size: 16px;
+  line-height: 19.2px;
+}
+
+.card + .card {
+  margin-top: var(--card-gap);
+}
+
+/* ---------- taglines (mobile only) ---------- */
+.taglines {
+  display: none;
+}
+
+.tagline {
+  display: flex;
+  gap: 8px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 17.6px;
+}
+
+/* ---------- cta ---------- */
+.cta {
+  margin-top: 487px;
+}
+
+.cta h2 {
+  width: fit-content;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 52px;
+}
+
+.cta .btn {
+  margin-left: 40px;
+  vertical-align: middle;
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  margin-top: 5px;
+  padding-bottom: 80px;
+}
+
+.footer-rule {
+  width: 100%;
+  height: 4px;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  padding-top: 40px;
+}
+
+/* 3 columns x 2 rows. Order is About/Donate/Privacy then
+   Events/Volunteer/social — as measured. */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 21px 40px;
+  margin-left: 32px;
+  font-size: 16px;
+  line-height: 19.2px;
+}
+
+.footer-links a {
+  white-space: nowrap;
+}
+
+.footer-social {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-social a {
+  width: 20px;
+  height: 20px;
+}
+
+.footer-social svg {
+  width: 100%;
+  height: 100%;
+}
+
+.footer-sign {
+  margin-top: 35px;
+}
+
+.footer-brand {
+  display: block;
+  width: 127px;
+  height: 33px;
+}
+
+.footer-brand svg {
+  width: 100%;
+  height: 100%;
+}
+
+.footer-copy {
+  width: fit-content;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.8px;
+  color: var(--muted);
+}
+
+/* =========================================================
+   <= 809.98  (Framer 1522l99 — mobile)
+   ========================================================= */
+@media (max-width: 809.98px) {
+  body {
+    font-size: 18px;
+    line-height: 23.4px;
+  }
+
+  .header-cta {
+    display: none;
+  }
+
+  .hero {
+    padding-top: 119px;
+  }
+
+  .hero-bleed {
+    top: -5px;
+  }
+
+  .hero-video {
+    width: 100%;
+    max-width: 342px;
+    aspect-ratio: 342 / 381;
+  }
+
+  .hero-title {
+    margin-top: 180px;
+  }
+
+  .hero-lower {
+    margin-top: 40px;
+  }
+
+  /* Full-bleed composition: two rows of three square icons with a 9:16
+     vertical video between them, over one illustration. The live cluster is
+     not a proportional scale of the 390px design - its height is linear in
+     the viewport width, so it is reproduced with linear calc()s:
+       row    = (100vw - 65px) / 3
+       video  = (100vw - 48px) * 16/9
+       height = 24 + row + 17 + video + 16 + row + 24  =  2.4444*100vw - 47.67px
+     Verified at 390 (905.7), 450, 550, 650, 750, 800 (1907.9) and 809. */
+  .cluster {
+    width: 100vw;
+    height: calc(2.4444 * 100vw - 47.67px);
+    margin-top: 32px;
+    margin-left: calc(50% - 50vw);
+  }
+
+  .cluster-art {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .cluster-icons,
+  .cluster-icons--right {
+    top: 24px;
+    right: auto;
+    left: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8.5px;
+    width: calc(100vw - 48px);
+  }
+
+  .cluster-icons--right {
+    top: calc(41px + (100vw - 65px) / 3 + (100vw - 48px) * 1.77778);
+  }
+
+  .cluster-icon {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .cluster-video {
+    top: calc(41px + (100vw - 65px) / 3);
+    left: 24px;
+    width: calc(100vw - 48px);
+    height: calc((100vw - 48px) * 1.77778);
+    object-fit: cover;
+  }
+
+  .welcome {
+    margin-top: 80px;
+  }
+
+  .welcome h2,
+  .declaration-copy h2,
+  .variant-copy h2,
+  .cta h2 {
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  .welcome h2 {
+    width: 556px;
+  }
+
+  .declaration {
+    margin-top: 200px;
+  }
+
+  .declaration-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .declaration-copy .btn {
+    margin-top: 32px;
+  }
+
+  .declaration-note {
+    margin: 80px 28px 0 64px;
+    max-width: none;
+  }
+
+  .change {
+    margin-top: 228px;
+  }
+
+  .change-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .change-grid h3 {
+    width: auto;
+    margin-top: 0;
+  }
+
+  .change .embed {
+    margin-top: 80px;
+  }
+
+  .variant {
+    grid-template-columns: 1fr;
+    gap: 144px;
+  }
+
+  .variant--crisis {
+    margin-top: 186px;
+  }
+
+  .variant--solution {
+    margin-top: 228px;
+  }
+
+  .variant--voice {
+    margin-top: 202px;
+  }
+
+  /* Card content width measured off the live cards: crisis tracks
+     100vw - 192 and solution tracks 100vw - 112, each capping at the width
+     the live design stops growing at (392 / 472). Slope is 1:1 with the
+     viewport, not an interpolation between the two sampled widths. */
+  .cards {
+    --card-w: min(100vw - 192px, 392px);
+    margin-top: 0;
+    margin-left: 32px;
+  }
+
+  .cards--single {
+    --card-w: min(100vw - 112px, 472px);
+    display: block;
+  }
+
+  /* Card gaps shrink as the cards get wider (fewer wrapped lines), each
+     flattening out once the card width law caps. Measured on the live:
+       crisis  gap 230@390 -> 192@600+   stagger 185@390 -> 147@600+
+       solution gap 102@390 ->  64@570+  stagger 150@390 ->  90@570+ */
+  .cards-col {
+    --card-gap: max(192px, calc(230px - (100vw - 390px) * 0.1806));
+    width: var(--card-w);
+  }
+
+  .cards-col--b {
+    margin-top: max(147px, calc(185px - (100vw - 390px) * 0.19));
+    margin-left: calc(80px - var(--card-w));
+  }
+
+  .cards--single {
+    display: block;
+  }
+
+  .cards--single .cards-col {
+    --card-gap: max(64px, calc(102px - (100vw - 390px) * 0.2111));
+    width: var(--card-w);
+  }
+
+  .cards--single .cards-col--b {
+    margin-top: 112px;
+    margin-left: 0;
+  }
+
+  /* Small correction so the solution section starts where the live does once
+     the crisis cards above it have resized. */
+  .variant--solution {
+    margin-top: calc(
+      228px + max(-21px, -39px + (100vw - 390px) * 0.0857)
+    );
+  }
+
+  .taglines {
+    display: block;
+    margin-top: 122px;
+    margin-left: 32px;
+    padding: 0 24px;
+  }
+
+  .tagline + .tagline {
+    margin-top: 2px;
+  }
+
+  .cta {
+    margin-top: 220px;
+  }
+
+  .cta .btn {
+    display: flex;
+    width: fit-content;
+    margin: 32px 0 0;
+  }
+
+  .site-footer {
+    margin-top: 100px;
+  }
+
+  .footer-inner {
+    padding-top: 38px;
+  }
+
+  .footer-links {
+    gap: 44px 30px;
+    margin-left: 0;
+  }
+}
+
+/* =========================================================
+   810 - 1199.98  (Framer 1wmt56v — tablet)
+   ========================================================= */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .js .nav-toggle {
+    display: none;
+  }
+
+  .js .nav {
+    display: flex;
+  }
+
+  .js .nav-panel {
+    display: none;
+  }
+
+  .welcome h2,
+  .declaration-copy h2,
+  .variant-copy h2,
+  .cta h2 {
+    font-size: 48px;
+    line-height: 48px;
+  }
+
+  .welcome p {
+    max-width: 100%;
+  }
+
+  .declaration-note {
+    margin-left: calc(50% + 88px);
+  }
+
+  /* Vote block and cluster stack, cluster left-aligned. */
+  .hero-lower {
+    grid-template-columns: 1fr;
+  }
+
+  .cluster {
+    justify-self: start;
+    margin-top: 40px;
+  }
+
+  /* The live tablet range is a stack of uniform 900px variant boxes: the copy
+     is vertically centred in the box, the crisis cards sit 64px from its top,
+     the boxes butt against each other with no gap, and the first box starts
+     103px below the section label.  Card columns are half the viewport less
+     64px, with a flat 96px gap, so they land at 50vw + 56px and +136px. */
+  .variant {
+    grid-template-columns: calc(50vw - 64px) 1fr;
+    gap: 96px;
+    align-items: center;
+    height: 900px;
+    margin-top: 0;
+  }
+
+  .variant--crisis {
+    margin-top: 106px;
+  }
+
+  /* Same width law as mobile: half the viewport less 192, capping at 392
+     (213 @810, 308 @1000, 392 from ~1178 up). */
+  /* Card inset from the box top: 140 @810, 188 @1000, 208 @1199 in the live.
+     The curve is not linear, so this fits the two ends exactly and leaves
+     ~15px at 1000. */
+  .cards {
+    --card-w: min(50vw - 192px, 392px);
+    align-self: start;
+    margin-top: calc(140px + (100vw - 810px) * 0.1749);
+    margin-left: 0;
+  }
+
+  .cards-col {
+    --card-gap: calc(230px + (100vw - 810px) * -0.1);
+    width: var(--card-w);
+  }
+
+  /* Second column: 80px x-overlap, a 192px card gap, and a stagger that is
+     185px at 810 before flattening out to 147px for the rest of the range. */
+  .cards-col--b {
+    --card-gap: calc(192px + (100vw - 810px) * -0.0488);
+    margin-top: max(147px, 185px - (100vw - 810px) * 0.2);
+    margin-left: calc(80px - var(--card-w));
+  }
+
+  /* Boxes butt together, so the CTA hangs off the last one at a flat 180px. */
+  .cta {
+    margin-top: 180px;
+  }
+
+  .variant--solution .cards {
+    display: none;
+  }
+
+  .cta .btn {
+    margin-left: 32px;
+  }
+
+  .footer-inner {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .site-footer {
+    margin-top: 58px;
+  }
+
+  .footer-links {
+    order: 2;
+    justify-content: end;
+    margin-left: 0;
+  }
+
+  .footer-sign {
+    order: 1;
+    margin-top: 0;
+  }
+}
+
+/* =========================================================
+   >= 1200  (Framer dv7j5c / 1pz11xk / 72rtr7 — desktop)
+   ========================================================= */
+@media (min-width: 1200px) {
+  .js .nav-toggle {
+    display: none;
+  }
+
+  .js .nav {
+    display: flex;
+  }
+
+  .js .nav-panel {
+    display: none;
+  }
+
+  .hero-lower {
+    grid-template-columns: 392px 1fr;
+  }
+
+  .cluster {
+    justify-self: end;
+  }
+
+  .variant--solution .cards {
+    display: none;
+  }
+
+  .footer-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-links {
+    order: 2;
+    justify-content: end;
+    margin-left: 0;
+  }
+
+  .footer-sign {
+    order: 1;
+    margin-top: 0;
+  }
+}
