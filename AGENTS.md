@@ -48,13 +48,23 @@ The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from
 - ◑ **6.7 — Remote stays remote** (already true): images remain external
   `framerusercontent.com` URLs with `srcset`; `assets/fonts/fonts.css` (15 kB of
   `@font-face`) is unsubsetted.
+- ✗ **6.8 — Nav/footer deduplication: closed as not viable** (see
+  `docs/HTML_ANALYSIS.md` §10). Measured, not assumed: deleting `assets/scripts/`
+  (5.62 MB) and stripping the runtime tags gives **0/35** matching screenshots across
+  7 pages × 5 breakpoint widths. The runtime is load-bearing for three things —
+  pruning the inactive responsive variants, materializing the sprite defs into
+  `#svg-templates`, and driving the appear animations (21 of 26 `index.html` elements
+  otherwise stay at `opacity: 0.001` permanently, even after scrolling). Don't retry
+  this. Two candidate fixes for the pre-hydration paint were built, measured, and
+  reverted: 7.1% less error for +22% page weight, and the variant fix is fragile
+  because the per-component breakpoint data isn't in the served markup.
 
 ### Still open
-- ☐ **6.1 — Minify whitespace/comments.** ~985 kB (~30%) of the remaining ~1.22 MB is
+- ☐ **6.1 — Minify whitespace/comments.** ~548 kB (~45%) of the remaining ~1.22 MB is
   removable indentation. Use `html-minifier-terser` with `collapseWhitespace`,
   `removeComments`, `minifyCSS`, `minifyJS`. This is a one-time pass, not a pipeline.
+  This is now the only meaningful size win left.
 - ☐ Minify/dedupe `site.css` at rule level.
-- ☐ **6.8 — Nav/footer deduplication** (~30–60 kB per page of duplicated markup).
 - ☐ **Known bug in `site.css`** (documented in `docs/HTML_ANALYSIS.md` §9): three
   `url("assets/svg/uri_N.svg")` declarations are relative to the wrong base and still
   contain `&quot;` entities, so 14 + 6 uses of the artwork 404. Left over from the 6.3a
@@ -75,4 +85,5 @@ The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from
   is meaningless for those two — compare normalized DOM dumps instead. `404`, `about`,
   `films`, `volunteer` and `privacy-policy` do hash-stable.
 - Structure and run steps are documented in `docs/README.md` and
-  `docs/HTML_ANALYSIS.md`.
+  `docs/HTML_ANALYSIS.md`. `docs/RUNTIME.md` is a plain-English account of what the
+  Framer runtime does to the markup after the browser has it.

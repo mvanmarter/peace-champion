@@ -197,9 +197,12 @@ a minify + rule-level dedupe step would drop `site.css` from ~1.27 MB down furth
 - Images are external with `srcset` — keep them remote rather than base64-ing them.
 - `fonts.css` (15 kB) is a local file of `@font-face` rules — subsetting would trim it.
 
-### 6.8 Generate pages from a template (☐)
+### 6.8 Generate pages from a template (✗ — closed, see §10)
 - Nav and footer are duplicated in every file. A static-site generator / include step
   would put them in one place and prevent ~30–60 kB duplication per page.
+- **Closed as not viable.** The duplication is not compressible away: the Framer
+  runtime has to delete the inactive responsive variants, and it cannot be removed.
+  See §10 for the measurements.
 
 ### 6.9 Recommended workflow (☐)
 ```
@@ -440,6 +443,8 @@ With the done steps applied, the HTML total went from **~4.55 MB → ~1.22 MB**.
 remaining open item (whitespace minify) could bring it to **below ~0.3 MB** (plus the
 shared, cached `site.css`, `site.js`, `site-end.js` and sprite files).
 
+The `assets/scripts/` tree (35 files, 5.62 MB) cannot be reclaimed — see §10.
+
 ---
 
 ## 9. Known issue carried over from §7.5 (not part of 6.6)
@@ -458,3 +463,98 @@ The 6.3a pass extracted the SVG payloads correctly but rewrote the references wi
 accounting for the new base URL. Affects 14 uses of `uri_1` and 6 of `uri_2`; the
 artwork simply does not paint. This predates 6.6 and is unrelated to the script
 de-duplication.
+
+---
+
+## 10. The Framer runtime is load-bearing — measured, not assumed
+
+Two questions came up after §7.6: *can the 5.6 MB of Framer runtime be dropped
+outright*, and *is the pre-hydration paint visibly wrong?* Both were answered by
+measurement, using headless Chromium at 1440×1400 against this tree served over
+`http://127.0.0.1`, comparing screenshots with `pixelmatch`.
+
+**Method.** Baseline and prototype were served from **two different ports** (8123 /
+8124) so a stale server could not serve half of either. Every comparison was
+controlled by a base-vs-base self-consistency run first; `404`, `about`, `films`,
+`volunteer` and `privacy-policy` hash-stable, while `index` and `donate` do not (see
+`AGENTS.md`) and their diffs are quoted against their own noise floor.
+
+### 10.1 Dropping the runtime: dead end (0/35)
+
+A throwaway copy was made with `assets/scripts/` deleted and the three runtime tags
+removed from every page (8–12 `<link rel="modulepreload">`, the `script_main` module
+tag, and the `events.framer.com` tag). `site.js`, `site-end.js`, CSS, fonts, the
+`index.html` appear payloads, and the `srcdoc` iframes were deliberately preserved.
+Structurally the strip is clean: −13,833 chars of HTML, element counts unchanged, no
+residual runtime references, all embeds intact.
+
+**0 of 35** page×width screenshots matched. Three independent mechanisms break, and
+none of them is a bug that can be patched cheaply:
+
+| Mechanism | What the runtime does | Symptom without it |
+|---|---|---|
+| Variant pruning | Deletes every `.ssr-variant` element and rebuilds from its own data (`ssrVariants` goes 24 → 0) | 14 visible variant wrappers instead of 1 on `about`; duplicated nav/footer/CTA blocks; `docH` 6292 → 7692 |
+| Sprite materialization | Re-inserts the 16 defs into `#svg-templates` and rewrites `href` back to local `#id` | `#svg-templates` is empty as served, so every icon in §7.5 is a 0×0 box |
+| Appear animations | Drives `animateAppearEffects` | The inline `animator` alone leaves **21 of 26** `index.html` elements permanently at `opacity: 0.001`; scrolling to the bottom never reveals them |
+
+### 10.2 The pre-hydration paint *is* wrong (and always was)
+
+Loading the pages with JavaScript disabled reproduces §10.1's first two rows on the
+**current, unmodified** site. So this is not something 6.3b introduced — the runtime
+has always been masking it:
+
+- `about.html` renders 1,398 px (22%) too tall; "Vote Now" appears 3× where the
+  hydrated page has 2×; ~31 duplicated icon containers.
+- Pre-hydration vs hydrated, as a share of the 1440-tall viewport: **3.7%** (`404`),
+  3.9% (`about`), 3.3% (`donate`), 12.0% (`films`), 10.9% (`index`), 4.6%
+  (`privacy-policy`), 4.9% (`volunteer`).
+
+### 10.3 Two fixes were built, measured, and rejected
+
+Both were implemented in the working tree, verified, and then reverted.
+
+**Fix A — restore the inline sprite defs** (undo §6.3b's externalization for the
+defs): inline the 16 defs into `#svg-templates`, repoint every `<use>` at local `#id`.
+Cost **+271,412 bytes (+22% page weight)**. Effect: changes 10.5% of all pixels, and
+reduces total pre-hydration error by 35% — but it is *better* on `about` (−65%),
+`volunteer` (−62%), `films` (−49%), `donate` (−47%) and *worse* on `404`,
+`privacy-policy` and at 375 px. A wash overall, because making icons paint also makes
+them paint in the copies that should have been hidden.
+
+**Fix B — add the missing `hidden-*` classes** to 19 `.ssr-variant` wrappers. The
+`variant-id → breakpoint` map is **not in the served markup** (see §10.4), so it was
+derived empirically: load each page at all five breakpoints with the runtime running
+and record which `framer-v-*` ids survive hydration. Effect: −25% to −32% on `404`
+and −51% to −56% on `donate`, and **exactly zero** on `about`, `films`, `index`,
+`privacy-policy` and `volunteer`. It also *regressed* `donate` at 700 px.
+
+**Combined: 4,912,126 → 4,561,602 differing pixels, a 7.1% reduction, for +22% page
+weight**, leaving 45k–290k px of error per page. Not worth shipping, and Fix B is
+fragile: it encodes a measured table into class names that break silently if Framer's
+media queries ever change.
+
+Safety was checked before reverting: hydrated renders were byte-identical on
+`404`/`about`/`films`/`privacy-policy`/`volunteer`; `index` sat inside its own
+11k–50k px noise floor; `donate` showed a small excess (≤0.24% at 1600 px).
+
+### 10.4 Why this cannot be finished properly
+
+The residual duplication is **not** in the `.ssr-variant` wrappers:
+
+- The shipped `hidden-*` classes already satisfy "exactly one variant visible per
+  breakpoint" for all 32 sibling groups across the 7 pages. The invariant holds.
+- The runtime deletes *all* `.ssr-variant` elements and re-renders, so `hidden-*` is
+  only ever a pre-paint hint, never the final state.
+- What is left is components the `hidden-*` mechanism never covered. Finding them
+  requires per-component breakpoint metadata that does not exist in the files: there
+  is exactly **one** `data-framer-hydrate-v2` per page, on `#main`. Nested components
+  do not carry their own.
+
+Reproducing the runtime's selection statically therefore means reimplementing it.
+**Conclusion: the served HTML is a first-paint approximation by Framer's design.** The
+runtime is load-bearing, the 5.6 MB is not recoverable, and §6.8 should be closed as
+"not viable" rather than pursued. 6.1 (whitespace minification, ~548 kB) is the
+remaining real win.
+
+> For a plain-English account of what the runtime does to the markup, see
+> `docs/RUNTIME.md`.

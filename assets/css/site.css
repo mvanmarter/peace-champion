@@ -36483,7 +36483,7 @@ html,
                     image-rendering: pixelated;
                     flex-shrink: 0;
                     background-size: 100% 100%;
-                    background-image: url(&quot;assets/svg/uri_1.svg&quot;);
+                    background-image: url("../svg/uri_1.svg");
                    }
 .pc-i-013 { 
                         --font-selector: R0Y7TWFucm9wZS03MDA=;
@@ -36588,7 +36588,7 @@ html,
                       image-rendering: pixelated;
                       flex-shrink: 0;
                       background-size: 100% 100%;
-                      background-image: url(&quot;assets/svg/uri_1.svg&quot;);
+                      background-image: url("../svg/uri_1.svg");
                      }
 .pc-i-026 { 
                         --font-selector: R0Y7TWFucm9wZS03MDA=;
@@ -36709,7 +36709,7 @@ html,
                 image-rendering: pixelated;
                 flex-shrink: 0;
                 background-size: 100% 100%;
-                background-image: url(&quot;assets/svg/uri_2.svg&quot;);
+                background-image: url("../svg/uri_2.svg");
                }
 .pc-i-042 { 
                       display: block;
