@@ -532,6 +532,14 @@ _(measured)_.
 | `404.html`            | A        | 282      | 16                | 16              | 2750          | 1,110      | 0 / 3         | 0/0          |
 | `404.html`            | B, C     | 569      | 70                | **16**          | **1440**      | 1,110      | **12 / 15**   | 0/0          |
 
+> **The `<use> empty` column above is a trap, and I fell into it.** `getBBox()` returns
+> zero for any element inside a `display: none` responsive variant, so most of those 10–23
+> "empty" refs are simply *inactive breakpoints* — not broken icons. The same mistake made
+> me wrongly call `sprite.svg` dead weight. The column is a raw element count and should be
+> read as such; §7(b) re-measures it with `checkVisibility` to count only what a visitor
+> can actually see. **Visible-icon truth:** with the CDN blocked, 3–9 icons per page still
+> paint, courtesy of `sprite.svg`; without it, **0**.
+
 Three conclusions, in order of importance:
 
 1. **The pre-hydration paint is visually correct.** 54–76 nav anchors are in the DOM but
@@ -917,7 +925,7 @@ row — **the served HTML lays out better than the re-rendered version** (1638 p
 | **6 of 7 pages lay out 2750 px wide at a 1440 px viewport**                           | flex `min-width: auto` lets 2030 px items set `#main`'s min-content width (§5.5)                                                                                                                                         | _(measured)_           |
 | **Most SVG icons die if the Framer CDN is unreachable**                               | the runtime normally supplies the sprite defs from the CDN page chunk; with `sprite.svg` served, 3–9 icons per page survive, and 0 survive without it (§7b)                                                              | _(measured)_           |
 | **21 of 26 homepage hero elements stay at `opacity: 0.001` without the CDN**          | the appear engine never runs; `AGENTS.md` §6.8 measured the same 21/26                                                                                                                                                   | _(measured)_           |
-| `HTTP 404 …/assets/css/&quot;assets/svg/uri_1.svg&quot;` (and `uri_2.svg` on `about`) | the `site.css` bug from `HTML_ANALYSIS.md` §9 — the URL carries literal `&quot;` entities **and** resolves against `assets/css/`. Confirmed at `site.css:36486, 36591, 36712`. Fix: `../svg/uri_N.svg` with real quotes. | _(measured)_           |
+| ~~`HTTP 404 …/assets/css/&quot;assets/svg/uri_1.svg&quot;`~~ | **Fixed 2026-09-25.** The URLs carried literal `&quot;` entities **and** resolved against `assets/css/`, at `site.css:36486, 36591, 36712`. Corrected to `url("../svg/uri_N.svg")` — 3 lines, verified 200 + decode. Affected rules: `.pc-i-012`, `.pc-i-025` (34 elements site-wide) and `.pc-i-041` (6) — 40 background images that were silently not painting. | _(measured, fixed)_ |
 | `NotSupportedError: the name "givebutter-dialog" has already been used`               | Givebutter's UMD is loaded five times in the main document on `donate.html`                                                                                                                                              | _(measured)_           |
 | Two Vimeo embeds return `HTTP 401`                                                    | `player.vimeo.com` rejects the embed params                                                                                                                                                                              | _(measured)_           |
 | A Weglot translation widget loads on `privacy-policy`                                 | not in the markup; pulled by remote code                                                                                                                                                                                 | _(measured)_           |
