@@ -514,8 +514,8 @@ reference.
 
 | file | bytes | what |
 | --- | --- | --- |
-| `index2.html` | 14,826 | the page — semantic markup, no build step |
-| `assets/css/index2.css` | 22,022 | all styling, hand-tuned per breakpoint |
+| `index2.html` | 18,976 | the page — semantic markup, no build step |
+| `assets/css/index2.css` | 35,823 | all styling, hand-tuned per breakpoint |
 | `assets/vendor/dotlottie-player-2.5.6.js` | 779,388 | vendored animation player (see B.3) |
 | `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501 | crisis animation |
 | `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie` | 5,050 | solution animation (mobile) |
@@ -534,14 +534,36 @@ landmarks, and every text node's box.
 
 | width | doc-height delta | notes |
 | --- | --- | --- |
-| 1728 / 1440 / 1200 | **0** | exact |
-| 1199 | +2 | |
-| 1000 | +1 | |
-| 810 | +2 | tablet box structure exact; second card column exact |
-| 800 / 700 / 600 / 500 / 450 | −666 … −683 | intentional, see B.5 |
-| 390 | −665 | intentional, see B.5 |
+| 1728 / 1440 / 1200 | **0** | welcome, declaration, note, CTA, cards all ≤2px |
+| 1199 / 1000 / 810 | +2 … +6 | uniform upstream noise from the hero cluster |
+| 800 / 700 / 600 / 500 / 450 | −693 … −692 | intentional, see B.5; uniform with the CTA |
+| 390 | −692 | intentional, see B.5 |
 
-`scrollWidth` equals the viewport at every width measured — no horizontal overflow.
+`scrollWidth` equals the viewport at every width measured — no horizontal overflow
+(mine; the live overflows below 600px, see B.5 deviation 2). The card grid is
+exact-to-quantized at every width: all 5/10 card boxes land within 1px (desktop) or
+6–9px (mobile) and every box height matches (`dh=0`).
+
+Final measured spacing facts baked into `index2.css` (tune nothing by eye — these are
+the live's live values):
+
+- Declaration note `margin-top` is **60px at every width** (not 84/80 as the first
+  pass assumed).
+- Change block `padding-top` is **89px mobile / 80px ≥810**; mobile is capped by
+  `padding-bottom: 80px`.
+- The section label sits flush under the second video at mobile — `margin: 0 0 0 26px;
+  padding: 23px 0` — and carries `margin-top: 127px` at ≥810. On the live the label is
+  a flex column (title + sub) wrapped in 23px of vertical padding, m0, directly below
+  the embed, with 80px to the first 900×900 variant box.
+- `.variant--crisis` has **no margin** — the change block is contiguous with the
+  cascade. Solution and voice panels sit 41px / 40px below their precursors. Mobile
+  `.variant` gap is 64px.
+- Mobile card text gaps (col A → col B): col A 230@390→192@600+; col B 192@390→173@600+;
+  col B stagger 185@390→147@600+ — all `max(_, calc(A - (100vw-390)*k))` curves except
+  the 600+ flats. The **crisis** more-card keeps 271@390→211@600; the **solution**
+  more-card uses the flat 64px gap (scoped with
+  `.cards:not(.cards--single) .card + .card--more`). More-card paragraphs are
+  `font-weight: 500` with `margin-top: 0` (specificity > `.cards p`).
 
 ### B.3 The DotLottie problem, and what was decided
 
@@ -613,18 +635,115 @@ difference from the live page.
 
 ### B.5 Intentional deviations
 
-Two, both deliberate:
+Three, all deliberate:
 
-1. **Mobile document height is ~665–680 px shorter.** The live page contains an empty
-   transparent block reserved for an empty state. It contributes nothing visually, and
+1. **Mobile document height is ~692–693 px shorter.** The live page contains an empty
+   transparent block reserved for an empty state. It renders nothing visually, and
    reproducing dead space was judged not worth it. Everything above and below it matches
-   to within a couple of pixels.
+   within a few pixels, and the doc, the CTA row and the footer all shift up by exactly
+   the same −692/−693.
 2. **The welcome heading fits instead of overflowing.** On the live site below ~600 px this
    heading is 556 px wide inside a 342 px column and overflows both edges, which is what
    makes the live page horizontally scrollable (`scrollWidth` 473 at a 390 px viewport). Our
    version wraps to the column. This is the *cause* of deviation 1's smaller sibling
    difference and of `scrollWidth` being correct here and wrong there.
+3. **The mobile menu is a dropdown, not a full-screen takeover.** On the live site, opening
+   the burger expands the fixed header element itself to `height: 2000px`, so the bar
+   becomes a full-viewport cream overlay that covers the page (the document height does not
+   change — it is `position: fixed`, so it does not affect scroll extent). Ours is a
+   positioned panel under the bar. The panel's own geometry does match the live: `top: 83px`
+   (16 px below the bar), full-bleed, 24 px side inset, links on a 51 px pitch, and the
+   Vote Now button stretched to the full 342 px inset width. The takeover behaviour itself
+   was not copied — it is a self-contained panel, it does not affect layout, and matching it
+   is a behaviour change rather than a parity fix.
 
 Everything else in the mobile cluster — the three crisis/solution/voice blocks, the card
 grids, the CTA, the footer — lands within about 22 px of the live page, and the two
 videos, both iframes, the hero, and the vote counter match exactly.
+
+### B.6 The header
+
+Rebuilt from measurement, not from the export. The live header is a `position: fixed`,
+`z-index: 2` bar, **67.203 px** tall at every width, opaque `#faf9f6`, and it never hides or
+reappears on scroll (verified by measuring `getBoundingClientRect().top` after scrolling
+1400 px). Ours is 67 px via `.header-inner { min-height: 35px }` inside `padding: 16px 0`.
+
+Two rules, one of which was initially assumed to be one thing:
+
+- **The dark rule is painted by the header.** It is a full-box `::after` on
+  `.framer-5z4cni` — `content: ""; position: absolute; inset: 0; border-bottom: 1px solid
+  #222` — so it spans the header's full box rather than its content. Pixel-verified as
+  `rgb(34,34,34)` occupying exactly row `y=66` on both live and local, at 390 and 1440, at
+  scroll offset 0 and 1400.
+- **The light `1px #e1e0dd` line immediately under it is not a divider at all** — it is the
+  first row of the hero lattice, which is the subject of B.7 below. It was originally
+  reproduced as a desktop-only `.hero::before` and that explanation was wrong; the pixel
+  evidence for the lattice is in B.7 and the pseudo-element has been removed.
+
+Because the header is out of flow, `body` carries `padding-top: 67px` to restore the height
+it used to contribute, and the hero's own padding was re-derived from the live's measurements
+(145 px desktop, 100 px mobile) rather than kept at its pre-header value. The decorative
+bleed elements move with it: `top: 0` desktop, `-72px` mobile, verified against the live's
+absolute positions at 390/600/810/1000/1440.
+
+The one measurement worth recording, because it is easy to "fix" backwards: the live's nav
+links report **two different boxes**. As inline `<a>` elements inside a `19.2px` line-height
+block they measure `[x, 22, w, 22]` — the font's content area, positioned by the line box —
+while the text block they sit in measures `[x, 24, w, 19.2]`. Matching the block puts our
+glyph baselines within 0.1 px of the live's; matching the `<a>` box instead would land the
+type 2 px high. `.nav` therefore stays at `line-height: 19.2px`. `cmp.js` compares text
+blocks, so it scores these links 0/0/0 at both 810 and 1440.
+
+Also confirmed, and deliberately not reproduced: the live page has **no custom scrollbar
+behaviour** — no hide-on-scroll, no `scrollbar-width` override, `scroll-behavior: auto` — it
+just uses the browser default. Our `html, body { overflow-x: clip }` stays, because
+deviation 2 above means our page has no horizontal overflow to scroll.
+
+### B.7 The hero lattice
+
+The single largest visual element on the page, and the one that was missed longest, because
+it looks like a set of content dividers rather than a decorative grid.
+
+**What the live does.** A holder (`framer-11qpj2k`) sits at `y=67`, horizontally centred and
+`overflow: hidden`, and contains 140 `145×145px` cell elements in a `28×5` arrangement — a
+`4060×725px` lattice. Each cell draws its own edge, so the rendered lines are `2px` and
+straddle the cell boundaries (a cell at `left: 145k` paints a 1px edge at `145k−0.5` and
+`145k+144.5`; the overlapping pair is what makes them 2px). The holder is `725px` tall at
+≥810px. Below 810px it is `581px` tall and the inner lattice is shifted `top: -72px`, so the
+first visible row moves from `y=67` down to `y=140`. The holder's right edge is 2030px past
+the viewport's right edge, which is the origin of the live's `scrollWidth 2750` at 1440px.
+
+**What we do instead.** One `<div class="hero-grid" aria-hidden="true">` and a `::before`
+carrying two repeating-linear-gradients, 145px apart in each axis, `2px #e1e0dd`, offset by
+`background-position: -1px -1px` so the lines straddle the cell edges exactly as the live's
+overlapping edges do. It is `725px`/`581px` tall on the same breakpoint, and the `::before` is
+centred with `left: 50%`, `margin-left: -2030px`. This is a pixel match, not a DOM match:
+140 empty divs would add 140 elements to the accessibility tree and the paint tree for no
+visible gain. `gridcheck.js` compares detected line rows and columns against the live and
+reports EXACT at 1728/1440/1200/810/809/600/390, and the one measured breakpoint (810 vs
+809) flips in the same place on both.
+
+**Two things the lattice forced, both of which were found by pixel diffing rather than by
+reading the live's computed styles:**
+
+- **The film needs an opaque wrapper, not just a film.** On the live the hero film sits
+  inside a `577px`-wide cream box that keeps its desktop width below 810px, where only the
+  film inside it shrinks to `342px`. The box is invisible — `#faf9f6` on `#faf9f6` — except
+  that it hides the lattice beside the film, which is why no lattice row survives at the
+  film's own height on mobile. Reproduced as `.hero-video-box` (`width: 577px`, no
+  `max-width`, `background: var(--bg)`), which also carries the `z-index: 2` that puts the
+  film above the lattice. Its `margin-inline` is `calc((100% - 577px) / 2)` and not `auto`:
+  between 600px and 810px the box is wider than its container, and auto margins resolve to
+  zero when over-constrained, which pinned the box to the left padding and swallowed the
+  lattice line at `x=589` (the only remaining `gridcheck` mismatch after the wrapper was
+  added).
+- **The lattice paints over the bleed artwork, not under it.** The live's paint order is
+  bleed images first, cells second, video wrapper last, so the lines are visible across the
+  artwork at the left and right edges. `.hero-grid` is `z-index: 1` and the bleeds are
+  `z-index: auto`, which reproduces that.
+
+The old `.hero::before` light rule described in B.6 has been deleted — the lattice's first
+row is now that line, at the same `y=67` at ≥810px. Document height is unaffected: both
+elements are absolutely positioned, and `cmp.js` still reports 0 at 1728/1440/1200, +6/+7 at
+1199/1000/810 and −692/−693 at 800/700/600/390, with no horizontal overflow at any width.
+

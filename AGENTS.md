@@ -45,25 +45,46 @@ Reproduces the live homepage with no Framer code, no React, no analytics, no Tur
 
 | file | bytes | what |
 | --- | --- | --- |
-| `index2.html` | 14,826 | the page — semantic markup, no build step |
-| `assets/css/index2.css` | 22,022 | all styling, hand-tuned per breakpoint |
+| `index2.html` | 18,976 | the page — semantic markup, no build step |
+| `assets/css/index2.css` | 35,823 | all styling, hand-tuned per breakpoint |
 | `assets/vendor/dotlottie-player-2.5.6.js` | 779,388 | vendored animation player |
 | `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501 | crisis animation |
 | `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie` | 5,050 | solution animation (mobile) |
 
 Verified against the live site with `cmp.js` (see Working conventions). Document-height
-delta and `scrollWidth` at 9 widths:
+delta and `scrollWidth` at 12 widths (final measurement, Sep 2026):
 
 | width | doc-height delta | scrollWidth |
 | --- | --- | --- |
-| 1728 / 1440 / 1200 | **0** | correct |
-| 1199 / 1000 / 810 | +2 / +1 / +2 | correct |
-| 800 / 700 / 600 / 500 / 450 / 390 | −666 … −665 | correct (live overflows) |
+| 1728 / 1440 / 1200 | **0** (welcome, declaration, note, CTA, cards all ≤2px) | correct |
+| 1199 / 1000 / 810 | +2 … +6 (uniform upstream noise from the hero cluster) | correct |
+| 800 / 700 / 600 / 500 / 450 / 390 | −693 … −692 | correct, no overflow at any width (live overflows) |
 
-Both DotLottie player boxes match the live site within 1px at all 9 widths. Two videos,
-both iframes, the hero and the vote counter match exactly; the mobile cluster lands
-within ~22px. The negative mobile deltas are **intentional** — see "Intentional
-deviations" below. Full write-up: `docs/NEW_SITE.md` Appendix B.
+The card grid is exact-to-quantized at every width: all 5/10 card boxes land within
+1px (desktop) or 6–9px (mobile) and every box height matches (`dh=0`). The negative
+mobile deltas are **intentional** — see "Intentional deviations" below. From 810px up
+the page is exact; below 810px the doc/CTA/footer sit a uniform −693…−692, the CTA row
+and the footer being shifted by exactly the same amount as the omitted empty block.
+The footer itself reproduces the live layout (see below).
+
+Measured live spacing facts baked into `index2.css` (do not "re-tune" by eye):
+declaration note `margin-top` is **60px at every width**; the change block's top
+padding is **89px mobile / 80px ≥810**; the section label sits flush under the second
+video at mobile (`margin: 0 0 0 26px; padding: 23px 0`) with the change block capped
+by **80px** — at desktop the label carries `margin-top: 127px`; `.variant--crisis`
+has **no margin** (change block is contiguous with the cascade); solution/voice
+panels are 41/40px below their precursors; mobile variant gaps are 64px. Mobile card
+gaps: col A text gap 230@390→192@600+, col B text gap 192@390→173@600+, col B
+stagger 185@390→147@600+ (curves via `max(_, calc(A - (100vw-390)*k))`); the crisis
+more-card keeps 271@390→211@600 but the solution more-card uses the flat 64px; more-card
+paragraphs are `font-weight: 500` with `margin-top: 0`. The B2.5/C relative delltas
+are not present.
+
+Both DotLottie player boxes match the live site within 1px at all widths; `lottie-check.js`
+confirms both players load, animating frames advance, and the only console errors are
+Vimeo's own Turnstile 401s. Two videos, both iframes, the hero and the vote counter
+match exactly; the mobile cluster lands within ~22px. Full write-up:
+`docs/NEW_SITE.md` Appendix B.
 
 ## Key findings (load-bearing, easy to get wrong)
 
@@ -99,15 +120,67 @@ deviations" below. Full write-up: `docs/NEW_SITE.md` Appendix B.
   copied, because a control bar on a paused video is a visible difference.
 - **The Framer runtime injects a `framer.com/edit` badge iframe** on the live site.
   `index2.html` has no such frame. Harmless, but it means frame counts differ by one.
+- **The live header is `position: fixed`, `z-index: 2`, 67.203px tall, and persistent** — it
+  never hides or reappears on scroll (verified at scroll 1400). Its own rule is the **dark**
+  `1px #222` full-box `::after` (`inset: 0; border-bottom`) at row `y=66`. Because the header
+  is out of flow, `body` carries `padding-top: 67px` and the hero/bleed offsets were
+  re-derived (see `docs/NEW_SITE.md` B.6).
+- **The hero is a lattice of bordered squares, and the `1px #e1e0dd` line at `y=67` is its
+  first row — not a content divider.** The live paints a `4060×725px` grid of `145×145px`
+  cells (28×5) inside an `overflow: hidden` holder, horizontally centred, `725px` tall at
+  ≥810px and `581px` tall below 810px with the inner lattice shifted `top: -72px` (first
+  visible row then at `y=140`). Lines are `2px #e1e0dd` straddling the cell edges. The
+  holder's right edge is why the live reports `scrollWidth 2750` at 1440px. Reproduced with
+  one `<div class="hero-grid" aria-hidden="true">` and two repeating gradients, not 140
+  cells (see `docs/NEW_SITE.md` B.7).
+- **The live nav links measure two different boxes, and only one of them is the truth.**
+  As inline `<a>`s in a `19.2px` line-height block they report `[x, 22, w, 22]`; the text
+  block reports `[x, 24, w, 19.2]`. `.nav` stays at `line-height: 19.2px` — matching the
+  block puts the glyph baselines within 0.1px of the live's, matching the `<a>` box lands the
+  type 2px high. `cmp.js` compares blocks, so it scores these 0/0/0.
+- **The live page has no custom scrollbar behaviour** (no hide-on-scroll, no
+  `scrollbar-width` override, `scroll-behavior: auto`). Nothing to copy; keep ours default.
 
 ## Intentional deviations in `index2.html`
-Do not "fix" these — they are choices, and both are recorded in `docs/NEW_SITE.md` B.5:
-1. **Mobile document height is ~665–680px shorter.** The live page reserves an empty
+Do not "fix" these — they are choices, and all are recorded in `docs/NEW_SITE.md` B.5:
+1. **Mobile document height is ~692–693px shorter.** The live page reserves an empty
    transparent block for an empty state. It renders nothing; reproducing dead space was
-   judged not worth it. Everything above and below matches within a couple of pixels.
+   judged not worth it. Everything above and below matches within a couple of pixels,
+   and the doc, the CTA row and the footer all shift up by exactly the same −692/−693.
 2. **The welcome heading fits instead of overflowing.** On the live site below ~600px it
    is 556px wide in a 342px column and overflows both edges, which is what makes the live
    page horizontally scrollable (`scrollWidth` 473 at a 390px viewport). Ours wraps.
+3. **The mobile menu is a dropdown, not a full-screen takeover.** On the live, opening the
+   burger expands the fixed header element to `height: 2000px`, turning the bar into a
+   full-viewport overlay. Ours is a positioned panel. The panel's own geometry *does* match
+   (`top: 83px`, full-bleed, 24px inset, links on a 51px pitch, CTA stretched to 342px);
+   only the takeover behaviour was not copied.
+
+### `cmp.js` false positives (do not chase these)
+- `films MISSING` in both directions at mobile — see above.
+- `saying 'yes'`, `— massive goal`, `— easy` reported `MISSING` on the live side: the live
+  splits those across elements differently. Our `.taglines` block is index2.html:440-447.
+- `lbl-t` / `lbl-s` show a consistent ~106px delta at desktop. This is **not** moved text —
+  it is the live's taller wrapper around the same two lines, and both rows carry the *same*
+  offset, so it is a box-convention difference rather than a displacement. `cmp.js` compares
+  wrapper boxes; the document height is exact at every width ≥1200, which it could not be if
+  a text block had really moved. The `taglines` block sits between the card grid and the
+  CTA (index2.html:440-447), not above the cards — don't re-derive section spacing from it.
+  Note: the label's text could not be located on the live by exact-content match at desktop
+  (Framer splits it differently), so this row is unverified by ink measurement.
+- `eyebrow` / `change` / `note` show width deltas: same cause, the live's text blocks span
+  the full container while ours are content-width. Text y positions match.
+
+### Footer parity (implemented)
+
+The footer was restructured to the live's exact layout: a single row of three two-line
+link groups — `{About, Events}` 46px, `{Donate, Volunteer}` 55px, `{Privacy Policy}`
+102px — with a 24px gap below 810px and 40px at ≥810px, plus the copyright line, which
+at ≥810px sits on the same row opposite the link groups (links right, copy left,
+bottom-aligned). The old vertical column, the footer brand logo, and the Instagram /
+LinkedIn social icons are gone (the live footer has none of them). Verified at
+390 / 600 / 800 / 810 / 1000 / 1200 / 1440 / 1728: every link box and the copyright
+line land within 1px of the live, and the desktop document height stays exactly 0.
 
 ## Export track (cleanup done)
 The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from

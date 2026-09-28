@@ -86,6 +86,9 @@ html {
 
 body {
   margin: 0;
+  /* The header is fixed, so it contributes no height. This is the live's
+     `padding: 67px 0 0` on the page wrapper. */
+  padding-top: 67px;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
@@ -130,6 +133,7 @@ ul {
 
 /* ---------- layout primitives ---------- */
 .container {
+  --bleed: max(0px, (100vw - (var(--measure) + var(--pad) * 2)) / 2);
   width: 100%;
   max-width: calc(var(--measure) + var(--pad) * 2);
   margin-inline: auto;
@@ -178,7 +182,7 @@ ul {
 .embed {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: #000;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .embed iframe {
@@ -189,16 +193,38 @@ ul {
   border: 0;
 }
 
-/* ---------- header ---------- */
+/* ---------- header ----------
+   The live header is a fixed 67px bar at every width: 16px of padding above
+   and below a 35px row, an opaque cream fill, and a 1px #222 rule on its
+   bottom edge. `body` carries the matching 67px top offset below, which is
+   how the live keeps its content clear of a bar that is out of flow. */
 .site-header {
-  position: relative;
-  padding-top: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 16px 0;
+  background: var(--bg);
+}
+
+/* The live draws the rule as a full-box ::after overlay on the bar, not as a
+   border on it, so it adds no height and never shifts the row. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-bottom: 1px solid #222;
+  pointer-events: none;
 }
 
 .header-inner {
   display: flex;
   align-items: center;
   gap: 24px;
+  /* The live's row box is 35.2px at every width, even on mobile where the
+     tallest child is the 32px logo - so the bar is 67px tall there too. */
+  min-height: 35px;
 }
 
 .brand {
@@ -219,6 +245,9 @@ ul {
   gap: 8px 24px;
   margin-left: auto;
   font-size: 16px;
+  /* 19.2px, as on the live: its nav labels are 19.2px line boxes centred in the
+     35px row, which puts them on y=24. (An inline <a> reports the taller line
+     box of 22 there - do not "fix" this to 22.) */
   line-height: 19.2px;
 }
 
@@ -249,7 +278,9 @@ ul {
 }
 
 /* Mobile menu. The head script adds .js, so no-JS visitors keep the inline
-   nav and never see a button they cannot operate. */
+   nav and never see a button they cannot operate. On the live the panel drops
+   16px below the fixed bar (83px from its top edge), runs full-bleed with 24px
+   of side inset, and sets its links on a 51px pitch. */
 .js .nav-toggle {
   display: block;
 }
@@ -261,34 +292,43 @@ ul {
 .js .nav-panel {
   position: absolute;
   z-index: 20;
-  top: 60px;
-  left: var(--pad);
-  right: var(--pad);
+  top: 83px;
+  left: 0;
+  right: 0;
   display: none;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
+  gap: 31.8px;
+  padding: 22px 24px 24px;
   background: var(--bg);
   font-size: 16px;
   line-height: 19.2px;
+}
+
+/* The live's panel CTA spans the full inset width; its links stay content-width. */
+.js .nav-panel .btn {
+  align-self: stretch;
 }
 
 .js .nav-panel[data-open] {
   display: flex;
 }
 
-/* ---------- hero ---------- */
+/* ---------- hero ----------
+   `body` supplies the 67px below the fixed bar, so the hero's own padding is
+   the live's hero padding measured from the content start (212 - 67 at 810px
+   up, 167 - 67 below it). */
 .hero {
   position: relative;
-  padding-top: 161px;
+  padding-top: 145px;
 }
 
-/* Two decorative illustrations that bleed off both edges. The offsets are a
-   pure function of viewport width, exactly as measured on the live site. */
+/* Two decorative illustrations that bleed off both edges. They are pinned to
+   the top of the hero, which puts them flush under the header rule at 810px
+   up - exactly where the live has them. */
 .hero-bleed {
   position: absolute;
-  top: 67px;
+  top: 0;
   left: calc(50% - 870px);
   width: 580px;
   height: 725px;
@@ -304,7 +344,89 @@ ul {
   height: 100%;
 }
 
+/* ---------- hero grid ----------
+   The live opens with a 725px band directly under the header holding a
+   4060x725 lattice of 145px squares - 28 columns by 5 rows - horizontally
+   centred on the viewport and clipped to it. That lattice's right edge is at
+   1440/2 + 2030 = 2750, which is exactly the scrollWidth the broken export
+   reported, so this band is the element that used to overflow.
+
+   Each square on the live is an empty div whose ::after draws a #e1e0dd box,
+   and the pixels show that box rendering 2px wide, centred on the cell's edge
+   ([edge-1, edge+1)). Two repeating gradients are the same picture without 140
+   empty divs. The band's own bottom edge is a 1px line, and the band's top edge
+   cuts the first row's 2px top border down to the single 1px line that shows up
+   under the header at 810px up - which is why mobile, whose band is shifted up
+   by 72px, has no line at that height at all. */
+.hero-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Above the bleed artwork: on the live the two artwork images are siblings
+     that come *before* the cells inside the groups that hold them, so the
+     lattice paints over them. The video is lifted above this separately. */
+  z-index: 1;
+  height: 725px;
+  overflow: hidden;
+  border-bottom: 1px solid #e1e0dd;
+  pointer-events: none;
+}
+
+.hero-grid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4060px;
+  height: 725px;
+  margin-left: -2030px;
+  background-image: repeating-linear-gradient(
+      to right,
+      #e1e0dd 0 2px,
+      transparent 2px 145px
+    ),
+    repeating-linear-gradient(to bottom, #e1e0dd 0 2px, transparent 2px 145px);
+  background-size: 145px 100%, 100% 100%;
+  /* -1px so each band straddles its cell edge rather than starting at it. */
+  background-position: -1px -1px;
+  background-repeat: repeat;
+}
+
+/* Below 810px the live keeps the same 145px lattice but shifts the whole band
+   72px up and clips it to 581px, so the topmost visible line lands at y=140 and
+   the band's bottom edge cuts through the fifth row instead of closing it. */
+@media (max-width: 809.98px) {
+  .hero-grid {
+    height: 581px;
+  }
+
+  .hero-grid::before {
+    top: -72px;
+  }
+}
+
+/* The live wraps the hero film in a 577px-wide opaque cream box that keeps its
+   desktop width below 810px, where only the film inside shrinks to 342px. That
+   box is invisible - cream on cream - except that it hides the hero lattice
+   either side of the film, which is why no lattice line survives at the film's
+   own height on mobile. Deliberately no `max-width`, so it stays 577px wide at
+   every width; the page's `overflow-x: clip` keeps it from adding a scrollbar.
+   It also carries the stacking that puts the film above the lattice, matching
+   the live's full-width `z-index: 1` video wrapper. */
+.hero-video-box {
+  position: relative;
+  z-index: 2;
+  width: 577px;
+  /* Not `auto`: between 600 and 810 the 577px box is wider than its container,
+     and auto margins resolve to 0 when over-constrained, which left the box
+     hard against the left padding and swallowed the lattice line at x=589. */
+  margin-inline: calc((100% - 577px) / 2);
+  background: var(--bg);
+}
+
 .hero-video {
+  display: block;
   width: 577px;
   max-width: 100%;
   aspect-ratio: 577 / 435;
@@ -355,13 +477,47 @@ ul {
   line-height: 64px;
 }
 
+/* The live pairs the label with a 24x24 mark: a 10%-blue disc with a solid
+   12px blue dot in the middle, 16px to the right of the text. */
 .vote-label {
+  display: flex;
+  gap: 16px;
+  align-items: center;
   width: fit-content;
   margin-top: 13px;
   font-family: var(--mono);
   font-weight: 500;
   font-size: 16px;
   line-height: 17.6px;
+}
+
+.vote-icon {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+.vote-icon__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  background: rgba(0, 107, 212, 0.1);
+  transform: translate(-50%, -50%);
+}
+
+.vote-icon__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: var(--dot-blue);
+  transform: translate(-50%, -50%);
 }
 
 .vote .btn {
@@ -431,9 +587,14 @@ ul {
 }
 
 /* ---------- welcome ---------- */
+/* Full-bleed grey band. On the live it spans 0..100vw with 80px of padding
+   above and below the copy (1728..2196 at 1440, 1966..2495 at 390), so the
+   padding replaces the old margin-top and the copy does not move. */
 .welcome {
-  margin-top: 80px;
+  margin-top: 0;
+  padding-block: 80px;
   text-align: center;
+  background: #e3e3e3;
 }
 
 .welcome h2 {
@@ -460,10 +621,13 @@ ul {
 }
 
 /* ---------- declaration ---------- */
+/* Full-bleed white band, 120px of padding above and below the copy
+   (2196..3010 at 1440, 2495..3566 at 390). */
 .declaration {
-  margin-top: 200px;
+  margin-top: 0;
+  padding-block: 120px;
+  background: #fff;
 }
-
 .declaration-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -490,26 +654,47 @@ ul {
   margin-top: 32px;
 }
 
+/* The live note is a pill: 200px radius, 5%-black fill, 24/32 padding and a
+   16px gap to a 20x21 info glyph. 556px wide at 1440 (32 + 20 + 16 + 456 + 32)
+   and full-bleed-to-the-gutter at 390. */
 .declaration-note {
+  display: flex;
+  gap: 16px;
+  align-items: center;
   width: fit-content;
-  max-width: 456px;
-  margin: 84px 32px 0 calc(50% + 88px);
+  margin: 60px 0 0 calc(50% + 20px);
+  padding: 24px 32px;
+  border-radius: 200px;
+  background: rgba(0, 0, 0, 0.05);
   font-size: 16px;
   font-weight: 500;
   line-height: 19.2px;
+}
+
+/* The live's note is 556px wide at 1440, which is the 456px text measure plus
+   the glyph, the gap and the padding. The cap therefore belongs on the text,
+   not on the pill. */
+.declaration-note span {
+  max-width: 456px;
 }
 
 .declaration-note svg {
   flex: none;
   width: 20px;
   height: 21px;
-  margin-top: 1px;
 }
 
 /* ---------- change ---------- */
+/* The declaration band and the variant stack butt together on the live with no
+   gap, so the space in front of the change section is padding on the section
+   rather than a margin above it. The live's change block runs 3010..4234 at
+   1440 (1224 tall) and 3566..4589 at 390 (1023); with the grid, the embed and
+   the label fixed, that leaves 80px above at 1440/1000 and 89px at 390. */
 .change {
-  margin-top: 223px;
+  margin-top: 0;
+  padding-top: 80px;
 }
+
 
 .change-grid {
   display: grid;
@@ -540,7 +725,8 @@ ul {
   flex-direction: column;
   align-items: start;
   width: fit-content;
-  margin: 22px 0 0 26px;
+  margin: 127px 0 0 26px;
+  padding: 0;
 }
 
 .section-label .label-title {
@@ -557,12 +743,35 @@ ul {
 }
 
 /* ---------- variants ---------- */
+/* Each variant has a tinted panel behind its copy. On the live it is a real
+   element: 0..50vw and a full 900px tall at >=810, wrapping just the copy with
+   80px of padding above and below it below 810. The tint is per section. */
 .variant {
   position: relative;
   display: grid;
   grid-template-columns: 536px 1fr;
   gap: 96px;
   align-items: start;
+}
+
+.variant--crisis {
+  --tint: rgba(0, 0, 0, 0.05);
+}
+
+.variant--solution {
+  --tint: rgba(0, 107, 212, 0.1);
+}
+
+.variant--voice {
+  --tint: rgba(0, 138, 23, 0.1);
+}
+
+/* Below 810 the single column stacks, so the panel is the copy block itself,
+   pushed out to the gutters. */
+.variant-copy {
+  margin-inline: calc(-1 * var(--pad));
+  padding: 80px var(--pad);
+  background: var(--tint);
 }
 
 /* DotLottie backgrounds from the live site. Both are absolutely positioned and
@@ -680,6 +889,79 @@ ul {
   margin-left: -312px;
 }
 
+/* The live card is a bordered box, not a bare text block: the text sits 32px in
+   from each side and 24px from the top and bottom, on a cream fill. The column
+   widths above are the *text* widths, so the box is grown by the padding and
+   pulled back to keep the text exactly where it already measured. `margin-top:
+   -24px` lifts the box so the text does not move; the inter-card margin drops
+   by the 48px of vertical padding the boxes gained. Measured on the live: the
+   crisis text boxes sit at 776/856 @1440 and 56/136 @390, and the box edges at
+   744/824 and 24/104. */
+.card {
+  position: relative;
+  width: calc(100% + 64px);
+  margin-top: -24px;
+  margin-left: -32px;
+  padding: 24px 32px;
+  background: var(--bg);
+}
+
+.card + .card {
+  margin-top: calc(var(--card-gap) - 48px);
+}
+
+/* The 8px vertical rule on each card's left edge. The offsets are per-card and
+   width-independent — the live's five rules are the same at 390 and 1440 — so
+   they are keyed off data-bar rather than position in the flow. `data-bar` is
+   the card's rank in the *visual* sequence, not its DOM order, because the
+   two columns interleave. */
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 8px;
+  background: #000;
+  top: calc(-1 * var(--bar-top));
+  height: calc(100% + var(--bar-ext));
+}
+
+.card[data-bar="1"] { --bar-top: 28px; --bar-ext: 28px; }
+.card[data-bar="2"] { --bar-top: 13px; --bar-ext: 27px; }
+.card[data-bar="3"] { --bar-top: 23px; --bar-ext: 47px; }
+.card[data-bar="4"] { --bar-top: 14px; --bar-ext: 28px; }
+.card[data-bar="5"] { --bar-top: 46px; --bar-ext: 92px; }
+
+/* The live hangs the crisis closing card further down than the running gap:
+   271px of text gap at 390 and a flat 211px from 600 up, against 230/192 for
+   the rest. Fitted through the two measured ends on the same cap-at-600 curve
+   the other card gaps use. The solution list does NOT do this — its "And many
+   more..." card continues the flat 64px gap, so this is scoped to the two-column
+   crisis list only. */
+.card--more {
+  --more-gap: max(211px, calc(271px - (100vw - 390px) * 0.2857));
+}
+
+.cards:not(.cards--single) .card + .card--more {
+  margin-top: calc(var(--more-gap) - 48px);
+}
+
+/* Crisis rules are all black; the solution rules alternate the solution blue
+   and the voice green down the single mobile column. */
+.variant--solution .card:nth-child(odd)::before {
+  background: var(--btn);
+}
+
+.variant--solution .card:nth-child(even)::before {
+  background: var(--dot-green);
+}
+
+/* "And many more..." is body copy, not a heading. Two classes so this wins
+   over `.card p { margin-top: 4px }` further down, which is the source
+   order later in this file. */
+.cards .card--more > p {
+  margin-top: 0;
+}
+
 .card h3 {
   font-size: 18px;
   font-weight: 700;
@@ -690,10 +972,7 @@ ul {
   margin-top: 4px;
   font-size: 16px;
   line-height: 19.2px;
-}
-
-.card + .card {
-  margin-top: var(--card-gap);
+  font-weight: 500;
 }
 
 /* ---------- taglines (mobile only) ---------- */
@@ -711,26 +990,34 @@ ul {
 }
 
 /* ---------- cta ---------- */
+/* The live spreads the heading and the button to opposite ends of one 52px flex
+   row from 1200 up (justify-content: space-between, align-items: center).
+   Below that it stacks them, left-aligned, with a 16px gap — the row is 115px
+   at 390, 83px at 600/800 and 99px at 1000 purely because the heading wraps to
+   2 / 1 / 1.5 lines. */
 .cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 16px;
   margin-top: 487px;
 }
 
+/* Below 1200 the live puts the button on its own line, so the heading has to
+   claim a full line of the flex box even when the two would fit side by side
+   (at 600 the heading is 429 and the row is 552). */
 .cta h2 {
-  width: fit-content;
+  flex: 0 0 100%;
   font-family: var(--display);
   font-weight: 400;
   font-size: 52px;
   line-height: 52px;
 }
 
-.cta .btn {
-  margin-left: 40px;
-  vertical-align: middle;
-}
-
 /* ---------- footer ---------- */
 .site-footer {
-  margin-top: 5px;
+  margin-top: 40px;
   padding-bottom: 80px;
 }
 
@@ -742,58 +1029,36 @@ ul {
 .footer-inner {
   display: flex;
   flex-direction: column;
-  padding-top: 40px;
+  padding-top: 38px;
 }
 
-/* 3 columns x 2 rows. Order is About/Donate/Privacy then
-   Events/Volunteer/social — as measured. */
+/* The live footer mirrors the site header: a row of link groups —
+   {About,Events} {Donate,Volunteer} {Privacy Policy} — followed by the
+   copyright line at mobile, or set against it (links right, copy left) from
+   810px up. Groups sit 24px apart below 810px, 40px from 810px up. */
 .footer-links {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
+  display: flex;
+  flex-direction: row;
   justify-content: start;
-  gap: 21px 40px;
-  margin-left: 32px;
+  gap: 24px;
   font-size: 16px;
-  line-height: 19.2px;
+  line-height: 22px;
+}
+
+.footer-links li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
 }
 
 .footer-links a {
   white-space: nowrap;
 }
 
-.footer-social {
-  display: flex;
-  gap: 24px;
-}
-
-.footer-social a {
-  width: 20px;
-  height: 20px;
-}
-
-.footer-social svg {
-  width: 100%;
-  height: 100%;
-}
-
-.footer-sign {
-  margin-top: 35px;
-}
-
-.footer-brand {
-  display: block;
-  width: 127px;
-  height: 33px;
-}
-
-.footer-brand svg {
-  width: 100%;
-  height: 100%;
-}
-
 .footer-copy {
   width: fit-content;
-  margin-top: 16px;
+  margin-top: 84px;
   font-size: 14px;
   font-weight: 400;
   line-height: 16.8px;
@@ -814,11 +1079,13 @@ ul {
   }
 
   .hero {
-    padding-top: 119px;
+    padding-top: 100px;
   }
 
+  /* Below 810px the live parks the illustrations 5px above the top of the
+     document, i.e. mostly off-screen; only their x offsets are visible. */
   .hero-bleed {
-    top: -5px;
+    top: -72px;
   }
 
   .hero-video {
@@ -885,7 +1152,8 @@ ul {
   }
 
   .welcome {
-    margin-top: 80px;
+    margin-top: 0;
+    padding-block: 80px;
   }
 
   .welcome h2,
@@ -901,7 +1169,8 @@ ul {
   }
 
   .declaration {
-    margin-top: 200px;
+    margin-top: 0;
+    padding-block: 120px;
   }
 
   .declaration-grid {
@@ -914,12 +1183,27 @@ ul {
   }
 
   .declaration-note {
-    margin: 80px 28px 0 64px;
+    margin: 60px 0 0;
+    max-width: none;
+    padding: 20px 28px;
+  }
+
+  .declaration-note span {
     max-width: none;
   }
 
   .change {
-    margin-top: 228px;
+    margin-top: 0;
+    padding-top: 89px;
+    /* The live caps the change section with the section label wrapped in 23px
+       of vertical padding, then a flat 80px of space before the first 900px
+       variant box. The label itself sits flush below the embed. */
+    padding-bottom: 80px;
+  }
+
+  .section-label {
+    margin: 0 0 0 26px;
+    padding: 23px 0;
   }
 
   .change-grid {
@@ -936,21 +1220,29 @@ ul {
     margin-top: 80px;
   }
 
+  /* The single-column stack: the tinted copy panel, then 40px to the first
+     card box. The cards carry a 24px lift of their own, so the grid gap is
+     64px. */
   .variant {
     grid-template-columns: 1fr;
-    gap: 144px;
+    gap: 64px;
   }
 
+  /* The change block runs to the bottom of the live section chain with no gap
+     before the variant, so the crisis variant has no margin of its own here. */
   .variant--crisis {
-    margin-top: 186px;
+    margin-top: 0;
   }
 
+  /* Gap from the last card box of one variant to the next variant's tinted
+     panel is a flat 41 / 40 on the live at both 390 and 600, so these are
+     constants, not viewport-dependent. */
   .variant--solution {
-    margin-top: 228px;
+    margin-top: 41px;
   }
 
   .variant--voice {
-    margin-top: 202px;
+    margin-top: 40px;
   }
 
   /* Card content width measured off the live cards: crisis tracks
@@ -977,7 +1269,11 @@ ul {
     width: var(--card-w);
   }
 
+  /* Column B runs its own, tighter card gap: 192 @390, 173 from 600 up (text
+     gap, so 143/125 box-to-box). Column A is the 230/192 curve above; B does
+     not follow it. */
   .cards-col--b {
+    --card-gap: max(173px, calc(192px - (100vw - 390px) * 0.09));
     margin-top: max(147px, calc(185px - (100vw - 390px) * 0.19));
     margin-left: calc(80px - var(--card-w));
   }
@@ -987,21 +1283,13 @@ ul {
   }
 
   .cards--single .cards-col {
-    --card-gap: max(64px, calc(102px - (100vw - 390px) * 0.2111));
+    --card-gap: 64px;
     width: var(--card-w);
   }
 
   .cards--single .cards-col--b {
     margin-top: 112px;
     margin-left: 0;
-  }
-
-  /* Small correction so the solution section starts where the live does once
-     the crisis cards above it have resized. */
-  .variant--solution {
-    margin-top: calc(
-      228px + max(-21px, -39px + (100vw - 390px) * 0.0857)
-    );
   }
 
   .taglines {
@@ -1017,25 +1305,17 @@ ul {
 
   .cta {
     margin-top: 220px;
+    gap: 16px;
   }
 
   .cta .btn {
     display: flex;
     width: fit-content;
-    margin: 32px 0 0;
+    margin: 0;
   }
 
   .site-footer {
-    margin-top: 100px;
-  }
-
-  .footer-inner {
-    padding-top: 38px;
-  }
-
-  .footer-links {
-    gap: 44px 30px;
-    margin-left: 0;
+    margin-top: 40px;
   }
 }
 
@@ -1068,7 +1348,13 @@ ul {
   }
 
   .declaration-note {
-    margin-left: calc(50% + 88px);
+    margin: 60px 0 0 calc(50% + 20px);
+    max-width: none;
+    padding: 24px 32px;
+  }
+
+  .declaration-note span {
+    max-width: 456px;
   }
 
   /* Vote block and cluster stack, cluster left-aligned. */
@@ -1094,19 +1380,47 @@ ul {
     margin-top: 0;
   }
 
+  /* At 810 and up the panel spans the left half of the full 900px box, so it
+     moves off the copy and onto the variant. The copy and the cards are made
+     positioned so they paint over it (both are later in the DOM, and an
+     absolutely positioned ::before would otherwise cover non-positioned
+     in-flow content). */
+  .variant::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: calc(-1 * var(--bleed));
+    width: 50vw;
+    background: var(--tint);
+  }
+
+  .variant-copy,
+  .cards {
+    position: relative;
+  }
+
+  .variant-copy {
+    margin-inline: 0;
+    padding: 0;
+    background: none;
+  }
+
   .variant--crisis {
-    margin-top: 106px;
+    margin-top: 0;
   }
 
   /* Same width law as mobile: half the viewport less 192, capping at 392
      (213 @810, 308 @1000, 392 from ~1178 up). */
   /* Card inset from the box top: 140 @810, 188 @1000, 208 @1199 in the live.
-     The curve is not linear, so this fits the two ends exactly and leaves
-     ~15px at 1000. */
+     The curve is concave, so this is the min of the two straight segments
+     through those points — a quadratic would need px*px, which calc() rejects. */
   .cards {
     --card-w: min(50vw - 192px, 392px);
     align-self: start;
-    margin-top: calc(140px + (100vw - 810px) * 0.1749);
+    margin-top: min(
+      calc(140px + (100vw - 810px) * 0.2526),
+      calc(188px + (100vw - 1000px) * 0.1005)
+    );
     margin-left: 0;
   }
 
@@ -1115,10 +1429,10 @@ ul {
     width: var(--card-w);
   }
 
-  /* Second column: 80px x-overlap, a 192px card gap, and a stagger that is
-     185px at 810 before flattening out to 147px for the rest of the range. */
+  /* Second column: 80px x-overlap, a flat 192px card gap (measured 192 @1000),
+     and a stagger that is 185px at 810 before flattening out to 147px. */
   .cards-col--b {
-    --card-gap: calc(192px + (100vw - 810px) * -0.0488);
+    --card-gap: 192px;
     margin-top: max(147px, 185px - (100vw - 810px) * 0.2);
     margin-left: calc(80px - var(--card-w));
   }
@@ -1133,26 +1447,26 @@ ul {
   }
 
   .cta .btn {
-    margin-left: 32px;
+    margin-left: 0;
   }
 
   .footer-inner {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
+    padding-top: 40px;
   }
 
   .site-footer {
-    margin-top: 58px;
+    margin-top: 40px;
   }
 
   .footer-links {
     order: 2;
-    justify-content: end;
-    margin-left: 0;
+    gap: 40px;
   }
 
-  .footer-sign {
+  .footer-copy {
     order: 1;
     margin-top: 0;
   }
@@ -1186,19 +1500,59 @@ ul {
     display: none;
   }
 
+  /* The live's >=1200 variants are the same uniform 900px boxes as the tablet
+     range, but the copy column is a flat 536px (measured at 1200, 1440 and
+     1728) rather than 50vw - 64px. The three boxes butt together with no gap,
+     so the copy is exactly centred in each: 4234/5134/6034 at 1440. */
+  .variant {
+    grid-template-columns: 536px 1fr;
+    height: 900px;
+    align-items: center;
+    margin-top: 0;
+  }
+
+  .variant--crisis {
+    margin-top: 0;
+  }
+
+  /* Crisis cards: 183px from the box top to the card box at 1200, 1440 and
+     1728 alike, which is 207px to the text once the 24px padding is added. */
+  .cards {
+    align-self: start;
+    margin-top: 207px;
+  }
+
+  /* The CTA sits on one 52px row from 1200 up, with the live's 180px of clear
+     space above it (voice panel ends 6934, row starts 7114). */
+  .cta {
+    margin-top: 179px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cta h2 {
+    flex: 0 1 auto;
+  }
+
+  /* 84px of clear space from the CTA row down to the footer rule at 1200 and
+     up (measured: row ends 7158, footer starts 7250 at 1440). */
+  .site-footer {
+    margin-top: 40px;
+  }
+
   .footer-inner {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
+    padding-top: 40px;
   }
 
   .footer-links {
     order: 2;
-    justify-content: end;
-    margin-left: 0;
+    gap: 40px;
   }
 
-  .footer-sign {
+  .footer-copy {
     order: 1;
     margin-top: 0;
   }

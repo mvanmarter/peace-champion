@@ -1,4 +1,4 @@
-### Sitemap for https://globalpeaceyes.org/
+# Sitemap for https://globalpeaceyes.org/
 
 ## Pages to migrate
 
