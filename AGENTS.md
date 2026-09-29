@@ -45,8 +45,8 @@ Reproduces the live homepage with no Framer code, no React, no analytics, no Tur
 
 | file | bytes | what |
 | --- | --- | --- |
-| `index2.html` | 18,976 | the page — semantic markup, no build step |
-| `assets/css/index2.css` | 35,823 | all styling, hand-tuned per breakpoint |
+| `index2.html` | 19,217 | the page — semantic markup, no build step |
+| `assets/css/index2.css` | 43,101 | all styling, hand-tuned per breakpoint |
 | `assets/vendor/dotlottie-player-2.5.6.js` | 779,388 | vendored animation player |
 | `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501 | crisis animation |
 | `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie` | 5,050 | solution animation (mobile) |
@@ -56,33 +56,50 @@ delta and `scrollWidth` at 12 widths (final measurement, Sep 2026):
 
 | width | doc-height delta | scrollWidth |
 | --- | --- | --- |
-| 1728 / 1440 / 1200 | **0** (welcome, declaration, note, CTA, cards all ≤2px) | correct |
-| 1199 / 1000 / 810 | +2 … +6 (uniform upstream noise from the hero cluster) | correct |
-| 800 / 700 / 600 / 500 / 450 / 390 | −693 … −692 | correct, no overflow at any width (live overflows) |
+| 1728 / 1440 / 1200 | **−1** (sub-pixel; see below) | correct |
+| 1199 / 1000 / 810 | +5 … +6 (uniform upstream noise from the hero cluster) | correct |
+| 800 / 700 / 600 / 500 / 450 / 390 | −694 … −662 | correct, no overflow at any width (live overflows) |
 
 The card grid is exact-to-quantized at every width: all 5/10 card boxes land within
 1px (desktop) or 6–9px (mobile) and every box height matches (`dh=0`). The negative
 mobile deltas are **intentional** — see "Intentional deviations" below. From 810px up
-the page is exact; below 810px the doc/CTA/footer sit a uniform −693…−692, the CTA row
-and the footer being shifted by exactly the same amount as the omitted empty block.
-The footer itself reproduces the live layout (see below).
+the page is exact except for that 1px; below 810px the doc/CTA/footer sit a flat
+−693 (700 is −694, and 500/450 are −666/−662), the CTA row and the footer being
+shifted by exactly the same amount as the omitted empty block. The footer itself
+reproduces the live layout (see below).
+
+**The desktop −1 is sub-pixel, and do not "fix" it with a magic 0.5px.** The live's
+declaration copy block measures 427.203px and its note pill 86.406px, because Framer's
+button label uses a 19.203px line box; ours are exactly 427.000 and 86.400. The
+section therefore totals 813.609 on the live and 813.400 on ours, and the browser
+rounds those to 814 and 813. Every individual block now lands on the live's integer
+pixel — the film frame, the note pill, both label lines — so the only residue is the
+one lost rounding step. Reproducing 19.203px is not possible from clean CSS.
 
 Measured live spacing facts baked into `index2.css` (do not "re-tune" by eye):
 declaration note `margin-top` is **60px at every width**; the change block's top
-padding is **89px mobile / 80px ≥810**; the section label sits flush under the second
-video at mobile (`margin: 0 0 0 26px; padding: 23px 0`) with the change block capped
-by **80px** — at desktop the label carries `margin-top: 127px`; `.variant--crisis`
-has **no margin** (change block is contiguous with the cascade); solution/voice
-panels are 41/40px below their precursors; mobile variant gaps are 64px. Mobile card
-gaps: col A text gap 230@390→192@600+, col B text gap 192@390→173@600+, col B
-stagger 185@390→147@600+ (curves via `max(_, calc(A - (100vw-390)*k))`); the crisis
-more-card keeps 271@390→211@600 but the solution more-card uses the flat 64px; more-card
-paragraphs are `font-weight: 500` with `margin-top: 0`. The B2.5/C relative delltas
-are not present.
+padding is **89px mobile / 80px ≥810**; **the section label is flush under the second
+video at every width** (`margin: 0 0 0 26px; padding: 23px 0`, title 23px below the
+film, sub 53px below) and the change block is capped by **80px of bottom padding**;
+`.variant--crisis` has **no margin** (change block is contiguous with the cascade);
+solution/voice panels are 41/40px below their precursors; mobile variant gaps are 64px.
+Mobile card gaps: col A text gap 230@390→192@600+, col B text gap 192@390→173@600+,
+col B stagger 185@390→147@600+ (curves via `max(_, calc(A - (100vw-390)*k))`); the
+crisis more-card keeps 271@390→211@600 but the solution more-card uses the flat 64px;
+more-card paragraphs are `font-weight: 500` with `margin-top: 0`.
 
-Both DotLottie player boxes match the live site within 1px at all widths; `lottie-check.js`
-confirms both players load, animating frames advance, and the only console errors are
-Vimeo's own Turnstile 401s. Two videos, both iframes, the hero and the vote counter
+**The DotLottie player boxes do NOT match the live within 1px — this claim used to be
+in this file and was wrong.** Measured player `top` against the live: **±7px** at
+810/1000/1199, **−74 … −91px** at 390/600/800, and **−318px at ≥1200**. The ≥1200
+figure comes from the `--lot-y: -318px` rule in the `@media (min-width: 1200px)` block,
+whose own comment claims the live centres the player — it does not: the live's player
+top (4234 at 1440) equals its container's top (4235) minus 1px, i.e. flush, so
+`--lot-y: 0px` is what matches. **A one-line fix, not applied** — it moves a 916×902
+animation by 318px, which is very visible, so it is worth doing deliberately rather
+than folding into an unrelated change. A/B'd against `HEAD` (worktree) to confirm this
+is pre-existing and not caused by the label/footer work. `lottie-check.js` still
+confirms both players load and animate, and the only console errors are Vimeo's own
+Turnstile 401s. Two videos, both iframes, the hero and the vote counter
 match exactly; the mobile cluster lands within ~22px. Full write-up:
 `docs/NEW_SITE.md` Appendix B.
 
@@ -133,6 +150,25 @@ match exactly; the mobile cluster lands within ~22px. Full write-up:
   holder's right edge is why the live reports `scrollWidth 2750` at 1440px. Reproduced with
   one `<div class="hero-grid" aria-hidden="true">` and two repeating gradients, not 140
   cells (see `docs/NEW_SITE.md` B.7).
+- **Most section rules are `::after` overlays, not CSS `border`s — and the welcome band's top
+  edge is deliberately 2px.** The live draws them as `::after { position: absolute; inset: 0 }`
+  with `border-*` sides, painted inside a box that already has its measured size. Ours do the
+  same, with `pointer-events: none`. `.hero::after` closes the hero with a 1px black rule and
+  `.welcome::after` adds its own top and bottom rules; the two boxes are flush, so at 1440 the
+  live paints rows **1727 and 1728** black and row 1729 is already the `#e3e3e3` fill. Adding
+  only the band's own top border would look visibly thinner. `.cluster::after` is a 1px `#222`
+  frame on all four sides at ≥810px but **top/bottom only below 810px**, where the live's box is
+  full-bleed and its left/right edges land on the viewport boundary. Never convert these to real
+  `border`s — that would add a pixel of document height at every width (see B.8).
+- **The change section paints *two* full-bleed rules, and its film's frame is 97px taller
+  than the film.** Row 3010 (1440) / 3566 (390) is the "be the change" block's top edge; row
+  3410 / 4220 is the *film's* full-bleed wrapper, which is also where the frame's top edge
+  lands. Both belong to full-width section wrappers, not the 1200px `.container`, so they run
+  `x=0` to `100vw` — ours use `left: 50%; width: 100vw; translateX(-50%)`, exact because
+  `.container` is centred. And the live's film frame is drawn by a box enclosing the film
+  *and* the section label beneath it (745 = 648 + 97 at 1440, 289 = 192 + 97 at 390), so
+  ours is `height: calc(100% + 97px)`. Do not "fix" the frame to hug the video — that puts
+  its bottom edge 97px too high.
 - **The live nav links measure two different boxes, and only one of them is the truth.**
   As inline `<a>`s in a `19.2px` line-height block they report `[x, 22, w, 22]`; the text
   block reports `[x, 24, w, 19.2]`. `.nav` stays at `line-height: 19.2px` — matching the
@@ -160,27 +196,63 @@ Do not "fix" these — they are choices, and all are recorded in `docs/NEW_SITE.
 - `films MISSING` in both directions at mobile — see above.
 - `saying 'yes'`, `— massive goal`, `— easy` reported `MISSING` on the live side: the live
   splits those across elements differently. Our `.taglines` block is index2.html:440-447.
-- `lbl-t` / `lbl-s` show a consistent ~106px delta at desktop. This is **not** moved text —
-  it is the live's taller wrapper around the same two lines, and both rows carry the *same*
-  offset, so it is a box-convention difference rather than a displacement. `cmp.js` compares
-  wrapper boxes; the document height is exact at every width ≥1200, which it could not be if
-  a text block had really moved. The `taglines` block sits between the card grid and the
-  CTA (index2.html:440-447), not above the cards — don't re-derive section spacing from it.
-  Note: the label's text could not be located on the live by exact-content match at desktop
-  (Framer splits it differently), so this row is unverified by ink measurement.
+- ~~`lbl-t` / `lbl-s` show a consistent ~106px delta at desktop~~ — **fixed, and this
+  entry is kept only so the fix is not re-diagnosed as a box-convention artifact.**
+  It was a real bug: `.section-label` carried a desktop `margin-top: 127px` that the live
+  does not have. The live's label is a flush 97px box (`padding: 23px 0`) at *every*
+  width, and the change block below it is capped by 80px of bottom padding. Both are now
+  in the base rule, and the mobile override that restated the same box was deleted as
+  redundant. `changelabel.js` now reports 23px / 53px below the film at 1440 and 390,
+  and `cmp.js` scores `lbl-t` and `lbl-s` **0/0/0** at 1440. The `taglines` block sits
+  between the card grid and the CTA (index2.html:440-447), not above the cards — don't
+  re-derive section spacing from it.
 - `eyebrow` / `change` / `note` show width deltas: same cause, the live's text blocks span
   the full container while ours are content-width. Text y positions match.
+- The **`--lot-y: -318px`** rule at ≥1200 is a separate real offset, not a false positive
+  — see the DotLottie paragraph above.
 
 ### Footer parity (implemented)
 
-The footer was restructured to the live's exact layout: a single row of three two-line
-link groups — `{About, Events}` 46px, `{Donate, Volunteer}` 55px, `{Privacy Policy}`
-102px — with a 24px gap below 810px and 40px at ≥810px, plus the copyright line, which
-at ≥810px sits on the same row opposite the link groups (links right, copy left,
-bottom-aligned). The old vertical column, the footer brand logo, and the Instagram /
-LinkedIn social icons are gone (the live footer has none of them). Verified at
-390 / 600 / 800 / 810 / 1000 / 1200 / 1440 / 1728: every link box and the copyright
-line land within 1px of the live, and the desktop document height stays exactly 0.
+The footer reproduces the live's exact layout: a single row of three two-line link
+groups — `{About, Events}` 46px, `{Donate, Volunteer}` 55px, `{Privacy Policy}` 102px
+— with a 24px gap below 810px and 40px at ≥810px. At ≥810px the **brand column** (wordmark
++ copyright) sits on the left opposite the links, `align-items: center`; below 810px the
+links stack first and the brand column follows with a 32px gap.
+
+**The footer wordmark exists on the live and is now reproduced — the earlier claim in
+this file that "the live footer has none of them" was wrong.** Measured on the live at
+1440 and 390: a **127×33** SVG at `x=144`, then 16px, then the copyright, so the column is
+66px tall — exactly the link row's height, which is why the live's row can be
+`align-items: center` and the columns line up. It is **not** the header's symbol: the live
+uses `sprite.svg#svg-1864332813_13682` (`viewBox="0 0 127 33"`, a single-path rendition)
+where the header uses `#svg-1141485548_13698` (`viewBox="0 0 127 32"`, 46 paths). Both
+were already in `assets/svg/sprite.svg`; point at the footer's. Marked `aria-hidden`
+like the header's. The Instagram / LinkedIn icons are still absent from ours — the live
+does have them, at `[1194,7293,20,23]` and `[1238,7293,20,23]` under "Privacy Policy"
+— but they are inside the third link group, which is 102px wide either way, so adding
+them is a separate task and changes no geometry.
+
+Verified at 1440 and 390: logo, brand column and copy land within the same 1px as the
+rest of the desktop page, and within 1px of the rule at 390.
+
+### Still open on `index2.html`
+- ☐ **The remaining live section rules are not reproduced yet.** Six are now
+  (`.hero::after`, `.cluster::after`, `.welcome::after`, `.change::before`,
+  `.change .embed::before`, `.change .embed::after` — see B.8). Still missing: the
+  declaration inner box `[144,2316,556,313]` (which frames the *declaration* film, and
+  whose bottom edge lands on the note pill's top), the note pill, and the later card/panel
+  boxes. Triage by enumerating every element's `::before`/`::after` computed border
+  (`pborders.js`), then reproduce each the same way — `::after` with `inset: 0`, never a
+  real `border`. Also untriaged: the live paints piles of tiny bordered boxes near the CTA
+  and footer at mobile widths. Not started; ask before starting.
+- ☐ **At 500px and 450px the document is `−666`/`−662` and the solution/voice panel sits
+  35/39px lower than the live's.** Outside the hero work, not investigated. Every other width
+  is accounted for (see the table above).
+- ☐ **The DotLottie player is 318px too high from 1200px up** — the `--lot-y: -318px`
+  rule contradicts the live (`--lot-y: 0px` matches); see the DotLottie paragraph above.
+  One-line fix, not applied.
+- ☐ **The footer's Instagram / LinkedIn icons are missing** (live has them under
+  "Privacy Policy"); no geometry impact, separate task.
 
 ## Export track (cleanup done)
 The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from

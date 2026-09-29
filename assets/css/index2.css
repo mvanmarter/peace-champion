@@ -149,7 +149,7 @@ ul {
 .welcome h2,
 .declaration-copy h2,
 .change-grid h3,
-.variant-copy h2,
+.slides h2,
 .cta h2 {
   text-transform: uppercase;
 }
@@ -321,6 +321,20 @@ ul {
 .hero {
   position: relative;
   padding-top: 145px;
+}
+
+/* The live closes the hero with a 1px black rule on its last row (y=1727 at
+   1440, 1965 at 390). It sits immediately above the welcome band's own top
+   rule, so the two together read as a single 2px line - which is exactly what
+   the pixels show: rows 1727 and 1728 are both rgb(0,0,0) on the live. An
+   overlay rather than a real border, because a border here would add a pixel
+   to the document height at every width. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-bottom: 1px solid #000;
+  pointer-events: none;
 }
 
 /* Two decorative illustrations that bleed off both edges. They are pinned to
@@ -532,6 +546,19 @@ ul {
   height: 604px;
 }
 
+/* 1px #222 frame on all four sides at >= 810px. Below 810px the live keeps
+   only the top and bottom edges - its mobile box is full-bleed, so the
+   left/right rules would sit exactly on the viewport edge and read as
+   artifacts. Measured at 390: top and bottom rows are rgb(34,34,34), the
+   left/right columns are not painted. */
+.cluster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #222;
+  pointer-events: none;
+}
+
 .cluster-art {
   position: absolute;
   inset: 0;
@@ -591,10 +618,24 @@ ul {
    above and below the copy (1728..2196 at 1440, 1966..2495 at 390), so the
    padding replaces the old margin-top and the copy does not move. */
 .welcome {
+  position: relative;
   margin-top: 0;
   padding-block: 80px;
   text-align: center;
   background: #e3e3e3;
+}
+
+/* Black rules on the band's top and bottom edges. Together with the hero's
+   bottom rule above it, the top edge is 2px: at 1440 the live paints rows
+   1727 and 1728 black, and 1729 is already the #e3e3e3 fill. The left and
+   right edges are never painted - the band is full-bleed. */
+.welcome::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  pointer-events: none;
 }
 
 .welcome h2 {
@@ -646,8 +687,13 @@ ul {
   margin-top: 16px;
 }
 
+/* 32px, not 34: measured on the live, the second paragraph starts at 2598
+   where the first ends at 2566, and the live's 34 would put it at 2600. The 2px
+   made the whole copy block 429 instead of 427, which pushed the note pill to
+   2805 instead of 2803 and the declaration section to 815 instead of 814 - the
+   +1px document-height delta at every width from 1200 up. */
 .declaration-copy p + p {
-  margin-top: 34px;
+  margin-top: 32px;
 }
 
 .declaration-copy .btn {
@@ -658,6 +704,7 @@ ul {
    16px gap to a 20x21 info glyph. 556px wide at 1440 (32 + 20 + 16 + 456 + 32)
    and full-bleed-to-the-gutter at 390. */
 .declaration-note {
+  position: relative;
   display: flex;
   gap: 16px;
   align-items: center;
@@ -669,6 +716,19 @@ ul {
   font-size: 16px;
   font-weight: 500;
   line-height: 19.2px;
+}
+
+/* The live frames this pill with 1px solid #000 on all four sides, but paints it
+   as an [data-border]::after overlay sized 100%/100% with border-radius:inherit,
+   not as a real border - see .framer-1243fwy in assets/css/site.css. Reproduced
+   as an overlay so the pill's own box height is unchanged. */
+.declaration-note::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 /* The live's note is 556px wide at 1440, which is the 456px text measure plus
@@ -691,8 +751,35 @@ ul {
    1440 (1224 tall) and 3566..4589 at 390 (1023); with the grid, the embed and
    the label fixed, that leaves 80px above at 1440/1000 and 89px at 390. */
 .change {
+  position: relative;
   margin-top: 0;
   padding-top: 80px;
+  /* The live's change area ends with 80px of flat space below the film's frame
+     before the first 900px variant box starts, and that 80px is *inside* the
+     full-bleed wrapper that carries the frame (padding-bottom on a box ending
+     at 4235, with the next section starting at 4234). Ours needs the same
+     80px, or the whole variant stack and everything below it rides 80px high.
+     Below 810px this was already set by the mobile override; the base rule
+     carried none, which is exactly what let the 127px label margin hide. */
+  padding-bottom: 80px;
+}
+
+/* The live closes the declaration band with a full-bleed 1px black rule at the
+   top of the change block. It is painted by the full-width section wrapper,
+   not by the 1200px `.container`, so it runs the whole viewport: row 3010 at
+   1440 and row 3566 at 390, black from x=0 to x=100vw, with the row above
+   still the white declaration band. `left: 50%` + `100vw` is exact because
+   `.container` is centred, so the pseudo's midpoint is the viewport's. An
+   overlay rather than a real border, for the reason given in B.8. */
+.change::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  border-top: 1px solid #000;
+  pointer-events: none;
 }
 
 
@@ -720,13 +807,58 @@ ul {
   margin-top: 80px;
 }
 
+/* The change film carries a 1px black frame, and the full-width wrapper it
+   sits in adds its own top rule on the same row — so the top edge reads as a
+   single full-bleed line with the frame's corners dropped into it. Both are
+   absolutely positioned, so the player is unaffected; `::after` is the later
+   child, so the frame paints on top of the iframe.
+
+   The frame reaches 97px below the video because on the live it is drawn by a
+   box enclosing the video and the section label beneath it as one unit: 745 =
+   648 + 97 at 1440, and 289 = 192 + 97 at 390. The label band is 97px at
+   every width (23px of padding above the title, 26px of title, 4px gap, 21px
+   of sub, 23px below). */
+.change .embed::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  border-top: 1px solid #000;
+  pointer-events: none;
+}
+
+.change .embed::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 97px);
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+/* The film caption, in the live's exact box: flush against the film's bottom
+   (no gap), 23px of padding above and below, so the whole box is 97px tall at
+   every width. This is NOT the same as the live's at 810px and up in one
+   respect: the live's 97px box is 1152 wide with the two lines left-aligned
+   inside it at x=170, whereas ours is shrink-wrapped to the 261px of text. The
+   left edge and the text positions match, so only the box's own width differs.
+
+   The old desktop rule here was `margin: 127px 0 0 26px; padding: 0`, which
+   pushed the text 104px below where the live puts it (measured 127px below the
+   film vs 23px). The live uses the same flush box at every width, so the base
+   rule and the mobile override are now identical - see the open item in
+   AGENTS.md about matching the 1152px box. */
 .section-label {
   display: flex;
   flex-direction: column;
   align-items: start;
   width: fit-content;
-  margin: 127px 0 0 26px;
-  padding: 0;
+  margin: 0 0 0 26px;
+  padding: 23px 0;
 }
 
 .section-label .label-title {
@@ -735,117 +867,48 @@ ul {
   line-height: 26px;
 }
 
+/* The live's 26px title and 21px sub are separated by 4px (4080..4106, then
+   4110..4131 at 1440), and its sub box is 21px tall, not 20.8. Both were 2px
+   out before this was measured, which is why the sub sat 2px high. */
 .section-label .label-sub {
-  margin-top: 2px;
+  margin-top: 4px;
   font-size: 16px;
   font-weight: 500;
-  line-height: 20.8px;
+  line-height: 21px;
 }
 
-/* ---------- variants ---------- */
-/* Each variant has a tinted panel behind its copy. On the live it is a real
-   element: 0..50vw and a full 900px tall at >=810, wrapping just the copy with
-   80px of padding above and below it below 810. The tint is per section. */
-.variant {
-  position: relative;
+/* ---------- slides ---------- */
+/* Static rebuild of the live "Slides" section. Each slide is one grid row: the
+   copy (eyebrow + heading + paragraph) on the left and its matching content
+   (cards or taglines) on the right, all rendered at once — no parallax and no
+   dotlottie players. Below 810px each slide collapses to a single column, copy
+   first. */
+.slides {
+  padding-top: 0;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.slide {
   display: grid;
-  grid-template-columns: 536px 1fr;
-  gap: 96px;
+  grid-template-columns: 1fr;
+  gap: 64px;
   align-items: start;
-}
-
-.variant--crisis {
-  --tint: rgba(0, 0, 0, 0.05);
-}
-
-.variant--solution {
-  --tint: rgba(0, 107, 212, 0.1);
-}
-
-.variant--voice {
-  --tint: rgba(0, 138, 23, 0.1);
-}
-
-/* Below 810 the single column stacks, so the panel is the copy block itself,
-   pushed out to the gutters. */
-.variant-copy {
+  /* Span the module edge to edge so the between-section rules line up with the
+     module's own top/bottom borders, keeping the content at the 24px inset. */
   margin-inline: calc(-1 * var(--pad));
-  padding: 80px var(--pad);
-  background: var(--tint);
+  padding-inline: var(--pad);
 }
 
-/* DotLottie backgrounds from the live site. Both are absolutely positioned and
-   pointer-transparent, so they never affect the measured section geometry.
-   >=810: a single 916x902 player in the crisis variant, centred on 75vw
-   (measured 150/292/441/442/622/838 at 810/1000/1199/1200/1440/1728).
-   <=809: both players scale with the viewport at 2.227x / 2.193x and are
-   centred on 50vw, bleeding off the left edge as the live ones do. */
-.lottie {
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
+.slide + .slide {
+  border-top: 1px solid #000;
 }
 
-/* The variants are the centred .container, so a percentage `left` resolves
-   against the container, not the viewport. The live centres the player on a
-   fraction of the *viewport*, so subtract the container's own offset.
-   Mobile y-offsets are the live's measured player tops minus our section tops
-   (crisis 325/-61/-303 and solution 276/-70/-329 at 390/600/800); the live
-   curve has a kink at 600, so it is two linear segments. */
-.lottie--crisis,
-.lottie--solution {
-  top: var(--lot-y);
-  left: calc(50vw - max(0px, (100vw - 1200px) / 2));
-  width: 222.7vw;
-  height: 219.3vw;
-  transform: translateX(-50%);
-}
-
-.lottie--crisis {
-  --lot-y: calc(325px - (100vw - 390px) * 1.838);
-}
-
-.lottie--solution {
-  --lot-y: calc(276px - (100vw - 390px) * 1.6476);
-}
-
-@media (min-width: 601px) and (max-width: 809.98px) {
-  .lottie--crisis {
-    --lot-y: calc(-61px - (100vw - 600px) * 1.21);
-  }
-
-  .lottie--solution {
-    --lot-y: calc(-70px - (100vw - 600px) * 1.295);
-  }
-}
-
-@media (min-width: 810px) {
-  .lottie--solution {
-    display: none;
-  }
-
-  .lottie--crisis {
-    --lot-y: 0px;
-    left: calc(75vw - max(0px, (100vw - 1200px) / 2));
-    width: 916px;
-    height: 902px;
-  }
-}
-
-/* At >=1200 our variants are not the 900px centred boxes the live tablet range
-   uses, so the live's player sits above our top-aligned copy by half of
-   (900 - 264), the offset the live's own centring produces. */
-@media (min-width: 1200px) {
-  .lottie--crisis {
-    --lot-y: -318px;
-  }
-}
-
-.variant-copy .eyebrow {
+.slide-copy .eyebrow {
   margin-top: 0;
 }
 
-.variant-copy h2 {
+.slide-copy h2 {
   margin-top: 16px;
   font-family: var(--display);
   font-weight: 400;
@@ -853,113 +916,82 @@ ul {
   line-height: 52px;
 }
 
-.variant-copy p {
+.slide-copy p {
   margin-top: 16px;
 }
 
-.variant--crisis {
-  margin-top: 423px;
+/* The live gives each section's copy a tinted panel behind it. Empty-state
+   aside, the tint is per section: a translucent grey for the crisis slide, the
+   solution blue and the voice green. The tint sits on the copy box itself and
+   fills it edge to edge, so the block padding that insets the text is inside
+   the colour and the band runs flush to the section's top/bottom rules. The box
+   is bled left by the container inset (with matching left padding to keep the
+   text where it was) so the tint's left edge lines up with the horizontal rules
+   above and below the section. The right-hand clearance from the vertical rule
+   is added in the two-column breakpoints. */
+.slide-copy {
+  padding-block: 48px;
+  margin-left: calc(-1 * var(--pad));
+  padding-left: var(--pad);
 }
 
-.variant--solution {
-  margin-top: 546px;
+.slide--crisis .slide-copy {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-.variant--voice {
-  margin-top: 625px;
+.slide--solution .slide-copy {
+  background: rgba(0, 107, 212, 0.1);
 }
 
-/* Two independent columns that deliberately overlap by 312px, matching the
-   measured design. Kept as flow content (not absolute) so it still reflows. */
+.slide--voice .slide-copy {
+  background: rgba(0, 138, 23, 0.1);
+}
+
+.slide-panel {
+  min-width: 0;
+  padding-block: 0 48px;
+}
+
+/* The cards sit in a simple column that spans the right column, top-aligned.
+   From 1200px up they spread into two columns with the closing "And many
+   more..." card spanning the full row. */
 .cards {
-  display: flex;
-  align-items: flex-start;
-  margin-top: -112px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
 }
 
-.cards-col {
-  --card-gap: 191px;
-  flex: none;
-  width: 392px;
-}
-
-.cards-col--b {
-  --card-gap: 173px;
-  margin-top: 147px;
-  margin-left: -312px;
-}
-
-/* The live card is a bordered box, not a bare text block: the text sits 32px in
-   from each side and 24px from the top and bottom, on a cream fill. The column
-   widths above are the *text* widths, so the box is grown by the padding and
-   pulled back to keep the text exactly where it already measured. `margin-top:
-   -24px` lifts the box so the text does not move; the inter-card margin drops
-   by the 48px of vertical padding the boxes gained. Measured on the live: the
-   crisis text boxes sit at 776/856 @1440 and 56/136 @390, and the box edges at
-   744/824 and 24/104. */
 .card {
   position: relative;
-  width: calc(100% + 64px);
-  margin-top: -24px;
-  margin-left: -32px;
   padding: 24px 32px;
   background: var(--bg);
+  border: 1px solid #000;
 }
 
-.card + .card {
-  margin-top: calc(var(--card-gap) - 48px);
-}
-
-/* The 8px vertical rule on each card's left edge. The offsets are per-card and
-   width-independent — the live's five rules are the same at 390 and 1440 — so
-   they are keyed off data-bar rather than position in the flow. `data-bar` is
-   the card's rank in the *visual* sequence, not its DOM order, because the
-   two columns interleave. */
+/* The 8px vertical rule on each card's left edge, running the box's full
+   height. Crisis rules are all black; the solution rules alternate the
+   solution blue and the voice green down the list. */
 .card::before {
   content: '';
   position: absolute;
   left: 0;
+  top: 0;
+  bottom: 0;
   width: 8px;
   background: #000;
-  top: calc(-1 * var(--bar-top));
-  height: calc(100% + var(--bar-ext));
 }
 
-.card[data-bar="1"] { --bar-top: 28px; --bar-ext: 28px; }
-.card[data-bar="2"] { --bar-top: 13px; --bar-ext: 27px; }
-.card[data-bar="3"] { --bar-top: 23px; --bar-ext: 47px; }
-.card[data-bar="4"] { --bar-top: 14px; --bar-ext: 28px; }
-.card[data-bar="5"] { --bar-top: 46px; --bar-ext: 92px; }
-
-/* The live hangs the crisis closing card further down than the running gap:
-   271px of text gap at 390 and a flat 211px from 600 up, against 230/192 for
-   the rest. Fitted through the two measured ends on the same cap-at-600 curve
-   the other card gaps use. The solution list does NOT do this — its "And many
-   more..." card continues the flat 64px gap, so this is scoped to the two-column
-   crisis list only. */
 .card--more {
-  --more-gap: max(211px, calc(271px - (100vw - 390px) * 0.2857));
+  grid-column: 1 / -1;
 }
 
-.cards:not(.cards--single) .card + .card--more {
-  margin-top: calc(var(--more-gap) - 48px);
-}
-
-/* Crisis rules are all black; the solution rules alternate the solution blue
-   and the voice green down the single mobile column. */
-.variant--solution .card:nth-child(odd)::before {
+.slide--solution .card:nth-child(odd)::before {
   background: var(--btn);
 }
 
-.variant--solution .card:nth-child(even)::before {
+.slide--solution .card:nth-child(even)::before {
   background: var(--dot-green);
-}
-
-/* "And many more..." is body copy, not a heading. Two classes so this wins
-   over `.card p { margin-top: 4px }` further down, which is the source
-   order later in this file. */
-.cards .card--more > p {
-  margin-top: 0;
 }
 
 .card h3 {
@@ -975,9 +1007,18 @@ ul {
   font-weight: 500;
 }
 
-/* ---------- taglines (mobile only) ---------- */
+/* "And many more..." is body copy, not a heading. */
+.cards .card--more > p {
+  margin-top: 0;
+}
+
+/* ---------- taglines ---------- */
 .taglines {
-  display: none;
+  box-sizing: border-box;
+  max-width: 472px;
+  padding: 24px 32px;
+  background: var(--bg);
+  border: 1px solid #000;
 }
 
 .tagline {
@@ -987,6 +1028,20 @@ ul {
   font-weight: 500;
   font-size: 16px;
   line-height: 17.6px;
+}
+
+.tagline + .tagline {
+  margin-top: 8px;
+}
+
+/* The dash clause reads muted ("massive goal") on the first line and green
+   ("easy") on the second, as on the live. */
+.tagline span:last-child {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.tagline + .tagline span:last-child {
+  color: var(--dot-green);
 }
 
 /* ---------- cta ---------- */
@@ -1001,7 +1056,7 @@ ul {
   justify-content: flex-start;
   align-items: flex-start;
   gap: 16px;
-  margin-top: 487px;
+  margin-top: 96px;
 }
 
 /* Below 1200 the live puts the button on its own line, so the heading has to
@@ -1026,10 +1081,15 @@ ul {
   height: 4px;
 }
 
+/* Below 810px the live stacks the links above the wordmark+copy column with a
+   32px gap, and leaves 40px between the rule and the links (measured: rule
+   bottom 8755, links 8795 at 390). The old 38px padding-top and the copy's
+   84px margin were both standing in for that structure. */
 .footer-inner {
   display: flex;
   flex-direction: column;
-  padding-top: 38px;
+  gap: 32px;
+  padding-top: 40px;
 }
 
 /* The live footer mirrors the site header: a row of link groups —
@@ -1056,9 +1116,31 @@ ul {
   white-space: nowrap;
 }
 
+/* The live footer repeats the wordmark above the copyright, in the same place
+   the header has it: a 127x33 SVG at x=144, then 16px of gap, then the copy.
+   It is NOT the header's own symbol - the live uses #svg-1864332813_13682 here
+   (viewBox 0 0 127 33) where the header uses #svg-1141485548_13698 (viewBox
+   0 0 127 32). Both were already in the sprite; the footer one is a single-path
+   rendition of the same wordmark, so point at it rather than reusing the
+   header's 46-path block. Measured: logo 127x33, copy 16px below it, the pair
+   66px tall - exactly the height of the link row, which is why the live's row
+   is `align-items: center` and the two columns line up. */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: fit-content;
+}
+
+.footer-logo {
+  display: block;
+  width: 127px;
+  height: 33px;
+}
+
 .footer-copy {
   width: fit-content;
-  margin-top: 84px;
   font-size: 14px;
   font-weight: 400;
   line-height: 16.8px;
@@ -1117,6 +1199,14 @@ ul {
     margin-left: calc(50% - 50vw);
   }
 
+  /* Top and bottom edges only - the mobile box is full-bleed, so its left and
+     right edges land on the viewport boundary and the live does not paint
+     them. Verified by pixel probe at 390: rows 1060 and 1964 are
+     rgb(34,34,34) across the full width, columns 0 and 389 are not. */
+  .cluster::after {
+    border-width: 1px 0;
+  }
+
   .cluster-art {
     width: 100%;
     height: 100%;
@@ -1158,7 +1248,7 @@ ul {
 
   .welcome h2,
   .declaration-copy h2,
-  .variant-copy h2,
+  .slides h2,
   .cta h2 {
     font-size: 32px;
     line-height: 32px;
@@ -1201,10 +1291,8 @@ ul {
     padding-bottom: 80px;
   }
 
-  .section-label {
-    margin: 0 0 0 26px;
-    padding: 23px 0;
-  }
+  /* No label override here any more: the mobile box is the same flush,
+     23px-padded rule the base now carries, so restating it was redundant. */
 
   .change-grid {
     grid-template-columns: 1fr;
@@ -1220,91 +1308,11 @@ ul {
     margin-top: 80px;
   }
 
-  /* The single-column stack: the tinted copy panel, then 40px to the first
-     card box. The cards carry a 24px lift of their own, so the grid gap is
-     64px. */
-  .variant {
-    grid-template-columns: 1fr;
-    gap: 64px;
-  }
-
-  /* The change block runs to the bottom of the live section chain with no gap
-     before the variant, so the crisis variant has no margin of its own here. */
-  .variant--crisis {
-    margin-top: 0;
-  }
-
-  /* Gap from the last card box of one variant to the next variant's tinted
-     panel is a flat 41 / 40 on the live at both 390 and 600, so these are
-     constants, not viewport-dependent. */
-  .variant--solution {
-    margin-top: 41px;
-  }
-
-  .variant--voice {
-    margin-top: 40px;
-  }
-
-  /* Card content width measured off the live cards: crisis tracks
-     100vw - 192 and solution tracks 100vw - 112, each capping at the width
-     the live design stops growing at (392 / 472). Slope is 1:1 with the
-     viewport, not an interpolation between the two sampled widths. */
-  .cards {
-    --card-w: min(100vw - 192px, 392px);
-    margin-top: 0;
-    margin-left: 32px;
-  }
-
-  .cards--single {
-    --card-w: min(100vw - 112px, 472px);
-    display: block;
-  }
-
-  /* Card gaps shrink as the cards get wider (fewer wrapped lines), each
-     flattening out once the card width law caps. Measured on the live:
-       crisis  gap 230@390 -> 192@600+   stagger 185@390 -> 147@600+
-       solution gap 102@390 ->  64@570+  stagger 150@390 ->  90@570+ */
-  .cards-col {
-    --card-gap: max(192px, calc(230px - (100vw - 390px) * 0.1806));
-    width: var(--card-w);
-  }
-
-  /* Column B runs its own, tighter card gap: 192 @390, 173 from 600 up (text
-     gap, so 143/125 box-to-box). Column A is the 230/192 curve above; B does
-     not follow it. */
-  .cards-col--b {
-    --card-gap: max(173px, calc(192px - (100vw - 390px) * 0.09));
-    margin-top: max(147px, calc(185px - (100vw - 390px) * 0.19));
-    margin-left: calc(80px - var(--card-w));
-  }
-
-  .cards--single {
-    display: block;
-  }
-
-  .cards--single .cards-col {
-    --card-gap: 64px;
-    width: var(--card-w);
-  }
-
-  .cards--single .cards-col--b {
-    margin-top: 112px;
-    margin-left: 0;
-  }
-
-  .taglines {
-    display: block;
-    margin-top: 122px;
-    margin-left: 32px;
-    padding: 0 24px;
-  }
-
-  .tagline + .tagline {
-    margin-top: 2px;
-  }
-
+  /* Mobile uses the base single column: each slide's copy above its content,
+     with the cards flowing as a one-column list. The old interleaved two-column
+     card stack and the scroll-driven variants are gone. */
   .cta {
-    margin-top: 220px;
+    margin-top: 96px;
     gap: 16px;
   }
 
@@ -1337,7 +1345,7 @@ ul {
 
   .welcome h2,
   .declaration-copy h2,
-  .variant-copy h2,
+  .slides h2,
   .cta h2 {
     font-size: 48px;
     line-height: 48px;
@@ -1367,92 +1375,40 @@ ul {
     margin-top: 40px;
   }
 
-  /* The live tablet range is a stack of uniform 900px variant boxes: the copy
-     is vertically centred in the box, the crisis cards sit 64px from its top,
-     the boxes butt against each other with no gap, and the first box starts
-     103px below the section label.  Card columns are half the viewport less
-     64px, with a flat 96px gap, so they land at 50vw + 56px and +136px. */
-  .variant {
-    grid-template-columns: calc(50vw - 64px) 1fr;
-    gap: 96px;
-    align-items: center;
-    height: 900px;
-    margin-top: 0;
+  /* Tablet keeps the two-column slide row: the copy column is a comfortable
+     share of the viewport, the panel takes the rest. Cards stay a single
+     column list. The 1px vertical rule between the columns replaces the grid
+     gap; each side carries its own padding so text clears the rule and the
+     rule spans the full row height (both columns stretch). */
+  .slide {
+    grid-template-columns: minmax(0, 40%) 1fr;
+    column-gap: 0;
+    align-items: stretch;
   }
 
-  /* At 810 and up the panel spans the left half of the full 900px box, so it
-     moves off the copy and onto the variant. The copy and the cards are made
-     positioned so they paint over it (both are later in the DOM, and an
-     absolutely positioned ::before would otherwise cover non-positioned
-     in-flow content). */
-  .variant::before {
-    content: '';
-    position: absolute;
-    inset-block: 0;
-    left: calc(-1 * var(--bleed));
-    width: 50vw;
-    background: var(--tint);
+  .slide-copy {
+    padding-right: 32px;
   }
 
-  .variant-copy,
-  .cards {
-    position: relative;
+  .slide-panel {
+    border-left: 1px solid #000;
+    padding: 48px 0 48px 32px;
   }
 
-  .variant-copy {
-    margin-inline: 0;
-    padding: 0;
-    background: none;
-  }
-
-  .variant--crisis {
-    margin-top: 0;
-  }
-
-  /* Same width law as mobile: half the viewport less 192, capping at 392
-     (213 @810, 308 @1000, 392 from ~1178 up). */
-  /* Card inset from the box top: 140 @810, 188 @1000, 208 @1199 in the live.
-     The curve is concave, so this is the min of the two straight segments
-     through those points — a quadratic would need px*px, which calc() rejects. */
-  .cards {
-    --card-w: min(50vw - 192px, 392px);
-    align-self: start;
-    margin-top: min(
-      calc(140px + (100vw - 810px) * 0.2526),
-      calc(188px + (100vw - 1000px) * 0.1005)
-    );
-    margin-left: 0;
-  }
-
-  .cards-col {
-    --card-gap: calc(230px + (100vw - 810px) * -0.1);
-    width: var(--card-w);
-  }
-
-  /* Second column: 80px x-overlap, a flat 192px card gap (measured 192 @1000),
-     and a stagger that is 185px at 810 before flattening out to 147px. */
-  .cards-col--b {
-    --card-gap: 192px;
-    margin-top: max(147px, 185px - (100vw - 810px) * 0.2);
-    margin-left: calc(80px - var(--card-w));
-  }
-
-  /* Boxes butt together, so the CTA hangs off the last one at a flat 180px. */
   .cta {
-    margin-top: 180px;
-  }
-
-  .variant--solution .cards {
-    display: none;
+    margin-top: 96px;
   }
 
   .cta .btn {
     margin-left: 0;
   }
 
+  /* At 810px and up the brand column goes left and the links right, and both
+     columns are 66px tall so `center` and `flex-end` agree - the live uses
+     center. Measured: brand 144..461, links 989..1296, both top 7250. */
   .footer-inner {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     padding-top: 40px;
   }
@@ -1466,9 +1422,8 @@ ul {
     gap: 40px;
   }
 
-  .footer-copy {
+  .footer-brand {
     order: 1;
-    margin-top: 0;
   }
 }
 
@@ -1496,36 +1451,32 @@ ul {
     justify-self: end;
   }
 
-  .variant--solution .cards {
-    display: none;
-  }
-
-  /* The live's >=1200 variants are the same uniform 900px boxes as the tablet
-     range, but the copy column is a flat 536px (measured at 1200, 1440 and
-     1728) rather than 50vw - 64px. The three boxes butt together with no gap,
-     so the copy is exactly centred in each: 4234/5134/6034 at 1440. */
-  .variant {
+  /* Desktop: the copy column is a flat 536px and the cards spread into a
+     two-column grid with a wider gap. The 1px vertical rule replaces the
+     column gap; each side carries its own padding so text clears the rule and
+     the rule spans the full row height (both columns stretch). */
+  .slide {
     grid-template-columns: 536px 1fr;
-    height: 900px;
-    align-items: center;
-    margin-top: 0;
+    column-gap: 0;
+    align-items: stretch;
   }
 
-  .variant--crisis {
-    margin-top: 0;
+  .slide-copy {
+    padding-right: 48px;
   }
 
-  /* Crisis cards: 183px from the box top to the card box at 1200, 1440 and
-     1728 alike, which is 207px to the text once the 24px padding is added. */
+  .slide-panel {
+    border-left: 1px solid #000;
+    padding: 48px 0 48px 48px;
+  }
+
   .cards {
-    align-self: start;
-    margin-top: 207px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
   }
 
-  /* The CTA sits on one 52px row from 1200 up, with the live's 180px of clear
-     space above it (voice panel ends 6934, row starts 7114). */
   .cta {
-    margin-top: 179px;
+    margin-top: 96px;
     justify-content: space-between;
     align-items: center;
   }
@@ -1540,9 +1491,12 @@ ul {
     margin-top: 40px;
   }
 
+  /* At 810px and up the brand column goes left and the links right, and both
+     columns are 66px tall so `center` and `flex-end` agree - the live uses
+     center. Measured: brand 144..461, links 989..1296, both top 7250. */
   .footer-inner {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     padding-top: 40px;
   }
@@ -1552,8 +1506,7 @@ ul {
     gap: 40px;
   }
 
-  .footer-copy {
+  .footer-brand {
     order: 1;
-    margin-top: 0;
   }
 }

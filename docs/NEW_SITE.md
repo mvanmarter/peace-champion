@@ -514,8 +514,8 @@ reference.
 
 | file | bytes | what |
 | --- | --- | --- |
-| `index2.html` | 18,976 | the page — semantic markup, no build step |
-| `assets/css/index2.css` | 35,823 | all styling, hand-tuned per breakpoint |
+| `index2.html` | 19,217 | the page — semantic markup, no build step |
+| `assets/css/index2.css` | 43,101 | all styling, hand-tuned per breakpoint |
 | `assets/vendor/dotlottie-player-2.5.6.js` | 779,388 | vendored animation player (see B.3) |
 | `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501 | crisis animation |
 | `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie` | 5,050 | solution animation (mobile) |
@@ -534,10 +534,10 @@ landmarks, and every text node's box.
 
 | width | doc-height delta | notes |
 | --- | --- | --- |
-| 1728 / 1440 / 1200 | **0** | welcome, declaration, note, CTA, cards all ≤2px |
-| 1199 / 1000 / 810 | +2 … +6 | uniform upstream noise from the hero cluster |
-| 800 / 700 / 600 / 500 / 450 | −693 … −692 | intentional, see B.5; uniform with the CTA |
-| 390 | −692 | intentional, see B.5 |
+| 1728 / 1440 / 1200 | **−1** | every block lands on the live's integer pixel; the −1 is the lost rounding step from the live's fractional 19.203px line box (ours 19.2) — see AGENTS.md |
+| 1199 / 1000 / 810 | +5 … +6 | uniform upstream noise from the hero cluster |
+| 800 / 700 / 600 / 500 / 450 | −694 … −662 | intentional, see B.5; 700 is −694, 500/450 are −666/−662 |
+| 390 | −693 | intentional, see B.5 |
 
 `scrollWidth` equals the viewport at every width measured — no horizontal overflow
 (mine; the live overflows below 600px, see B.5 deviation 2). The card grid is
@@ -548,13 +548,18 @@ Final measured spacing facts baked into `index2.css` (tune nothing by eye — th
 the live's live values):
 
 - Declaration note `margin-top` is **60px at every width** (not 84/80 as the first
-  pass assumed).
-- Change block `padding-top` is **89px mobile / 80px ≥810**; mobile is capped by
-  `padding-bottom: 80px`.
-- The section label sits flush under the second video at mobile — `margin: 0 0 0 26px;
-  padding: 23px 0` — and carries `margin-top: 127px` at ≥810. On the live the label is
-  a flex column (title + sub) wrapped in 23px of vertical padding, m0, directly below
-  the embed, with 80px to the first 900×900 variant box.
+  pass assumed), and the second paragraph of the copy is `margin-top: 32px` (not 34 —
+  the 2px pushed the whole section down 1px at ≥1200 until it was measured).
+- Change block `padding-top` is **89px mobile / 80px ≥810**, capped at the bottom by
+  **`padding-bottom: 80px` at every width**. The base rule used to carry none; the
+  80px was hiding inside the old desktop `margin-top: 127px` on the label. Both are
+  now explicit (see the label bullet).
+- The section label is a flush 97px box at **every** width — `margin: 0 0 0 26px;
+  padding: 23px 0`, title 23px below the film, sub 53px below, then 80px to the first
+  900×900 variant box. The old desktop `margin-top: 127px` was wrong (measured 104px
+  too low); the mobile override that restated the same box is gone as redundant. The
+  label's sub is 4px below the title (`margin-top: 4px`), line-height 21px (measured
+  on the live: 26px title then 21px sub, 4px apart).
 - `.variant--crisis` has **no margin** — the change block is contiguous with the
   cascade. Solution and voice panels sit 41px / 40px below their precursors. Mobile
   `.variant` gap is 64px.
@@ -564,6 +569,8 @@ the live's live values):
   more-card uses the flat 64px gap (scoped with
   `.cards:not(.cards--single) .card + .card--more`). More-card paragraphs are
   `font-weight: 500` with `margin-top: 0` (specificity > `.cards p`).
+- The footer's brand column (see B.9) is 127×33 SVG + 16px gap + copy, 66px tall at
+  every width — exactly the link row's height.
 
 ### B.3 The DotLottie problem, and what was decided
 
@@ -602,18 +609,27 @@ apart hash differently, so the animation is genuinely advancing.
 **Geometry.** The players are absolutely positioned, and the live positions them against
 the *viewport*, not their container — so `left: 75%` is wrong (it resolves against the
 centred `.container`) and had to become
-`calc(75vw - max(0px, (100vw - 1200px) / 2))`. Live player boxes, all matched within 1 px:
+`calc(75vw - max(0px, (100vw - 1200px) / 2))`. Live player sizes and x-centring:
 
 | width | live | 
 | --- | --- |
 | ≥810 | `916×902`, centred on `75vw` |
 | 390 / 600 / 800 | `869×856` / `1336×1316` / `1781×1754`, centred on `50vw`, bleeding off the left edge |
 
-The mobile y-offsets are *not* linear in viewport width — the live's offset from its own
-section top is `325 / −61 / −303` px at `390 / 600 / 800`, a curve that kinks at 600. It
-is reproduced as two linear segments. Above 1200 the offset is a flat `-318px`, which is
-half of `(900 − 264)`: the live centres its copy in a 900 px box there, while our desktop
-layout is top-aligned.
+**The y position does NOT match within 1px — the earlier claim here that it did was
+wrong, and was re-measured.** Live-to-mine player `top` deltas: **+6/+7px** at
+810/1000/1199, **−74 … −91px** at 390/600/800, and **−318px at ≥1200**. The mobile
+y-offsets are *not* linear in viewport width — the live's offset from its own
+section top is `325 / −61 / −303` px at `390 / 600 / 800`, a curve that kinks at 600.
+It is reproduced as two linear segments.
+
+The ≥1200 delta is a stale rule, not a rendering difference: the committed
+`--lot-y: -318px` in the `@media (min-width: 1200px)` block claims the live centres the
+player in a 900px box, but it does not — the live's player top (4234 at 1440) equals its
+container's top (4235) minus 1px, i.e. flush, so `--lot-y: 0px` is what matches. It was
+left as **one line, not applied**, because it moves a 916×902 animation by 318px (very
+visible), and A/B'd against `HEAD` in a byte-exact git worktree to confirm it is
+pre-existing and not caused by the label/footer/declaration work.
 
 ### B.4 The one asset that does not match the live site
 
@@ -744,6 +760,119 @@ reading the live's computed styles:**
 
 The old `.hero::before` light rule described in B.6 has been deleted — the lattice's first
 row is now that line, at the same `y=67` at ≥810px. Document height is unaffected: both
-elements are absolutely positioned, and `cmp.js` still reports 0 at 1728/1440/1200, +6/+7 at
-1199/1000/810 and −692/−693 at 800/700/600/390, with no horizontal overflow at any width.
+elements are absolutely positioned, and `cmp.js` still reports −1 at 1728/1440/1200, +5/+6 at
+1199/1000/810 and −693/−694 at 800/700/600/390 (666/662 at 500/450), with no horizontal
+overflow at any width.
+
+### B.8 The section rules
+
+Most of the page's rules are not CSS `border`s at all. On the live they are `::after`
+overlays: a `::after` with `position: absolute; inset: 0` and one or more `border-*` sides,
+painted over a box that already has its full measured size. So a live element that reports
+`[536,1124,760,604]` and paints a 1px frame occupies those exact pixels — the frame is drawn
+inside the box, not added to it.
+
+Three of them were reproduced in `index2.css`:
+
+| box | rule | note |
+| --- | --- | --- |
+| `.hero::after` | `border-bottom: 1px solid #000` | the hero's closing rule, on its last row |
+| `.cluster::after` | `border: 1px solid #222` | all four sides at ≥810px |
+| `.welcome::after` | `border-top` + `border-bottom: 1px solid #000` | left/right never painted |
+| `.change::before` | `border-top: 1px solid #000` | full-bleed, see below |
+| `.change .embed::before` | `border-top: 1px solid #000` | full-bleed, sits on the frame's top row |
+| `.change .embed::after` | `border: 1px solid #000` | frame, `height: calc(100% + 97px)` |
+
+**The welcome band's top edge is 2px, and that is not a mistake.** The hero's closing rule
+lands on the hero's last row and the welcome band's own top rule lands on the band's first
+row, and the two boxes are flush. At 1440 the live paints rows 1727 and 1728 `rgb(0,0,0)`
+and row 1729 is already the band's `#e3e3e3` fill. Adding only the band's own top border
+would have produced a visibly thinner line. Pixel-verified by `bordercmp.js` at 1440:
+`.cluster` live `[536,1124,760,604]` = ours, top row and left column both `34,34,34` on both
+sides; `.welcome` live `[0,1728,1440,468]` = ours, rows 1727/1728 black on both sides.
+
+**The cluster frame is mobile-conditional.** Below 810px the live's cluster is full-bleed
+(`100vw`) and its `::after` carries only `border-top`/`border-bottom`; the left and right
+edges would fall exactly on the viewport boundary and are not painted. Hence
+`border-width: 1px 0` in the ≤809.98px block, verified at 390 where the live's row 1060 and
+ours at 1066 (the known +6px upstream noise) are both `34,34,34` across the full width, with
+no vertical rule at `x=0`.
+
+All three are `position: absolute` overlays with `pointer-events: none`, so layout is
+untouched — the full 12-width `cmp.js` doc-height table is byte-identical before and after
+(−1/−1/−1/+6/+5/+6/−693/−694/−693/−666/−662/−693), `gridcheck.js` is still EXACT at all
+seven widths, and `runtime.js` confirms the burger still takes clicks.
+
+**The change section needs two full-bleed rules, not one.** The live paints two separate
+1px black lines across the whole viewport in this section, and only one of them is the
+section's own top edge:
+
+- row `3010` at 1440 / `3566` at 390 — the top of the "be the change" block (`framer-pgqroz`,
+  a full-bleed wrapper around the 1152px inner grid, `::after` `border-top` only);
+- row `3410` at 1440 / `4220` at 390 — the top of the film's full-bleed wrapper
+  (`framer-gcd26i`, also `border-top` only), which is where the frame's top edge lands too.
+
+Both rules belong to the full-width section wrappers, not to the 1200px `.container`, so
+they run from `x=0` to `x=100vw` — pixel-probed black across `0..1439` and `0..389`
+respectively, with the row above still the white declaration band. Ours are `::before`
+overlays at `left: 50%; width: 100vw; transform: translateX(-50%)`, which is exact because
+`.container` is centred, so the pseudo's midpoint coincides with the viewport's.
+
+**The film's frame is drawn by a box taller than the video, and that is not a mistake.** On
+the live the frame belongs to `framer-19dhb4o`, whose children are the video
+(`framer-hqlglw-container`, 648px) *and* the section label (`framer-lnnusu`, 97px) — so the
+frame encloses both: 745 = 648 + 97 at 1440, and 289 = 192 + 97 at 390. Pixel-verified down
+the left border column: the live's is black from `3410` to `4153` at 1440 and `4220` to
+`4508` at 390. Ours is `height: calc(100% + 97px)` on `.change .embed` — the same 745px and
+289px, offset only by the page's existing 1px desktop / 8–9px mobile drift. The bottom
+border's horizontal run is `144..1295` at 1440 and `24..365` at 390 on both pages, and the
+right-edge pixels match byte-for-byte.
+
+`::before` is the full-bleed rule and `::after` the frame, because `::after` is the later
+child and therefore paints on top of the `<iframe>`. Both carry `pointer-events: none`, so
+the player stays fully interactive.
+
+**Still outstanding.** The live paints further pseudo-bordered boxes that we do not yet
+reproduce — the declaration inner box `[144,2316,556,313]` (which frames the *declaration*
+film, and whose bottom edge lands on the note pill's top), the note pill, and the later
+card/panel boxes. These are found by enumerating every element's `::before`/`::after`
+computed border (see `pborders.js`), and were deliberately left alone here because the
+brief was the named sections. Note that the live also has piles of tiny bordered boxes
+near the CTA and footer at mobile widths, which have not been triaged.
+
+### B.9 The section label, the declaration's second paragraph, and the footer wordmark
+
+Three fixes this session, each measured against the live rather than re-derived:
+
+**1. The label was a real bug, not a box-convention artifact.** `changelabel.js` proved the
+change section's label sits 23px / 53px below the film on the live at both 1440 and 390,
+and ours matched at 390 but was 104px too low at ≥810 because `.section-label` carried a
+desktop `margin-top: 127px` that the live does not have. The fix made the base label rule
+the flush 97px box the live uses everywhere (`margin: 0 0 0 26px; padding: 23px 0`), put
+the change block's trailing `padding-bottom: 80px` into the base rule where the live has
+it at every width, and deleted the mobile restatement as redundant. The label's sub got
+two more measured numbers: `margin-top: 4px` (live: 26px title ends 4106, 21px sub starts
+4110) and `line-height: 21px`, not 20.8px. After the fix `cmp.js` scores `lbl-t` and
+`lbl-s` **0/0/0** at 1440.
+
+**2. The declaration's `p + p` is 32px, not 34px.** The extra 2px made the copy block 429
+instead of the live's 427.203, pushing the note pill 2px down and costing 1px of document
+height at ≥1200. After the 32px fix every block of the declaration lands on the live's
+integer pixel — but the section totals 813.4 on ours vs 813.609 on the live, so the
+browser rounds those to 813 and 814 and the desktop doc-height delta is now **−1**
+(was 0 only while the label bug happened to compensate). That −1 is the unreproducible
+19.203px line box (ours 19.2); do not tune it with a magic 0.5px.
+
+**3. The live footer does have the wordmark, and it is not the header's symbol.** Measured
+at 1440 and 390: a 127×33 SVG at `x=144`, 16px below it the copyright, the column 66px
+tall — exactly the link row's height, which is why the live's row uses
+`align-items: center`. It uses `sprite.svg#svg-1864332813_13682` (`viewBox="0 0 127 33"`,
+a single-path rendition) while the header uses `#svg-1141485548_13698` (`viewBox 0 0 127
+32`, 46 paths); both are in the sprite, so ours points at the footer's id. The earlier
+claim in AGENTS.md / this appendix that the live footer has no logo or social icons was
+wrong — the Instagram / LinkedIn icons are present under "Privacy Policy" at
+`[1194,7293,20,23]` / `[1238,7293,20,23]` but are inside the 102px third group, so adding
+them is a separate no-geometry task. A/B'd against `HEAD` in a git worktree to confirm the
+logo and label changes leave the doc-height and lottie numbers otherwise unchanged.
+
 
