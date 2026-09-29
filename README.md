@@ -91,7 +91,7 @@ No build step, no package.json, no bundler — the folder is the deploy unit.
   animations respond 200.
 
 > The inline-CSS / inline-SVG / inline-script cleanup described in
-> `docs/HTML_ANALYSIS.md` §7 happened after this list was written and is documented
+> `docs/html-analysis.md` §7 happened after this list was written and is documented
 > there, not here.
 
 ## Notes

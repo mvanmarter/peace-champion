@@ -1,6 +1,6 @@
-# BREAKPOINTS.md — the breakpoints in this project
+# breakpoints.md — the breakpoints in this project
 
-Reference for every breakpoint in the repo, what each one is *for*, and the traps
+Reference for every breakpoint in the repo, what each one is _for_, and the traps
 around them. Written 2026-09-29.
 
 Everything marked **verified** was measured, not inferred. The commands are in
@@ -12,11 +12,11 @@ Everything marked **verified** was measured, not inferred. The commands are in
 
 There are **two real breakpoints**: **810px** and **1200px**.
 
-| range | name | `index2.css` query |
-| --- | --- | --- |
-| ≤ 809.98px | mobile | `@media (max-width: 809.98px)` |
-| 810 – 1199.98px | tablet | `@media (min-width: 810px) and (max-width: 1199.98px)` |
-| ≥ 1200px | desktop | `@media (min-width: 1200px)` |
+| range           | name    | `index2.css` query                                     |
+| --------------- | ------- | ------------------------------------------------------ |
+| ≤ 809.98px      | mobile  | `@media (max-width: 809.98px)`                         |
+| 810 – 1199.98px | tablet  | `@media (min-width: 810px) and (max-width: 1199.98px)` |
+| ≥ 1200px        | desktop | `@media (min-width: 1200px)`                           |
 
 The live Framer site has **four** tiers, not two — it also splits at **1440px** and
 **1728px**. `index2.css` deliberately collapses those two into the `≥ 1200px`
@@ -32,10 +32,10 @@ boundary pixels.** 810 and 809 differ; 1200 and 1199 differ.
 Per `AGENTS.md` there are two tracks. They have **different** breakpoint systems,
 and this is the single most confusing thing in the repo.
 
-| | file | authoritative for |
-| --- | --- | --- |
-| **export track** | `assets/css/site.css` (1.28 MB, 7 pages concatenated) | the 6 non-homepage exported pages |
-| **`index2.html`** | `assets/css/index2.css` | **the homepage — this is the deployable artifact** |
+|                   | file                                                  | authoritative for                                  |
+| ----------------- | ----------------------------------------------------- | -------------------------------------------------- |
+| **export track**  | `assets/css/site.css` (1.28 MB, 7 pages concatenated) | the 6 non-homepage exported pages                  |
+| **`index2.html`** | `assets/css/index2.css`                               | **the homepage — this is the deployable artifact** |
 
 If you are changing the homepage, `index2.css` is the only file that matters.
 `site.css` is the frozen Framer export and does **not** control `index2.html` at
@@ -49,13 +49,13 @@ Taken from Chrome's own report of which media conditions actually match the live
 homepage's app root (`.framer-fu3UK`), via the CDP `CSS.getMatchedStylesForNode`
 domain — not by reading the stylesheet:
 
-| viewport | matching conditions | `h2` size | nav | burger |
-| --- | --- | --- | --- | --- |
-| 1920, 1728 | `(always)` | 52px | flex | absent |
-| 1727, 1441, 1440 | `(always)` + `(min-width:1440px) and (max-width:1727.98px)` | 52px | flex | absent |
-| 1439, 1201, 1200 | `(always)` + `(min-width:1200px) and (max-width:1439.98px)` | 52px | flex | absent |
-| 1199, 811, 810 | `(always)` + `(min-width:810px) and (max-width:1199.98px)` | 48px | flex | absent |
-| 809, 390 | `(always)` + `(max-width:809.98px)` | 32px | absent | block |
+| viewport         | matching conditions                                         | `h2` size | nav    | burger |
+| ---------------- | ----------------------------------------------------------- | --------- | ------ | ------ |
+| 1920, 1728       | `(always)`                                                  | 52px      | flex   | absent |
+| 1727, 1441, 1440 | `(always)` + `(min-width:1440px) and (max-width:1727.98px)` | 52px      | flex   | absent |
+| 1439, 1201, 1200 | `(always)` + `(min-width:1200px) and (max-width:1439.98px)` | 52px      | flex   | absent |
+| 1199, 811, 810   | `(always)` + `(min-width:810px) and (max-width:1199.98px)`  | 48px      | flex   | absent |
+| 809, 390         | `(always)` + `(max-width:809.98px)`                         | 32px      | absent | block  |
 
 So the live's tier set is: **≤809.98 / 810–1199.98 / 1200–1439.98 / 1440–1727.98 /
 ≥1728**. The `.98` suffix is Framer's (Tailwind's) convention and is real — it is
@@ -76,7 +76,7 @@ Supporting evidence, in descending order of strength:
 
 - **Re-verified today (29 Sep 2026):** the live's `h2` is **52px at every one of
   1920 / 1728 / 1727 / 1440 / 1439 / 1200**, and the only thing that changes across
-  that whole span is *which media condition matched* — never a rendered value
+  that whole span is _which media condition matched_ — never a rendered value
   (§3 table). The 1440 tier exists in the CSS but is behaviourally inert on the
   homepage.
 - **`AGENTS.md`'s recorded `cmp.js` result** (not re-run today): document-height
@@ -97,34 +97,36 @@ Two blocks. The second is the big one.
 
 **Type and body scale**
 
-| | mobile | tablet | desktop |
-| --- | --- | --- | --- |
-| `body` | 18px / 23.4px | *(base)* 20px / 26px | *(base)* 20px / 26px |
-| all four `h2` | 32px / 32px | 48px / 48px | *(base)* 52px / 52px |
+|               | mobile        | tablet               | desktop              |
+| ------------- | ------------- | -------------------- | -------------------- |
+| `body`        | 18px / 23.4px | _(base)_ 20px / 26px | _(base)_ 20px / 26px |
+| all four `h2` | 32px / 32px   | 48px / 48px          | _(base)_ 52px / 52px |
 
 The four headings share one selector list:
 `.welcome h2, .declaration-copy h2, .slides h2, .cta h2`.
 
 **Header / nav** — the burger replaces the inline nav and the "Vote Now" CTA:
+
 - `.header-cta { display: none }` — the header CTA is dropped
 - `.nav-toggle` becomes visible and `.js .nav` is hidden
 
 ⚠️ This is the one place the cascade runs **the other way** — see
 [§6.3](#63-the-nav-is-mobile-first-the-one-exception). The mobile nav state is
-the *base*, and the `≥810` blocks opt *into* the inline nav.
+the _base_, and the `≥810` blocks opt _into_ the inline nav.
 
 **Hero**
+
 - `.hero { padding-top: 100px }`
 - **`.hero-video` changes aspect ratio, not just size** — base is
   `577px` wide at `aspect-ratio: 577 / 435` (landscape); mobile caps at `342px` at
   `aspect-ratio: 342 / 381` (portrait). `.hero-video-box` is a separate wrapper
-  class and is *not* affected by this breakpoint.
+  class and is _not_ affected by this breakpoint.
 - `.hero-title { margin-top: 180px }`, `.hero-lower { margin-top: 40px }`
 - `.hero-bleed { top: -72px }` — the live parks the illustrations mostly off-screen
 - `.hero-grid { height: 581px }` (vs 725px above 810) and `.hero-grid::before { top: -72px }`
 
 **The icon cluster becomes a full-bleed mobile composition.** This is the single
-biggest layout change in the file. It is *not* a proportional scale of the desktop
+biggest layout change in the file. It is _not_ a proportional scale of the desktop
 cluster — the live's cluster height is **linear in viewport width**, so it is built
 from `calc()`s:
 
@@ -142,17 +144,17 @@ height = 2.4444 * 100vw - 47.67px
 
 **Sections stack**
 
-| selector | mobile | tablet / desktop |
-| --- | --- | --- |
-| `.welcome` | `padding-block: 80px` | *(base)* — same value, a redundant no-op |
-| `.declaration` | `padding-block: 120px` | *(base)* — same value, a redundant no-op |
-| `.declaration-grid` | 1 column, 40px gap | *(base)* |
-| `.change-grid` | 1 column, 24px gap | *(base)* |
-| `.change` | `padding-top: 89px` | *(base)* 80px |
-| `.declaration-note` | `padding: 20px 28px` | `24px 32px` |
+| selector            | mobile                 | tablet / desktop                         |
+| ------------------- | ---------------------- | ---------------------------------------- |
+| `.welcome`          | `padding-block: 80px`  | _(base)_ — same value, a redundant no-op |
+| `.declaration`      | `padding-block: 120px` | _(base)_ — same value, a redundant no-op |
+| `.declaration-grid` | 1 column, 40px gap     | _(base)_                                 |
+| `.change-grid`      | 1 column, 24px gap     | _(base)_                                 |
+| `.change`           | `padding-top: 89px`    | _(base)_ 80px                            |
+| `.declaration-note` | `padding: 20px 28px`   | `24px 32px`                              |
 
 **Footer flips** — `.footer-inner` goes `column` with a 32px gap; the links stack
-*above* the brand column. The 810+ rule does the opposite (see §5.2).
+_above_ the brand column. The 810+ rule does the opposite (see §5.2).
 
 ### 5.2 The tablet query — `@media (min-width: 810px) and (max-width: 1199.98px)`
 
@@ -160,24 +162,43 @@ The "in-between" tier. It is much smaller than the mobile block and is mostly ab
 proportion rather than structure.
 
 **Nav returns** — identical to the desktop block:
+
 ```css
-.js .nav-toggle { display: none; }
-.js .nav        { display: flex; }
-.js .nav-panel  { display: none; }
+.js .nav-toggle {
+  display: none;
+}
+.js .nav {
+  display: flex;
+}
+.js .nav-panel {
+  display: none;
+}
 ```
 
 **Hero / cluster**
+
 - `.hero-lower { grid-template-columns: 1fr }` — the vote block and the cluster
   **stack** (at ≥1200 they sit side by side in `392px 1fr`)
 - `.cluster { justify-self: start; margin-top: 40px }` — left-aligned
   (≥1200 is `justify-self: end`, i.e. right)
 
 **Slides become two columns** — this is the tablet tier's real job:
+
 ```css
-.slide        { grid-template-columns: minmax(0, 40%) 1fr; column-gap: 0; align-items: stretch; }
-.slide-copy   { padding-right: 32px; }
-.slide-panel  { border-left: 1px solid #000; padding: 48px 0 48px 32px; }
+.slide {
+  grid-template-columns: minmax(0, 40%) 1fr;
+  column-gap: 0;
+  align-items: stretch;
+}
+.slide-copy {
+  padding-right: 32px;
+}
+.slide-panel {
+  border-left: 1px solid #000;
+  padding: 48px 0 48px 32px;
+}
 ```
+
 The `1px` vertical rule **replaces** the grid gap (`column-gap: 0`), and each side
 carries its own padding so text clears the rule. `align-items: stretch` makes the
 rule span the full row height. Verified: at 1199 the columns resolve to
@@ -221,7 +242,7 @@ matches at 809.5px, so the handoff is continuous.
 `AGENTS.md`'s verification widths are all integers, so the `.98` is invisible to
 `cmp.js`. It is still the correct value.
 
-> Note: the **other 6 export pages** in `site.css` use the *integer* form
+> Note: the **other 6 export pages** in `site.css` use the _integer_ form
 > (`809px`, `1199px`, …). Both forms are present in `site.css` because it
 > concatenates two generations of Framer CSS with different page roots. Only the
 > homepage (`.framer-fu3UK`) uses `.98`. See [§7](#7-the-export-tracks-breakpoints).
@@ -231,15 +252,15 @@ matches at 809.5px, so the handoff is continuous.
 `index2.css` is **mobile-last**. Unconditional rules carry the desktop values and
 the two media queries override them downward:
 
-| selector | base value (= desktop) |
-| --- | --- |
-| `h2` (all four) | `52px / 52px` |
-| `body` | `20px / 26px` |
-| `.slide` | `grid-template-columns: 1fr; gap: 64px` |
-| `.cards` | `grid-template-columns: 1fr; gap: 16px` |
-| `.cluster` | `760px × 604px` |
-| `.hero-lower` | `display: grid` (no columns → single) |
-| `.footer-inner` | `column`, 32px gap |
+| selector        | base value (= desktop)                  |
+| --------------- | --------------------------------------- |
+| `h2` (all four) | `52px / 52px`                           |
+| `body`          | `20px / 26px`                           |
+| `.slide`        | `grid-template-columns: 1fr; gap: 64px` |
+| `.cards`        | `grid-template-columns: 1fr; gap: 16px` |
+| `.cluster`      | `760px × 604px`                         |
+| `.hero-lower`   | `display: grid` (no columns → single)   |
+| `.footer-inner` | `column`, 32px gap                      |
 
 So `.cluster { width: 760px }` looks like a mobile rule and is not — it is the
 desktop cluster, and the mobile block replaces it wholesale. **Adding a rule
@@ -254,22 +275,28 @@ it to the tablet query.
 Everything else in `index2.css` is mobile-last (§6.2). **The header nav is the
 opposite, and this will bite you.**
 
-The *base* (unconditional) rules are the mobile/burger state:
+The _base_ (unconditional) rules are the mobile/burger state:
 
-| line | rule | state |
-| --- | --- | --- |
-| 262 | `.nav-toggle { display: none }` | no-JS → never shown |
-| 284 | `.js .nav-toggle { display: block }` | **JS → burger shown** |
-| 288 | `.js .nav { display: none }` | **JS → inline nav hidden** |
-| 292 | `.js .nav-panel { display: none }` | panel closed |
-| 313 | `.js .nav-panel[data-open] { … }` | panel open |
+| line | rule                                 | state                      |
+| ---- | ------------------------------------ | -------------------------- |
+| 262  | `.nav-toggle { display: none }`      | no-JS → never shown        |
+| 284  | `.js .nav-toggle { display: block }` | **JS → burger shown**      |
+| 288  | `.js .nav { display: none }`         | **JS → inline nav hidden** |
+| 292  | `.js .nav-panel { display: none }`   | panel closed               |
+| 313  | `.js .nav-panel[data-open] { … }`    | panel open                 |
 
-Then both `≥810` blocks (lines 1334 and 1434) *opt back into* the desktop nav:
+Then both `≥810` blocks (lines 1334 and 1434) _opt back into_ the desktop nav:
 
 ```css
-.js .nav-toggle { display: none; }
-.js .nav        { display: flex; }
-.js .nav-panel  { display: none; }
+.js .nav-toggle {
+  display: none;
+}
+.js .nav {
+  display: flex;
+}
+.js .nav-panel {
+  display: none;
+}
 ```
 
 Consequence: a nav rule you add in the base is a **mobile** rule, and you must
@@ -285,7 +312,7 @@ rules are scoped `.js .nav-toggle`, `.js .nav`, `.js .nav-panel`.
 That is **progressive enhancement, not a media query**: without JS the inline nav
 stays visible at every width and no burger is ever shown, so a no-JS visitor never
 sees a button they cannot operate. The actual breakpoint is still 810 — the `.js`
-prefix only decides *who gets the burger*.
+prefix only decides _who gets the burger_.
 
 ### 6.5 There is no JavaScript breakpoint logic at all
 
@@ -303,12 +330,12 @@ JS media-query listener.
 ### 6.6 The container is NOT a breakpoint
 
 ```css
---pad: 24px;        /* :root, unconditional */
---measure: 1152px;  /* :root, unconditional */
+--pad: 24px; /* :root, unconditional */
+--measure: 1152px; /* :root, unconditional */
 
 .container {
   width: 100%;
-  max-width: calc(var(--measure) + var(--pad) * 2);  /* 1200px */
+  max-width: calc(var(--measure) + var(--pad) * 2); /* 1200px */
   margin-inline: auto;
   padding-inline: var(--pad);
 }
@@ -331,7 +358,7 @@ without the other.
 
 `AGENTS.md` repeatedly cites 800 as the mobile cutoff ("zero in the DOM ≤800px").
 **800 is a test width, not a breakpoint.** The live switches between 810 and 809.
-When changing anything structural, test `810` *and* `809`, not `810` and `800`.
+When changing anything structural, test `810` _and_ `809`, not `810` and `800`.
 
 ---
 
@@ -342,16 +369,19 @@ Only relevant if you ever rebuild the other 6 pages the `index2.html` way
 media queries. They fall into two families:
 
 **Homepage root `.framer-fu3UK`** — 4 queries, all `.98`:
+
 ```
 @media (max-width: 809.98px)
 @media (min-width: 810px) and (max-width: 1199.98px)
 @media (min-width: 1200px) and (max-width: 1439.98px)
 @media (min-width: 1440px) and (max-width: 1727.98px)
 ```
+
 plus `(always)` for ≥1728.
 
 **Other page roots** (`.framer-nj3x10`, `.framer-90vj06`, …) — the **integer**
 form:
+
 ```
 @media (max-width: 809px) and (min-width: 0)
 @media (max-width: 1199px) and (min-width: 810px)
@@ -371,6 +401,7 @@ the live site. Treat the other pages' breakpoints as unverified.
 ## 8. How to verify
 
 Serve over HTTP from the repo root — never `file://`:
+
 ```powershell
 python -m http.server 8137
 ```
@@ -390,17 +421,17 @@ Siblings worth knowing: `lottie-geom.js`, `runtime.js`, `turnstile-origin.js`.
 
 All in `%TEMP%\opencode\`, all Playwright (`playwright-core`):
 
-| script | what it answers |
-| --- | --- |
-| `media-inventory.js` | brace-aware dump of every `@media` and its top-level selectors |
-| `bp-roots.js` | which Framer page root owns each `@media` in `site.css` |
-| `bp-tiers.js` | **the live's active tier per width**, via CDP `getMatchedStylesForNode` — the source of §3 |
-| `bp-sweep.js` | behavioural sweep of `h2` / nav / burger / cluster / footer per width |
-| `live-header.js` | everything the live paints in its top 80px, per width |
-| `bp-matched.js` | which rules match a given node, and their media conditions |
+| script               | what it answers                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| `media-inventory.js` | brace-aware dump of every `@media` and its top-level selectors                             |
+| `bp-roots.js`        | which Framer page root owns each `@media` in `site.css`                                    |
+| `bp-tiers.js`        | **the live's active tier per width**, via CDP `getMatchedStylesForNode` — the source of §3 |
+| `bp-sweep.js`        | behavioural sweep of `h2` / nav / burger / cluster / footer per width                      |
+| `live-header.js`     | everything the live paints in its top 80px, per width                                      |
+| `bp-matched.js`      | which rules match a given node, and their media conditions                                 |
 
 `bp-tiers.js` is the one to re-run if the live site is ever re-exported — it is the
-only check that reads the *live* tier set rather than a local stylesheet.
+only check that reads the _live_ tier set rather than a local stylesheet.
 
 ---
 
@@ -424,12 +455,12 @@ Two things asserted there are **not true of the files as they stand now**:
 Also note the live site's document height has drifted since `AGENTS.md`'s table was
 recorded. Measured 29 Sep 2026 (live vs `index2.html`):
 
-| width | live docH | ours docH | delta | `AGENTS.md` recorded |
-| --- | --- | --- | --- | --- |
-| 1440 | 7396 | 6220 | **−1176** | −1 |
-| 1200 | 7396 | 6220 | **−1176** | −1 |
-| 810 | 7680 | 6981 | **−699** | — |
-| 390 | 9039 | 8065 | **−974** | −694 … −662 |
+| width | live docH | ours docH | delta     | `AGENTS.md` recorded |
+| ----- | --------- | --------- | --------- | -------------------- |
+| 1440  | 7396      | 6220      | **−1176** | −1                   |
+| 1200  | 7396      | 6220      | **−1176** | −1                   |
+| 810   | 7680      | 6981      | **−699**  | —                    |
+| 390   | 9039      | 8065      | **−974**  | −694 … −662          |
 
 At 390 the entire footer block sits 974px lower on the live than on ours
 (`cmp.js`: `about` −974, `privacy policy` −974, `vote yes for global peace` −974),

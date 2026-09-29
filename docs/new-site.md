@@ -1,10 +1,10 @@
-# NEW_SITE.md — rebuilding this as a real static site
+# new-site.md — rebuilding this as a real static site
 
 ## 0. The short answer
 
 **Yes, it is overcomplicated** — but the useful framing is not "Framer is heavy." It is:
 
-> The complexity was never in the design. It is in the *delivery mechanism*, and we no
+> The complexity was never in the design. It is in the _delivery mechanism_, and we no
 > longer get anything for it.
 
 The site is 7 pages, ~4,350 words of copy, 40 images, 40 links, 1 form, 3 videos and
@@ -15,7 +15,7 @@ the homepage.
 
 > **⚠️ Correction (added after the rebuild was built and measured).** The 2.15 MB
 > "CAPTCHA on the homepage" is **Vimeo's, not ours.** It is Cloudflare Turnstile
-> initiated *inside* the two `player.vimeo.com` iframes, one per embed — not loaded by the
+> initiated _inside_ the two `player.vimeo.com` iframes, one per embed — not loaded by the
 > page's own code. Proven by `index2.html`, which contains zero Turnstile references yet
 > produces the identical request set, and by frame attribution of every
 > `challenges.cloudflare.com` request. It is therefore **not** a saving available to us
@@ -26,13 +26,13 @@ And the worst part is one I got wrong the first time, so it is worth being preci
 **the frozen export in this repo does not hydrate — but the live site does.** Measured
 today, same browser, 1440×900, all 7 pages:
 
-| | `globalpeaceyes.org` (live) | this repo, served |
-| --- | --- | --- |
-| React hydration errors | **0** | **4 per page** (`#418`, `#423`) |
-| `scrollWidth` @1440px | **1440** (correct) | **2750** (broken) |
-| `data-framer-name` after load | 318 / 392 / 293 / 226 / 226 / 32 | **identical** |
-| `.mjs` chunks loaded | 21 / 18 / 20 / 17 / 19 / 17 | **identical** |
-| Homepage HTML served | 651,657 B | 356,722 B |
+|                               | `globalpeaceyes.org` (live)      | this repo, served               |
+| ----------------------------- | -------------------------------- | ------------------------------- |
+| React hydration errors        | **0**                            | **4 per page** (`#418`, `#423`) |
+| `scrollWidth` @1440px         | **1440** (correct)               | **2750** (broken)               |
+| `data-framer-name` after load | 318 / 392 / 293 / 226 / 226 / 32 | **identical**                   |
+| `.mjs` chunks loaded          | 21 / 18 / 20 / 17 / 19 / 17      | **identical**                   |
+| Homepage HTML served          | 651,657 B                        | 356,722 B                       |
 
 Both run the same React app over the same component tree. The only difference is the HTML.
 Framer re-renders the live site on every request, so its served HTML always matches the
@@ -80,18 +80,18 @@ rather than assumed.
 
 `RUNTIME.md` §5.6, scenario **C** (all Framer hosts blocked), measured against this export:
 
-| Metric | With runtime | Without |
-| --- | --- | --- |
-| Nav links **visible** | 18 | **18** |
-| Layout width @1440px | 2750 px | **1440 px** |
-| Text content | present | present |
+| Metric                | With runtime | Without     |
+| --------------------- | ------------ | ----------- |
+| Nav links **visible** | 18           | **18**      |
+| Layout width @1440px  | 2750 px      | **1440 px** |
+| Text content          | present      | present     |
 
 The `hidden-*` classes plus the `@media` rules in `site.css` already hide the inactive
 breakpoints with no JavaScript whatsoever. The breakpoint rewrite is a **DOM-weight
 optimisation, not a visual requirement** — `RUNTIME.md` §5.6 conclusion 1 says this
 explicitly.
 
-One correction to my own earlier reading of this table: the `2750px` column was *not* a
+One correction to my own earlier reading of this table: the `2750px` column was _not_ a
 property of the runtime. It was a property of the failed hydration (§0). On the live site,
 where hydration succeeds, the same runtime produces `1440px`. So the honest statement is
 narrower and still sufficient: **the breakpoint-pruning step is optional, and the
@@ -100,14 +100,14 @@ static HTML renders correctly on its own.**
 ### 2.2 The runtime is load-bearing for exactly three things, all of them small
 
 `AGENTS.md` §6.8 is right that you cannot just delete `assets/scripts/`. It is wrong about
-*which three* things matter. The real list is:
+_which three_ things matter. The real list is:
 
-| Runtime is needed for | Size of the replacement |
-| --- | --- |
-| Materialising the SVG sprite defs | keep `sprite.svg` — it already works JS-free (§7b) |
-| Driving the appear animations | ~20 lines of CSS, 0 kB of JS |
-| The vote counter (Cloud Run) | ~15 lines of `fetch` |
-| Everything else (router, forms, components) | *nothing — the static HTML already does it* |
+| Runtime is needed for                       | Size of the replacement                            |
+| ------------------------------------------- | -------------------------------------------------- |
+| Materialising the SVG sprite defs           | keep `sprite.svg` — it already works JS-free (§7b) |
+| Driving the appear animations               | ~20 lines of CSS, 0 kB of JS                       |
+| The vote counter (Cloud Run)                | ~15 lines of `fetch`                               |
+| Everything else (router, forms, components) | _nothing — the static HTML already does it_        |
 
 `RUNTIME.md` §7b is the decisive one: with `sprite.svg` served, external `<use href="sprite.svg#id">`
 resolves **natively, in every browser, with JavaScript disabled**. The runtime's
@@ -119,9 +119,9 @@ The reduced-motion defect is the exception, and I re-measured it against
 `globalpeaceyes.org` today to be sure. Sampling the first hero element's opacity from
 before any page script runs:
 
-| | `reducedMotion: 'no-preference'` | `reducedMotion: 'reduce'` |
-| --- | --- | --- |
-| **Live** | `0.001@56ms → 0.790@467ms → 1.000@612ms` | `0.001@53ms → 0.547@417ms → 1.000@565ms` |
+|                 | `reducedMotion: 'no-preference'`          | `reducedMotion: 'reduce'`                |
+| --------------- | ----------------------------------------- | ---------------------------------------- |
+| **Live**        | `0.001@56ms → 0.790@467ms → 1.000@612ms`  | `0.001@53ms → 0.547@417ms → 1.000@565ms` |
 | **This export** | `0.001@113ms → 0.783@534ms → 1.000@566ms` | `0.001@99ms → 0.969@577ms → 1.000@607ms` |
 
 The browser reports `matchMedia('(prefers-reduced-motion: reduce)').matches === true` and
@@ -136,20 +136,20 @@ regardless of whether the rewrite happens (§7, step 1).
 
 This is the strategic point. Every open defect traces to code we do not control:
 
-| Defect | Live? | Fixable locally? |
-| --- | --- | --- |
-| Hero animation ignores OS reduced-motion (§9) | **Yes** | **No** — buried in the 465 kB bundle |
-| 6 of 12 CDN chunks differ from the export mirror (§5.4) | Yes | **No** — we don't control the CDN |
-| Weglot widget on privacy-policy (§12.2) | Yes | **No** — pulled in by remote code |
-| Termly embed collapses to a 900px stub (§5.6) | Yes | **No** — needs the runtime's iframe protocol |
-| One shipped font is corrupt, silently fails (§8) | Yes | **No** — the CDN serves it |
-| 2.15 MB Turnstile + Google Maps on donate | Yes | **No** — third-party JS. ⚠️ **Corrected later:** the homepage's Turnstile is Vimeo's (inside the player iframes), so it is *not* removable by us. Google Maps on donate is the site's own and *is* removable. |
-| Hydration failure / 2750px overflow | **No — export only** | Yes, by not shipping the export |
-| Framer editor bar loads on every page then gives up (§0.8) | Yes | **No** |
+| Defect                                                     | Live?                | Fixable locally?                                                                                                                                                                                              |
+| ---------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hero animation ignores OS reduced-motion (§9)              | **Yes**              | **No** — buried in the 465 kB bundle                                                                                                                                                                          |
+| 6 of 12 CDN chunks differ from the export mirror (§5.4)    | Yes                  | **No** — we don't control the CDN                                                                                                                                                                             |
+| Weglot widget on privacy-policy (§12.2)                    | Yes                  | **No** — pulled in by remote code                                                                                                                                                                             |
+| Termly embed collapses to a 900px stub (§5.6)              | Yes                  | **No** — needs the runtime's iframe protocol                                                                                                                                                                  |
+| One shipped font is corrupt, silently fails (§8)           | Yes                  | **No** — the CDN serves it                                                                                                                                                                                    |
+| 2.15 MB Turnstile + Google Maps on donate                  | Yes                  | **No** — third-party JS. ⚠️ **Corrected later:** the homepage's Turnstile is Vimeo's (inside the player iframes), so it is _not_ removable by us. Google Maps on donate is the site's own and _is_ removable. |
+| Hydration failure / 2750px overflow                        | **No — export only** | Yes, by not shipping the export                                                                                                                                                                               |
+| Framer editor bar loads on every page then gives up (§0.8) | Yes                  | **No**                                                                                                                                                                                                        |
 
-`RUNTIME.md` §13.3 puts it plainly: the local `assets/scripts/` mirror is *the only copy
-that matches our HTML*, and **nothing references it**. The live site is not currently
-broken by chunk drift — it re-renders fresh HTML, so it hydrates — but our export *is*, and
+`RUNTIME.md` §13.3 puts it plainly: the local `assets/scripts/` mirror is _the only copy
+that matches our HTML_, and **nothing references it**. The live site is not currently
+broken by chunk drift — it re-renders fresh HTML, so it hydrates — but our export _is_, and
 the only two ways to reconcile them are to self-host 5.9 MB of minified React, or to stop
 depending on the CDN. The second one is the rewrite.
 
@@ -163,11 +163,11 @@ pass. It is the point at which the defect list becomes an empty file.
 I measured the rule blocks in `assets/css/site.css` (1,284,824 bytes, 2,395 declaration
 blocks):
 
-| Category | Bytes | Share | Removable? |
-| --- | --- | --- | --- |
-| Rules naming a `.framer-<hash>` class (807 blocks) | 689,597 | **53.7%** | Yes — one rule per `<div>` |
-| Framer's base component stylesheet (`.framer-text`, `data-framer-page-link-*`, `data-framer-component-type`) | 593,417 | **46.2%** | Yes — it's a generic blob |
-| Everything else | 1,810 | 0.1% | — |
+| Category                                                                                                     | Bytes   | Share     | Removable?                 |
+| ------------------------------------------------------------------------------------------------------------ | ------- | --------- | -------------------------- |
+| Rules naming a `.framer-<hash>` class (807 blocks)                                                           | 689,597 | **53.7%** | Yes — one rule per `<div>` |
+| Framer's base component stylesheet (`.framer-text`, `data-framer-page-link-*`, `data-framer-component-type`) | 593,417 | **46.2%** | Yes — it's a generic blob  |
+| Everything else                                                                                              | 1,810   | 0.1%      | —                          |
 
 **Essentially 100% of the stylesheet is removable.** Two reasons:
 
@@ -205,18 +205,18 @@ assets/img/  assets/font/  assets/video/
 Projected (estimates, not measurements — but the HTML/CSS columns are grounded in the
 21 kB content inventory and the rule analysis above):
 
-| | Now | Rebuilt | |
-| --- | --- | --- | --- |
-| HTML, 7 pages | 1,220,749 B | ~70–110 kB | ~12× |
-| CSS (loaded on every page) | 1,284,824 B | ~15–25 kB | ~60× |
-| First-party JS | ~2.5 MB runtime (+5.9 MB unused mirror) | ~4 kB | ~600× |
-| `index.html` page weight | 8.58 MB | ~1.2 MB (almost all media) | ~7× |
-| `donate.html` page weight | 11.50 MB | ~0.3 MB | ~38× |
-| Hydration | fails on this export → full re-render | none exists | |
-| 1440px overflow | 6 of 7 pages *(export only)* | gone | |
-| `prefers-reduced-motion` | **ignored — live, today** | honoured | |
-| JavaScript disabled | loses icons + hero | **fully functional** | |
-| Third-party CDN dependency | total | none | |
+|                            | Now                                     | Rebuilt                    |       |
+| -------------------------- | --------------------------------------- | -------------------------- | ----- |
+| HTML, 7 pages              | 1,220,749 B                             | ~70–110 kB                 | ~12×  |
+| CSS (loaded on every page) | 1,284,824 B                             | ~15–25 kB                  | ~60×  |
+| First-party JS             | ~2.5 MB runtime (+5.9 MB unused mirror) | ~4 kB                      | ~600× |
+| `index.html` page weight   | 8.58 MB                                 | ~1.2 MB (almost all media) | ~7×   |
+| `donate.html` page weight  | 11.50 MB                                | ~0.3 MB                    | ~38×  |
+| Hydration                  | fails on this export → full re-render   | none exists                |       |
+| 1440px overflow            | 6 of 7 pages _(export only)_            | gone                       |       |
+| `prefers-reduced-motion`   | **ignored — live, today**               | honoured                   |       |
+| JavaScript disabled        | loses icons + hero                      | **fully functional**       |       |
+| Third-party CDN dependency | total                                   | none                       |       |
 
 ### 4.2 The six transformations
 
@@ -227,7 +227,8 @@ Framer's SSR doesn't know the viewport, so it ships every breakpoint and marks f
 natively and costs nothing.
 
 ```html
-<!-- now: 5 copies, 72 anchors, 290 wrapper divs, hidden-* + ssr-variant + <!--$--> pairs -->
+<!-- now: 5 copies, 72 anchors, 290 wrapper divs, hidden-* + ssr-variant + <!--$-->
+pairs -->
 <!-- becomes: -->
 <nav class="site-nav">
   <ul class="nav-list">
@@ -248,7 +249,7 @@ bulk of the HTML.
 
 **2. Replace 2,273 hashed classes with ~30 named ones.**
 
-Walk the component tree, read the computed styles, and write a class per *role*
+Walk the component tree, read the computed styles, and write a class per _role_
 (`.hero__title`, `.card-grid`, `.stat`, `.footer__link`). Same pixels, 1/60th the bytes,
 and the next person can read it.
 
@@ -266,13 +267,20 @@ Today: 22,970 B of `animator` + 10,773 B of JSON payload + 1,468 B of trigger = 
 JavaScript** whose entire job is to fade 26 elements in.
 
 ```css
-@keyframes rise { from { opacity: 0; transform: translateY(-16px); } }
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
 [data-animate] {
-  animation: rise .5s cubic-bezier(.2,.8,.2,1) both;
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   animation-delay: calc(var(--i, 0) * 60ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-animate] { animation: none; }
+  [data-animate] {
+    animation: none;
+  }
 }
 ```
 
@@ -294,9 +302,9 @@ its 15 inputs are **honeypots** that existed to defeat Framer's spam handling.
 
 ```html
 <form class="volunteer-form" method="POST" action="https://formspree.io/f/xxxx">
-  <label>Name <input name="Name" required></label>
-  <label>Email <input name="Email" type="email" required></label>
-  <label>Location <input name="Location" required></label>
+  <label>Name <input name="Name" required /></label>
+  <label>Email <input name="Email" type="email" required /></label>
+  <label>Location <input name="Location" required /></label>
   <label>Message <textarea name="Message" required></textarea></label>
   <button type="submit">Send</button>
 </form>
@@ -306,17 +314,17 @@ its 15 inputs are **honeypots** that existed to defeat Framer's spam handling.
 
 ### 4.3 Kill the third-party weight — this is now the majority of the page
 
-Once the 2.5 MB of Framer runtime is gone, the third-party embeds *are* the page weight.
+Once the 2.5 MB of Framer runtime is gone, the third-party embeds _are_ the page weight.
 They need a deliberate decision, not an accident.
 
-| Page | Cost today | Replace with |
-| --- | --- | --- |
-| `donate.html` | **9.41 MB of Givebutter JS** — Stripe, Braintree, GA, and a **1.30 MB Google Maps load** on a donation page | A **Stripe Payment Link** (~30 kB) or a link to your own donation page. **Biggest single win on the site.** |
-| `index.html` | **2.15 MB Cloudflare Turnstile**, pulled in by remote code | A honeypot field (0 kB), or keep Turnstile only on the actual vote endpoint. **⚠️ Superseded — measured later: this Turnstile is Vimeo's, initiated inside the two `player.vimeo.com` iframes, so a honeypot would save nothing. The site already contains zero Turnstile code and still gets the traffic. Keep Vimeo or lose the CAPTCHA.** |
-| `privacy-policy.html` | Termly iframe → collapses to a 900px stub without the runtime; plus an **unexpected Weglot widget** | **Write it as a static HTML page.** It is 123 words. Why is this an iframe? |
-| `index.html` | Vote counter on a `run.app` Cloud Run service | Keep, but own it — or render a static number in the HTML and refresh it with 15 lines of `fetch` |
-| `index.html` | 2.36 MB Gumlet MP4 + **2 Vimeo embeds returning HTTP 401** | Self-host, `preload="none"`, poster images, lazy-load. Fix or drop the 401s. |
-| `index.html` | A Lottie animation (via `dotlottie-player`, 466 kB local) | A CSS/`<img>` equivalent, or keep — but serve it yourself |
+| Page                  | Cost today                                                                                                  | Replace with                                                                                                                                                                                                                                                                                                                                 |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `donate.html`         | **9.41 MB of Givebutter JS** — Stripe, Braintree, GA, and a **1.30 MB Google Maps load** on a donation page | A **Stripe Payment Link** (~30 kB) or a link to your own donation page. **Biggest single win on the site.**                                                                                                                                                                                                                                  |
+| `index.html`          | **2.15 MB Cloudflare Turnstile**, pulled in by remote code                                                  | A honeypot field (0 kB), or keep Turnstile only on the actual vote endpoint. **⚠️ Superseded — measured later: this Turnstile is Vimeo's, initiated inside the two `player.vimeo.com` iframes, so a honeypot would save nothing. The site already contains zero Turnstile code and still gets the traffic. Keep Vimeo or lose the CAPTCHA.** |
+| `privacy-policy.html` | Termly iframe → collapses to a 900px stub without the runtime; plus an **unexpected Weglot widget**         | **Write it as a static HTML page.** It is 123 words. Why is this an iframe?                                                                                                                                                                                                                                                                  |
+| `index.html`          | Vote counter on a `run.app` Cloud Run service                                                               | Keep, but own it — or render a static number in the HTML and refresh it with 15 lines of `fetch`                                                                                                                                                                                                                                             |
+| `index.html`          | 2.36 MB Gumlet MP4 + **2 Vimeo embeds returning HTTP 401**                                                  | Self-host, `preload="none"`, poster images, lazy-load. Fix or drop the 401s.                                                                                                                                                                                                                                                                 |
+| `index.html`          | A Lottie animation (via `dotlottie-player`, 466 kB local)                                                   | A CSS/`<img>` equivalent, or keep — but serve it yourself                                                                                                                                                                                                                                                                                    |
 
 ### 4.4 Prune the asset tree
 
@@ -347,7 +355,7 @@ throwaway scripts that produced the measurements — reuse them.
 `index.html` goes from 1,404 served elements down to **465 after settling / 96 kB**, with
 the responsive duplicates gone and the component tree intact. I measured the same thing on
 the live site today: **469 elements / 99.6 kB**, and an identical `data-framer-name` count
-(318). Both are the *actual* rendered page at a real viewport, un-duplicated. Dump it at
+(318). Both are the _actual_ rendered page at a real viewport, un-duplicated. Dump it at
 one breakpoint per page and you have a clean skeleton to work from, with real text and real
 structure.
 
@@ -363,12 +371,12 @@ Then, for each component:
 Two notes:
 
 - **The Framer runtime rewrites the DOM on load** — it re-inserts sprite defs and reverts
-  `<use>` hrefs. So the *served* HTML is not what a visitor sees; the settled dump is.
+  `<use>` hrefs. So the _served_ HTML is not what a visitor sees; the settled dump is.
   Dump after settle, not at `DOMContentLoaded` (`RUNTIME.md` §14, last bullet).
 - **Compare against the live site, not against this export.** The live site hydrates
   correctly and lays out at 1440px; this export does neither. So screenshot the live site
   as your reference — that is the design you are preserving. The local export's post-hydrate
-  DOM is still a fine structural blueprint, but its *layout* is the broken one.
+  DOM is still a fine structural blueprint, but its _layout_ is the broken one.
 
 ---
 
@@ -380,7 +388,7 @@ Everything above assumes the person changing a word of copy can open a text edit
   lines repeated 6 times; editing them is 6 small edits. This is the simplest possible
   thing and it will still be correct in five years.
 - **If no → a non-developer needs to edit copy → this rebuild is the wrong shape.**
-  Hand-written HTML is a *developer* CMS. If marketing owns the words, the honest options
+  Hand-written HTML is a _developer_ CMS. If marketing owns the words, the honest options
   are (a) 11ty with `_data.yml`/Markdown content files, (b) Astro + a headless CMS, or
   (c) a hosted editor like Decap/Tina wired to the same static output. All three still
   produce plain HTML and CSS at the end — none of them bring back React.
@@ -417,7 +425,7 @@ Each step is independently shippable and independently verifiable.
 3. **Rebuild `404.html` first.** Simplest page, 14 unique lines of text, and it gets the
    whole pipeline (CSS, nav, footer, assets, deploy) proven end to end in an hour.
 4. **`about.html`**, then `films.html`. Real content, no embeds, no form.
-5. **`privacy-policy.html`.** Static text. Kills Termly *and* Weglot.
+5. **`privacy-policy.html`.** Static text. Kills Termly _and_ Weglot.
 6. **`volunteer.html`.** Adds the form. Kills 11 honeypots and the runtime dependency.
 7. **`donate.html` last.** Needs the Givebutter → Stripe decision made, and that's a
    business call, not an engineering one.
@@ -429,17 +437,17 @@ Each step is independently shippable and independently verifiable.
 
 ---
 
-## 8. What I would *not* do
+## 8. What I would _not_ do
 
 - **Don't keep patching the Framer export.** `AGENTS.md` §6.8 already closed the
   "delete the runtime" experiment at 0/35 matching screenshots. The reason is that it was
-  framed as *subtraction*. A rewrite is a *replacement* — you end up with CSS that matches,
+  framed as _subtraction_. A rewrite is a _replacement_ — you end up with CSS that matches,
   not CSS that was deleted.
 - **Don't minify (6.1) or dedupe `site.css` rule-level.** Both are real work on bytes
   that a 20 kB replacement makes irrelevant. The 1.28 MB is not a minification problem;
   it is a wrong-architecture problem.
 - **Don't self-host `assets/scripts/`.** `RUNTIME.md` §13.3 correctly identifies it as the
-  only copy matching our HTML, and it *would* fix the hydration mismatch. But it fixes it
+  only copy matching our HTML, and it _would_ fix the hydration mismatch. But it fixes it
   by committing to 5.9 MB of minified React for a site with 21 kB of text. Keep it as a
   diagnostic reference; delete it before you deploy.
 - **Don't preserve the A/B test variants.** `/` carries an `abTestId` with three named
@@ -455,11 +463,11 @@ Each step is independently shippable and independently verifiable.
 
 The runtime is not complicated because the site is complicated. The site is 21 kB of text
 in 7 files; the runtime is complicated because Framer is a design tool whose static export
-is a *rendering of its editor state*, not a shippable artifact — it ships five copies of
+is a _rendering of its editor state_, not a shippable artifact — it ships five copies of
 every component, names every `<div>` after a hash, and delegates the actual page to 2.5 MB
 of React that then **fails to hydrate and throws the HTML away** on every single page load.
 We have already spent this repo's effort optimising a document that React discards — and
-the export we ended up with is *worse than the live site it came from*, because stale HTML
+the export we ended up with is _worse than the live site it came from_, because stale HTML
 plus current chunks means a guaranteed failed hydration. The measurement settles it: block
 the Framer CDN and the site still shows the right number of nav links and all of the right
 text, because the `hidden-*` classes and `@media` rules do the responsive work with no
@@ -484,7 +492,7 @@ node reduced-motion2.js        # samples hero opacity from before any page scrip
 Two things worth knowing if you re-run these:
 
 - **The live site uses clean URLs.** `https://globalpeaceyes.org/index.html` returns the
-  404 page — title *"Page Not Found"*, 286 elements, the `FCSiEZ4Vj7n8Qqgo` route chunk on
+  404 page — title _"Page Not Found"_, 286 elements, the `FCSiEZ4Vj7n8Qqgo` route chunk on
   every request. The real routes are `/`, `/about`, `/films`, `/volunteer`, `/donate`,
   `/privacy-policy`. Testing `.html` paths against the live site silently measures the 404
   page seven times, which is a very convincing way to conclude the live site is broken.
@@ -502,8 +510,8 @@ difference is the HTML each one is served.
 
 ## Appendix B — what was actually built: `index2.html`
 
-Sections 0–9 above are the *plan*, written against the export. This appendix records the
-*result*: a hand-built, dependency-free replacement for the homepage, and how it was
+Sections 0–9 above are the _plan_, written against the export. This appendix records the
+_result_: a hand-built, dependency-free replacement for the homepage, and how it was
 verified.
 
 ### B.1 What it is
@@ -512,13 +520,13 @@ verified.
 Framer code. `index.html` and the other six exported pages are untouched and remain the
 reference.
 
-| file | bytes | what |
-| --- | --- | --- |
-| `index2.html` | 19,217 | the page — semantic markup, no build step |
-| `assets/css/index2.css` | 43,101 | all styling, hand-tuned per breakpoint |
-| `assets/vendor/dotlottie-player-2.5.6.js` | 779,388 | vendored animation player (see B.3) |
-| `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501 | crisis animation |
-| `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie` | 5,050 | solution animation (mobile) |
+| file                                                   | bytes   | what                                      |
+| ------------------------------------------------------ | ------- | ----------------------------------------- |
+| `index2.html`                                          | 19,217  | the page — semantic markup, no build step |
+| `assets/css/index2.css`                                | 43,101  | all styling, hand-tuned per breakpoint    |
+| `assets/vendor/dotlottie-player-2.5.6.js`              | 779,388 | vendored animation player (see B.3)       |
+| `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501  | crisis animation                          |
+| `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie`  | 5,050   | solution animation (mobile)               |
 
 Deliberately absent, per the plan in §4.3: the Framer runtime, analytics, and Turnstile.
 The page loads exactly three external origins — the two Vimeo players, and nothing else.
@@ -532,12 +540,12 @@ remove while Vimeo is embedded.
 in the same browser at each width, then compares document height, `scrollWidth`, ~25
 landmarks, and every text node's box.
 
-| width | doc-height delta | notes |
-| --- | --- | --- |
-| 1728 / 1440 / 1200 | **−1** | every block lands on the live's integer pixel; the −1 is the lost rounding step from the live's fractional 19.203px line box (ours 19.2) — see AGENTS.md |
-| 1199 / 1000 / 810 | +5 … +6 | uniform upstream noise from the hero cluster |
-| 800 / 700 / 600 / 500 / 450 | −694 … −662 | intentional, see B.5; 700 is −694, 500/450 are −666/−662 |
-| 390 | −693 | intentional, see B.5 |
+| width                       | doc-height delta | notes                                                                                                                                                    |
+| --------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1728 / 1440 / 1200          | **−1**           | every block lands on the live's integer pixel; the −1 is the lost rounding step from the live's fractional 19.203px line box (ours 19.2) — see AGENTS.md |
+| 1199 / 1000 / 810           | +5 … +6          | uniform upstream noise from the hero cluster                                                                                                             |
+| 800 / 700 / 600 / 500 / 450 | −694 … −662      | intentional, see B.5; 700 is −694, 500/450 are −666/−662                                                                                                 |
+| 390                         | −693             | intentional, see B.5                                                                                                                                     |
 
 `scrollWidth` equals the viewport at every width measured — no horizontal overflow
 (mine; the live overflows below 600px, see B.5 deviation 2). The card grid is
@@ -555,7 +563,7 @@ the live's live values):
   80px was hiding inside the old desktop `margin-top: 127px` on the label. Both are
   now explicit (see the label bullet).
 - The section label is a flush 97px box at **every** width — `margin: 0 0 0 26px;
-  padding: 23px 0`, title 23px below the film, sub 53px below, then 80px to the first
+padding: 23px 0`, title 23px below the film, sub 53px below, then 80px to the first
   900×900 variant box. The old desktop `margin-top: 127px` was wrong (measured 104px
   too low); the mobile override that restated the same box is gone as redundant. The
   label's sub is 4px below the title (`margin-top: 4px`), line-height 21px (measured
@@ -607,19 +615,19 @@ Both players were confirmed rendering, not merely present: the shadow root conta
 apart hash differently, so the animation is genuinely advancing.
 
 **Geometry.** The players are absolutely positioned, and the live positions them against
-the *viewport*, not their container — so `left: 75%` is wrong (it resolves against the
+the _viewport_, not their container — so `left: 75%` is wrong (it resolves against the
 centred `.container`) and had to become
 `calc(75vw - max(0px, (100vw - 1200px) / 2))`. Live player sizes and x-centring:
 
-| width | live | 
-| --- | --- |
-| ≥810 | `916×902`, centred on `75vw` |
+| width           | live                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------ |
+| ≥810            | `916×902`, centred on `75vw`                                                         |
 | 390 / 600 / 800 | `869×856` / `1336×1316` / `1781×1754`, centred on `50vw`, bleeding off the left edge |
 
 **The y position does NOT match within 1px — the earlier claim here that it did was
 wrong, and was re-measured.** Live-to-mine player `top` deltas: **+6/+7px** at
 810/1000/1199, **−74 … −91px** at 390/600/800, and **−318px at ≥1200**. The mobile
-y-offsets are *not* linear in viewport width — the live's offset from its own
+y-offsets are _not_ linear in viewport width — the live's offset from its own
 section top is `325 / −61 / −303` px at `390 / 600 / 800`, a curve that kinks at 600.
 It is reproduced as two linear segments.
 
@@ -661,7 +669,7 @@ Three, all deliberate:
 2. **The welcome heading fits instead of overflowing.** On the live site below ~600 px this
    heading is 556 px wide inside a 342 px column and overflows both edges, which is what
    makes the live page horizontally scrollable (`scrollWidth` 473 at a 390 px viewport). Our
-   version wraps to the column. This is the *cause* of deviation 1's smaller sibling
+   version wraps to the column. This is the _cause_ of deviation 1's smaller sibling
    difference and of `scrollWidth` being correct here and wrong there.
 3. **The mobile menu is a dropdown, not a full-screen takeover.** On the live site, opening
    the burger expands the fixed header element itself to `height: 2000px`, so the bar
@@ -688,7 +696,7 @@ Two rules, one of which was initially assumed to be one thing:
 
 - **The dark rule is painted by the header.** It is a full-box `::after` on
   `.framer-5z4cni` — `content: ""; position: absolute; inset: 0; border-bottom: 1px solid
-  #222` — so it spans the header's full box rather than its content. Pixel-verified as
+#222` — so it spans the header's full box rather than its content. Pixel-verified as
   `rgb(34,34,34)` occupying exactly row `y=66` on both live and local, at 390 and 1440, at
   scroll offset 0 and 1400.
 - **The light `1px #e1e0dd` line immediately under it is not a divider at all** — it is the
@@ -736,8 +744,7 @@ overlapping edges do. It is `725px`/`581px` tall on the same breakpoint, and the
 centred with `left: 50%`, `margin-left: -2030px`. This is a pixel match, not a DOM match:
 140 empty divs would add 140 elements to the accessibility tree and the paint tree for no
 visible gain. `gridcheck.js` compares detected line rows and columns against the live and
-reports EXACT at 1728/1440/1200/810/809/600/390, and the one measured breakpoint (810 vs
-809) flips in the same place on both.
+reports EXACT at 1728/1440/1200/810/809/600/390, and the one measured breakpoint (810 vs 809) flips in the same place on both.
 
 **Two things the lattice forced, both of which were found by pixel diffing rather than by
 reading the live's computed styles:**
@@ -774,14 +781,14 @@ inside the box, not added to it.
 
 Three of them were reproduced in `index2.css`:
 
-| box | rule | note |
-| --- | --- | --- |
-| `.hero::after` | `border-bottom: 1px solid #000` | the hero's closing rule, on its last row |
-| `.cluster::after` | `border: 1px solid #222` | all four sides at ≥810px |
-| `.welcome::after` | `border-top` + `border-bottom: 1px solid #000` | left/right never painted |
-| `.change::before` | `border-top: 1px solid #000` | full-bleed, see below |
-| `.change .embed::before` | `border-top: 1px solid #000` | full-bleed, sits on the frame's top row |
-| `.change .embed::after` | `border: 1px solid #000` | frame, `height: calc(100% + 97px)` |
+| box                      | rule                                           | note                                     |
+| ------------------------ | ---------------------------------------------- | ---------------------------------------- |
+| `.hero::after`           | `border-bottom: 1px solid #000`                | the hero's closing rule, on its last row |
+| `.cluster::after`        | `border: 1px solid #222`                       | all four sides at ≥810px                 |
+| `.welcome::after`        | `border-top` + `border-bottom: 1px solid #000` | left/right never painted                 |
+| `.change::before`        | `border-top: 1px solid #000`                   | full-bleed, see below                    |
+| `.change .embed::before` | `border-top: 1px solid #000`                   | full-bleed, sits on the frame's top row  |
+| `.change .embed::after`  | `border: 1px solid #000`                       | frame, `height: calc(100% + 97px)`       |
 
 **The welcome band's top edge is 2px, and that is not a mistake.** The hero's closing rule
 lands on the hero's last row and the welcome band's own top rule lands on the band's first
@@ -820,7 +827,7 @@ overlays at `left: 50%; width: 100vw; transform: translateX(-50%)`, which is exa
 
 **The film's frame is drawn by a box taller than the video, and that is not a mistake.** On
 the live the frame belongs to `framer-19dhb4o`, whose children are the video
-(`framer-hqlglw-container`, 648px) *and* the section label (`framer-lnnusu`, 97px) — so the
+(`framer-hqlglw-container`, 648px) _and_ the section label (`framer-lnnusu`, 97px) — so the
 frame encloses both: 745 = 648 + 97 at 1440, and 289 = 192 + 97 at 390. Pixel-verified down
 the left border column: the live's is black from `3410` to `4153` at 1440 and `4220` to
 `4508` at 390. Ours is `height: calc(100% + 97px)` on `.change .embed` — the same 745px and
@@ -833,7 +840,7 @@ child and therefore paints on top of the `<iframe>`. Both carry `pointer-events:
 the player stays fully interactive.
 
 **Still outstanding.** The live paints further pseudo-bordered boxes that we do not yet
-reproduce — the declaration inner box `[144,2316,556,313]` (which frames the *declaration*
+reproduce — the declaration inner box `[144,2316,556,313]` (which frames the _declaration_
 film, and whose bottom edge lands on the note pill's top), the note pill, and the later
 card/panel boxes. These are found by enumerating every element's `::before`/`::after`
 computed border (see `pborders.js`), and were deliberately left alone here because the
@@ -851,8 +858,7 @@ desktop `margin-top: 127px` that the live does not have. The fix made the base l
 the flush 97px box the live uses everywhere (`margin: 0 0 0 26px; padding: 23px 0`), put
 the change block's trailing `padding-bottom: 80px` into the base rule where the live has
 it at every width, and deleted the mobile restatement as redundant. The label's sub got
-two more measured numbers: `margin-top: 4px` (live: 26px title ends 4106, 21px sub starts
-4110) and `line-height: 21px`, not 20.8px. After the fix `cmp.js` scores `lbl-t` and
+two more measured numbers: `margin-top: 4px` (live: 26px title ends 4106, 21px sub starts 4110) and `line-height: 21px`, not 20.8px. After the fix `cmp.js` scores `lbl-t` and
 `lbl-s` **0/0/0** at 1440.
 
 **2. The declaration's `p + p` is 32px, not 34px.** The extra 2px made the copy block 429
@@ -874,5 +880,3 @@ wrong — the Instagram / LinkedIn icons are present under "Privacy Policy" at
 `[1194,7293,20,23]` / `[1238,7293,20,23]` but are inside the 102px third group, so adding
 them is a separate no-geometry task. A/B'd against `HEAD` in a git worktree to confirm the
 logo and label changes leave the doc-height and lottie numbers otherwise unchanged.
-
-

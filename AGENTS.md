@@ -1,6 +1,7 @@
 # AGENTS.md — PeaceChampion
 
 ## Project status (IMPORTANT)
+
 - This repo is a one-time static export of https://globalpeaceyes.org/ (7 HTML pages
   plus assets), originally published from Framer.
 - The Framer.com site is FROZEN — it will NO LONGER be updated. There will be no more
@@ -9,6 +10,7 @@
   "regeneration" procedures for pulling from Framer.
 
 ## Goal
+
 - Take what was on the Framer site, clean it up, and deploy it to a new hosting
   provider as static files. The cleanup phase is essentially complete (see below);
   what remains is minification and picking a host.
@@ -19,6 +21,7 @@
      homepage. Complete and verified. **This is the deployable artifact.**
 
 ## ⚠️ Do not deploy the export as-is
+
 This is the single most important finding in the repo (`docs/NEW_SITE.md` §0):
 
 > **The frozen export in this repo does not hydrate — but the live site does.**
@@ -29,36 +32,37 @@ always matches the chunks currently on the CDN. Our export is a snapshot whose H
 longer matches those chunks, so **React throws the served DOM away and re-renders from
 JavaScript on every page view.** Measured, same browser, 1440×900, all 7 pages:
 
-| | `globalpeaceyes.org` (live) | this repo, served |
-| --- | --- | --- |
-| React hydration errors | **0** | **4 per page** (`#418`, `#423`) |
-| `scrollWidth` @1440px | **1440** (correct) | **2750** (broken) |
-| Pages that lay out correctly | 7 of 7 | **1 of 7** |
+|                              | `globalpeaceyes.org` (live) | this repo, served               |
+| ---------------------------- | --------------------------- | ------------------------------- |
+| React hydration errors       | **0**                       | **4 per page** (`#418`, `#423`) |
+| `scrollWidth` @1440px        | **1440** (correct)          | **2750** (broken)               |
+| Pages that lay out correctly | 7 of 7                      | **1 of 7**                      |
 
 So 6.1–6.7 are transfer-size wins only, and 749 of the `.pc-i-*` classes they generated
 become 1 before anything is painted. "Just deploy the current export" ships the live
 site's content with a layout bug the live site does not have. Use `index2.html`.
 
 ## `index2.html` — the replacement homepage (DONE)
+
 Reproduces the live homepage with no Framer code, no React, no analytics, no Turnstile.
 `index.html` and the other six exported pages are untouched and remain the reference.
 
-| file | bytes | what |
-| --- | --- | --- |
-| `index2.html` | 19,217 | the page — semantic markup, no build step |
-| `assets/css/index2.css` | 43,101 | all styling, hand-tuned per breakpoint |
-| `assets/vendor/dotlottie-player-2.5.6.js` | 779,388 | vendored animation player |
-| `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501 | crisis animation |
-| `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie` | 5,050 | solution animation (mobile) |
+| file                                                   | bytes   | what                                      |
+| ------------------------------------------------------ | ------- | ----------------------------------------- |
+| `index2.html`                                          | 19,217  | the page — semantic markup, no build step |
+| `assets/css/index2.css`                                | 43,101  | all styling, hand-tuned per breakpoint    |
+| `assets/vendor/dotlottie-player-2.5.6.js`              | 779,388 | vendored animation player                 |
+| `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501  | crisis animation                          |
+| `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie`  | 5,050   | solution animation (mobile)               |
 
 Verified against the live site with `cmp.js` (see Working conventions). Document-height
 delta and `scrollWidth` at 12 widths (final measurement, Sep 2026):
 
-| width | doc-height delta | scrollWidth |
-| --- | --- | --- |
-| 1728 / 1440 / 1200 | **−1** (sub-pixel; see below) | correct |
-| 1199 / 1000 / 810 | +5 … +6 (uniform upstream noise from the hero cluster) | correct |
-| 800 / 700 / 600 / 500 / 450 / 390 | −694 … −662 | correct, no overflow at any width (live overflows) |
+| width                             | doc-height delta                                       | scrollWidth                                        |
+| --------------------------------- | ------------------------------------------------------ | -------------------------------------------------- |
+| 1728 / 1440 / 1200                | **−1** (sub-pixel; see below)                          | correct                                            |
+| 1199 / 1000 / 810                 | +5 … +6 (uniform upstream noise from the hero cluster) | correct                                            |
+| 800 / 700 / 600 / 500 / 450 / 390 | −694 … −662                                            | correct, no overflow at any width (live overflows) |
 
 The card grid is exact-to-quantized at every width: all 5/10 card boxes land within
 1px (desktop) or 6–9px (mobile) and every box height matches (`dh=0`). The negative
@@ -115,7 +119,7 @@ match exactly; the mobile cluster lands within ~22px. Full write-up:
 - **The renderer-less Framer DotLottie player cannot be reused.** The export's
   `assets/scripts/dotlottie-player.BuSJ8xyR.mjs` (466,290 B, byte-identical to live) calls
   into the Framer runtime; standalone it dies with `getRenderer(...) is not a
-  constructor`. Decision was to vendor the official publisher's package instead:
+constructor`. Decision was to vendor the official publisher's package instead:
   **`dotlottie-player`, unscoped** (there is no `@dotlottie/player` — it 404s), pinned to
   **2.5.6**, **BSD-3-Clause** with license headers inside the bundle. Use the self-contained
   UMD `dist/index.js`; the ESM build imports bare `lit` / `lottie-web` / `fflate` and needs
@@ -160,13 +164,13 @@ match exactly; the mobile cluster lands within ~22px. Full write-up:
   frame on all four sides at ≥810px but **top/bottom only below 810px**, where the live's box is
   full-bleed and its left/right edges land on the viewport boundary. Never convert these to real
   `border`s — that would add a pixel of document height at every width (see B.8).
-- **The change section paints *two* full-bleed rules, and its film's frame is 97px taller
+- **The change section paints _two_ full-bleed rules, and its film's frame is 97px taller
   than the film.** Row 3010 (1440) / 3566 (390) is the "be the change" block's top edge; row
-  3410 / 4220 is the *film's* full-bleed wrapper, which is also where the frame's top edge
+  3410 / 4220 is the _film's_ full-bleed wrapper, which is also where the frame's top edge
   lands. Both belong to full-width section wrappers, not the 1200px `.container`, so they run
   `x=0` to `100vw` — ours use `left: 50%; width: 100vw; translateX(-50%)`, exact because
   `.container` is centred. And the live's film frame is drawn by a box enclosing the film
-  *and* the section label beneath it (745 = 648 + 97 at 1440, 289 = 192 + 97 at 390), so
+  _and_ the section label beneath it (745 = 648 + 97 at 1440, 289 = 192 + 97 at 390), so
   ours is `height: calc(100% + 97px)`. Do not "fix" the frame to hug the video — that puts
   its bottom edge 97px too high.
 - **The live nav links measure two different boxes, and only one of them is the truth.**
@@ -178,7 +182,9 @@ match exactly; the mobile cluster lands within ~22px. Full write-up:
   `scrollbar-width` override, `scroll-behavior: auto`). Nothing to copy; keep ours default.
 
 ## Intentional deviations in `index2.html`
+
 Do not "fix" these — they are choices, and all are recorded in `docs/NEW_SITE.md` B.5:
+
 1. **Mobile document height is ~692–693px shorter.** The live page reserves an empty
    transparent block for an empty state. It renders nothing; reproducing dead space was
    judged not worth it. Everything above and below matches within a couple of pixels,
@@ -188,18 +194,19 @@ Do not "fix" these — they are choices, and all are recorded in `docs/NEW_SITE.
    page horizontally scrollable (`scrollWidth` 473 at a 390px viewport). Ours wraps.
 3. **The mobile menu is a dropdown, not a full-screen takeover.** On the live, opening the
    burger expands the fixed header element to `height: 2000px`, turning the bar into a
-   full-viewport overlay. Ours is a positioned panel. The panel's own geometry *does* match
+   full-viewport overlay. Ours is a positioned panel. The panel's own geometry _does_ match
    (`top: 83px`, full-bleed, 24px inset, links on a 51px pitch, CTA stretched to 342px);
    only the takeover behaviour was not copied.
 
 ### `cmp.js` false positives (do not chase these)
+
 - `films MISSING` in both directions at mobile — see above.
 - `saying 'yes'`, `— massive goal`, `— easy` reported `MISSING` on the live side: the live
   splits those across elements differently. Our `.taglines` block is index2.html:440-447.
 - ~~`lbl-t` / `lbl-s` show a consistent ~106px delta at desktop~~ — **fixed, and this
   entry is kept only so the fix is not re-diagnosed as a box-convention artifact.**
   It was a real bug: `.section-label` carried a desktop `margin-top: 127px` that the live
-  does not have. The live's label is a flush 97px box (`padding: 23px 0`) at *every*
+  does not have. The live's label is a flush 97px box (`padding: 23px 0`) at _every_
   width, and the change block below it is capped by 80px of bottom padding. Both are now
   in the base rule, and the mobile override that restated the same box was deleted as
   redundant. `changelabel.js` now reports 23px / 53px below the film at 1440 and 390,
@@ -216,8 +223,9 @@ Do not "fix" these — they are choices, and all are recorded in `docs/NEW_SITE.
 The footer reproduces the live's exact layout: a single row of three two-line link
 groups — `{About, Events}` 46px, `{Donate, Volunteer}` 55px, `{Privacy Policy}` 102px
 — with a 24px gap below 810px and 40px at ≥810px. At ≥810px the **brand column** (wordmark
-+ copyright) sits on the left opposite the links, `align-items: center`; below 810px the
-links stack first and the brand column follows with a 32px gap.
+
+- copyright) sits on the left opposite the links, `align-items: center`; below 810px the
+  links stack first and the brand column follows with a 32px gap.
 
 **The footer wordmark exists on the live and is now reproduced — the earlier claim in
 this file that "the live footer has none of them" was wrong.** Measured on the live at
@@ -236,10 +244,11 @@ Verified at 1440 and 390: logo, brand column and copy land within the same 1px a
 rest of the desktop page, and within 1px of the rule at 390.
 
 ### Still open on `index2.html`
+
 - ☐ **The remaining live section rules are not reproduced yet.** Six are now
   (`.hero::after`, `.cluster::after`, `.welcome::after`, `.change::before`,
   `.change .embed::before`, `.change .embed::after` — see B.8). Still missing: the
-  declaration inner box `[144,2316,556,313]` (which frames the *declaration* film, and
+  declaration inner box `[144,2316,556,313]` (which frames the _declaration_ film, and
   whose bottom edge lands on the note pill's top), the note pill, and the later card/panel
   boxes. Triage by enumerating every element's `::before`/`::after` computed border
   (`pborders.js`), then reproduce each the same way — `::after` with `inset: 0`, never a
@@ -255,8 +264,9 @@ rest of the desktop page, and within 1px of the rule at 390.
   "Privacy Policy"); no geometry impact, separate task.
 
 ## Export track (cleanup done)
+
 The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from
-`docs/HTML_ANALYSIS.md` §6:
+`docs/html-analysis.md` §6:
 
 - ✅ **6.2 — Inline CSS extracted.** All 17 distinct inline `<style>` blocks moved to
   `assets/css/site.css` (1.28 MB), linked from each page's `<head>`. Head size per
@@ -290,7 +300,7 @@ The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from
   `framerusercontent.com` URLs with `srcset`; `assets/fonts/fonts.css` (15 kB of
   `@font-face`) is unsubsetted.
 - ✗ **6.8 — Nav/footer deduplication: closed as not viable** (see
-  `docs/HTML_ANALYSIS.md` §10). Measured, not assumed: deleting `assets/scripts/`
+  `docs/html-analysis.md` §10). Measured, not assumed: deleting `assets/scripts/`
   (5.62 MB) and stripping the runtime tags gives **0/35** matching screenshots across
   7 pages × 5 breakpoint widths. The runtime is load-bearing for three things —
   pruning the inactive responsive variants, materializing the sprite defs into
@@ -302,22 +312,24 @@ The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from
   sidesteps the whole problem.
 
 ### Still open (export track only — does not affect `index2.html`)
+
 - ☐ **6.1 — Minify whitespace/comments.** ~548 kB (~45%) of the remaining ~1.22 MB is
   removable indentation. Use `html-minifier-terser` with `collapseWhitespace`,
   `removeComments`, `minifyCSS`, `minifyJS`. This is a one-time pass, not a pipeline.
   Now moot for the homepage (use `index2.html`); still applies to the other 6 pages.
 - ☐ Minify/dedupe `site.css` at rule level.
-- ☐ **Known bug in `site.css`** (documented in `docs/HTML_ANALYSIS.md` §9): three
+- ☐ **Known bug in `site.css`** (documented in `docs/html-analysis.md` §9): three
   `url("assets/svg/uri_N.svg")` declarations are relative to the wrong base and still
   contain `&quot;` entities, so 14 + 6 uses of the artwork 404. Left over from the 6.3a
   pass; fix is `../svg/uri_N.svg`. `index2.css` does not use `site.css` and is unaffected.
 - ☐ **Decide:** rebuild the other 6 pages the `index2.html` way, or ship them from the
   export and accept the hydration/layout bug. Not yet discussed — ask before starting.
 - ☐ Working tree: `index2.html`, `assets/css/index2.css` and `assets/vendor/` are
-  **untracked**; `docs/NEW_SITE.md` and `docs/PROMPTS.md` have uncommitted edits.
+  **untracked**; `docs/new-site.md` and `docs/prompts.md` have uncommitted edits.
   Nothing has been committed this session.
 
 ## Working conventions
+
 - Serve over HTTP; ES-module scripts and relative asset paths do not work over
   `file://`.
 - **Only one `http.server` process may hold a port.** Stale servers on port 8123 have
@@ -342,7 +354,7 @@ The 7 pages went from ~4.55 MB of HTML to ~1.22 MB. Completed items from
   Useful siblings: `lottie-geom.js` (player boxes vs live), `lottie-check.js` (player
   loads, shape count, frames advancing, console errors), `runtime.js` (fonts, videos,
   burger, requests), `turnstile-origin.js` (frame attribution for third-party requests).
-- Structure and run steps are documented in `docs/README.md` and
-  `docs/HTML_ANALYSIS.md`. `docs/RUNTIME.md` is a plain-English account of what the
-  Framer runtime does to the markup after the browser has it. `docs/NEW_SITE.md` is the
+- Structure and run steps are documented in `README.md` and
+  `docs/html-analysis.md`. `docs/runtime.md` is a plain-English account of what the
+  Framer runtime does to the markup after the browser has it. `docs/new-site.md` is the
   rebuild proposal (§0–9) plus the `index2.html` build record (Appendix B).

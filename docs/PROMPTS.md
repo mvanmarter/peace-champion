@@ -8,7 +8,7 @@ Moving back to the index2.html file, there is one section that needs a lot of wo
 
 ---
 
-Please format this Markdown file properly.
+Please format this Markdown file properly: /docs/chats/breakpoint-recommendations.md
 
 The file contains text copied from a ChatGPT conversation that has lost its Markdown formatting.
 
