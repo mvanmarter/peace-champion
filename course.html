@@ -1,0 +1,1718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How a Framer Site Becomes a Web Page — an interactive course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* =====================================================================
+   DESIGN SYSTEM  (warm "developer notebook" palette, vermillion accent)
+   ===================================================================== */
+:root {
+  --color-bg:             #FAF7F2;
+  --color-bg-warm:        #F5F0E8;
+  --color-bg-code:        #1E1E2E;
+  --color-text:           #2C2A28;
+  --color-text-secondary: #6B6560;
+  --color-text-muted:     #9E9790;
+  --color-border:         #E5DFD6;
+  --color-border-light:   #EEEBE5;
+  --color-surface:        #FFFFFF;
+  --color-surface-warm:   #FDF9F3;
+  --color-accent:         #D94F30;
+  --color-accent-hover:   #C4432A;
+  --color-accent-light:   #FDEEE9;
+  --color-accent-muted:   #E8836C;
+  --color-success:        #2D8B55;
+  --color-success-light:  #E8F5EE;
+  --color-error:          #C93B3B;
+  --color-error-light:    #FDE8E8;
+  --color-info:           #2A7B9B;
+  --color-info-light:     #E4F2F7;
+  --color-actor-1:        #D94F30;
+  --color-actor-2:        #2A7B9B;
+  --color-actor-3:        #7B6DAA;
+  --color-actor-4:        #D4A843;
+  --color-actor-5:        #2D8B55;
+
+  --font-display:  'Bricolage Grotesque', Georgia, serif;
+  --font-body:     'DM Sans', -apple-system, sans-serif;
+  --font-mono:     'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+  --text-6xl:  3.75rem;
+
+  --leading-tight:  1.15;
+  --leading-snug:   1.3;
+  --leading-normal: 1.6;
+  --leading-loose:  1.8;
+
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  --content-width:      800px;
+  --content-width-wide: 1000px;
+  --nav-height:         50px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-full: 9999px;
+
+  --shadow-sm:  0 1px 2px rgba(44, 42, 40, 0.05);
+  --shadow-md:  0 4px 12px rgba(44, 42, 40, 0.08);
+  --shadow-lg:  0 8px 24px rgba(44, 42, 40, 0.1);
+  --shadow-xl:  0 16px 48px rgba(44, 42, 40, 0.12);
+
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 300ms;
+  --duration-slow:   500ms;
+  --stagger-delay:   120ms;
+}
+
+/* ---------- base ---------- */
+* { box-sizing: border-box; }
+html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  background-image: radial-gradient(ellipse at 20% 50%, rgba(217, 79, 48, 0.03) 0%, transparent 50%);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: var(--leading-tight); margin: 0; }
+p { margin: 0 0 var(--space-4); }
+a { color: var(--color-accent); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); }
+
+/* ---------- nav ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(250, 247, 242, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border-light);
+  height: var(--nav-height);
+}
+.progress-bar {
+  position: absolute; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--color-accent);
+  transition: width 0.1s linear;
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: var(--content-width-wide); margin: 0 auto;
+  padding: 0 var(--space-6); height: 100%;
+}
+.nav-title {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+}
+.nav-dots { display: flex; gap: var(--space-2); align-items: center; }
+.nav-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--color-text-muted);
+  background: transparent; cursor: pointer; padding: 0;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+.nav-dot:hover { transform: scale(1.2); }
+.nav-dot.current { border-color: var(--color-accent); background: var(--color-accent); box-shadow: 0 0 0 3px rgba(217,79,48,0.15); }
+.nav-dot.visited { background: var(--color-accent); border-color: var(--color-accent); }
+
+/* ---------- screens / modules ---------- */
+.module {
+  min-height: 100vh; min-height: 100dvh;
+  scroll-snap-align: start;
+  padding: var(--space-16) var(--space-6);
+  padding-top: calc(var(--nav-height) + var(--space-10));
+}
+.module-content { max-width: var(--content-width); margin: 0 auto; }
+.module-header { margin-bottom: var(--space-12); }
+.module-number {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: var(--text-6xl); color: var(--color-accent);
+  opacity: 0.15; line-height: 1;
+}
+.module-title { font-size: var(--text-4xl); font-weight: 700; margin-top: var(--space-2); }
+.module-subtitle { font-size: var(--text-lg); color: var(--color-text-secondary); margin-top: var(--space-3); max-width: 60ch; }
+.module-body { display: flex; flex-direction: column; gap: var(--space-12); }
+.screen-heading {
+  font-size: var(--text-2xl); font-weight: 600; margin: 0 0 var(--space-4);
+  display: flex; align-items: center; gap: var(--space-3);
+}
+.eyebrow {
+  font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--color-accent);
+}
+
+/* ---------- hero ---------- */
+.hero {
+  min-height: 100vh; min-height: 100dvh;
+  scroll-snap-align: start;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: calc(var(--nav-height) + var(--space-16)) var(--space-6) var(--space-16);
+  background: var(--color-bg-warm);
+}
+.hero-content { max-width: var(--content-width-wide); margin: 0 auto; width: 100%; }
+.hero-badge {
+  display: inline-block; font-family: var(--font-mono); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--color-accent); border: 1px solid var(--color-accent-muted);
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-full);
+  margin-bottom: var(--space-6);
+}
+.hero h1 { font-size: var(--text-5xl); font-weight: 800; max-width: 16ch; }
+.hero-sub { font-size: var(--text-xl); color: var(--color-text-secondary); max-width: 60ch; margin-top: var(--space-6); }
+.hero-meta { margin-top: var(--space-8); display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.hero-chip {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+}
+.hero-scroll { margin-top: var(--space-16); color: var(--color-text-muted); font-size: var(--text-sm); animation: bob 2s infinite var(--ease-in-out); }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+/* ---------- translation blocks ---------- */
+.translation-block {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: var(--shadow-md); margin: var(--space-8) 0;
+}
+.translation-code {
+  background: var(--color-bg-code); color: #CDD6F4;
+  padding: var(--space-6); font-family: var(--font-mono);
+  font-size: var(--text-sm); line-height: 1.7; position: relative;
+  overflow-x: hidden;
+}
+.translation-code pre, .translation-code code {
+  white-space: pre-wrap; word-break: break-word; overflow-x: hidden;
+  margin: 0; font-family: var(--font-mono);
+}
+.translation-english {
+  background: var(--color-surface-warm); padding: var(--space-6);
+  font-size: var(--text-sm); line-height: 1.7; border-left: 3px solid var(--color-accent);
+}
+.translation-label {
+  position: absolute; top: var(--space-2); right: var(--space-3);
+  font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.1em;
+  opacity: 0.5; font-family: var(--font-mono);
+}
+.translation-english .translation-label { color: var(--color-text-muted); }
+.translation-lines p { margin: 0 0 var(--space-3); }
+.code-keyword  { color: #CBA6F7; }
+.code-string   { color: #A6E3A1; }
+.code-function { color: #89B4FA; }
+.code-comment  { color: #6C7086; }
+.code-number   { color: #FAB387; }
+.code-property { color: #F9E2AF; }
+.code-operator { color: #94E2D5; }
+.code-tag      { color: #F38BA8; }
+.code-attr     { color: #F9E2AF; }
+.code-value    { color: #A6E3A1; }
+.code-selector { color: #F5C2E7; }
+
+/* ---------- callouts ---------- */
+.callout {
+  display: flex; gap: var(--space-4); padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-md); border-left: 4px solid;
+  margin: var(--space-8) 0;
+}
+.callout-accent { background: var(--color-accent-light); border-color: var(--color-accent); }
+.callout-info   { background: var(--color-info-light);   border-color: var(--color-info); }
+.callout-warning{ background: var(--color-error-light);  border-color: var(--color-error); }
+.callout-icon { font-size: 1.4rem; line-height: 1; }
+.callout-content p { margin: 0; }
+.callout-title { display: block; margin-bottom: var(--space-2); }
+
+/* ---------- pattern cards ---------- */
+.pattern-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4); margin: var(--space-8) 0;
+}
+.pattern-card {
+  background: var(--color-surface); border-radius: var(--radius-md);
+  padding: var(--space-6); box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal);
+}
+.pattern-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.pattern-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: var(--space-4); }
+.pattern-title { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-2); }
+.pattern-desc { margin: 0; color: var(--color-text-secondary); font-size: var(--text-sm); }
+
+/* ---------- icon rows ---------- */
+.icon-rows { display: flex; flex-direction: column; gap: var(--space-4); margin: var(--space-8) 0; }
+.icon-row {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-4); background: var(--color-surface);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+}
+.icon-row p { margin: 0; color: var(--color-text-secondary); font-size: var(--text-sm); }
+.icon-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+
+/* ---------- step cards ---------- */
+.step-cards { display: flex; flex-direction: column; gap: var(--space-3); margin: var(--space-8) 0; }
+.step-card {
+  display: flex; align-items: flex-start; gap: var(--space-4);
+  padding: var(--space-4) var(--space-5); background: var(--color-surface);
+  border-radius: var(--radius-md); border-left: 3px solid var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--color-accent); color: white; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); flex-shrink: 0; font-size: var(--text-sm);
+}
+.step-body p { margin: var(--space-1) 0 0; color: var(--color-text-secondary); font-size: var(--text-sm); }
+
+/* ---------- flow diagram ---------- */
+.flow-steps { display: flex; align-items: stretch; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-8) 0; }
+.flow-step {
+  flex: 1; min-width: 140px; padding: var(--space-4);
+  background: var(--color-surface); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm); border-top: 3px solid var(--color-accent);
+}
+.flow-step-num { font-family: var(--font-display); font-weight: 800; color: var(--color-accent); font-size: var(--text-lg); }
+.flow-step p { margin: var(--space-2) 0 0; font-size: var(--text-sm); color: var(--color-text-secondary); }
+.flow-arrow { align-self: center; color: var(--color-accent-muted); font-size: var(--text-2xl); }
+
+/* ---------- file tree ---------- */
+.file-tree { font-family: var(--font-mono); font-size: var(--text-sm); margin: var(--space-8) 0; background: var(--color-surface); border-radius: var(--radius-md); padding: var(--space-6); box-shadow: var(--shadow-sm); }
+.ft-folder, .ft-file { padding: var(--space-1) var(--space-3); border-left: 2px solid var(--color-border-light); margin-left: var(--space-4); }
+.ft-folder > .ft-name { color: var(--color-accent); font-weight: 600; }
+.ft-folder > .ft-name::before { content: '📁 '; }
+.ft-file > .ft-name::before { content: '📄 '; }
+.ft-desc { color: var(--color-text-secondary); font-family: var(--font-body); margin-left: var(--space-2); font-size: var(--text-xs); }
+.ft-children { margin-left: var(--space-4); }
+
+/* ---------- chat ---------- */
+.chat-window { background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-md); overflow: hidden; margin: var(--space-8) 0; }
+.chat-messages { padding: var(--space-6); display: flex; flex-direction: column; min-height: 140px; }
+.chat-message { display: flex; gap: var(--space-3); margin-bottom: var(--space-4); align-items: flex-start; }
+.chat-avatar { width: 32px; height: 32px; border-radius: 50%; color: white; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: var(--text-xs); font-family: var(--font-display); flex-shrink: 0; }
+.chat-bubble { background: var(--color-bg-warm); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); max-width: 82%; }
+.chat-sender { font-size: var(--text-xs); font-family: var(--font-mono); font-weight: 600; display: block; margin-bottom: var(--space-1); }
+.chat-bubble p { margin: 0; font-size: var(--text-sm); }
+.chat-typing { display: flex; gap: var(--space-3); padding: 0 var(--space-6) var(--space-6); align-items: center; }
+.chat-typing-dots { display: flex; gap: 4px; }
+.typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-text-muted); animation: typingBounce 1.4s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+@keyframes chatIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.chat-controls { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; padding: var(--space-4) var(--space-6); border-top: 1px solid var(--color-border-light); background: var(--color-surface-warm); }
+.chat-progress { margin-left: auto; font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); }
+
+/* ---------- flow animation ---------- */
+.flow-animation { background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: var(--space-6); margin: var(--space-8) 0; }
+.flow-actors { display: flex; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-6); }
+.flow-actor { flex: 1; text-align: center; padding: var(--space-4); border: 2px solid var(--color-border); border-radius: var(--radius-md); transition: all var(--duration-normal) var(--ease-out); }
+.flow-actor.active { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent), 0 0 20px rgba(217,79,48,0.15); transform: scale(1.04); }
+.flow-actor-icon { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto var(--space-3); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.flow-actor span { font-size: var(--text-sm); font-weight: 600; }
+.flow-track { position: relative; height: 56px; background: var(--color-bg-warm); border-radius: var(--radius-sm); margin-bottom: var(--space-4); overflow: hidden; }
+.flow-progress-arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: var(--text-xl); left: 5%; transition: left 0.7s var(--ease-out); }
+.flow-step-label { font-size: var(--text-sm); color: var(--color-text-secondary); min-height: 2.6em; margin-bottom: var(--space-4); }
+.flow-controls {
+  display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center;
+  border-top: 1px solid var(--color-border-light); padding-top: var(--space-4);
+}
+.flow-progress { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); }
+
+/* ---------- architecture diagram ---------- */
+.arch-diagram { margin: var(--space-8) 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.arch-zone { border: 2px dashed var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); position: relative; }
+.arch-zone-label { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--space-4); }
+.arch-components { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.arch-component {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4);
+  cursor: pointer; transition: all var(--duration-fast);
+  font-size: var(--text-sm); text-align: center; min-width: 120px;
+}
+.arch-component:hover, .arch-component.sel { border-color: var(--color-accent); background: var(--color-accent-light); }
+.arch-component .arch-icon { font-size: 1.2rem; display: block; margin-bottom: var(--space-1); }
+.arch-description { min-height: 3em; background: var(--color-surface-warm); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--color-text-secondary); border-left: 3px solid var(--color-accent); }
+
+/* ---------- layer toggle ---------- */
+.layer-demo { margin: var(--space-8) 0; }
+.layer-tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-4); }
+.layer-tab {
+  font-family: var(--font-mono); font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4); border: 1px solid var(--color-border);
+  border-radius: var(--radius-full); background: var(--color-surface); cursor: pointer;
+}
+.layer-tab.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+.layer-viewport { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+.layer { padding: var(--space-6); }
+.layer-overlay { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-4); }
+.layer-description { margin-top: var(--space-4); font-size: var(--text-sm); color: var(--color-text-secondary); }
+.mini-ui { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); }
+.mini-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+.mini-nav svg { display: block; }
+.mini-nav-links { display: flex; gap: var(--space-3); }
+.mini-link { width: 28px; height: 8px; border-radius: 4px; background: var(--color-border); }
+.mini-hero { height: 64px; border-radius: var(--radius-sm); background: repeating-linear-gradient(90deg, var(--color-border-light) 0 14px, transparent 14px 18px); }
+.mini-hero.filled { background: linear-gradient(135deg, #D94F30 0%, #E8836C 100%); }
+
+/* ---------- spot the bug ---------- */
+.bug-challenge { background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: var(--space-6); margin: var(--space-8) 0; }
+.bug-code { font-family: var(--font-mono); font-size: var(--text-sm); background: var(--color-bg-code); color: #CDD6F4; border-radius: var(--radius-sm); overflow: hidden; margin: var(--space-4) 0; }
+.bug-line { display: flex; padding: var(--space-2) var(--space-4); cursor: pointer; white-space: pre-wrap; word-break: break-word; }
+.bug-line:hover { background: rgba(255,255,255,0.05); }
+.bug-line.incorrect { background: rgba(201,59,59,0.25); }
+.bug-line.correct { background: rgba(45,139,85,0.25); }
+.line-num { width: 3ch; color: #6C7086; flex-shrink: 0; user-select: none; }
+.bug-feedback { display: none; padding: var(--space-4); border-radius: var(--radius-sm); font-size: var(--text-sm); }
+.bug-feedback.show { display: block; }
+.bug-feedback.success { background: var(--color-success-light); color: var(--color-success); }
+.bug-feedback.error { background: var(--color-error-light); color: var(--color-error); }
+
+/* ---------- badge rows ---------- */
+.badge-list { display: flex; flex-direction: column; gap: var(--space-3); margin: var(--space-8) 0; }
+.badge-item { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); }
+.badge-code { font-family: var(--font-mono); font-size: var(--text-sm); background: var(--color-bg-code); color: #CBA6F7; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); white-space: nowrap; }
+.badge-desc { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+/* ---------- buttons ---------- */
+.btn {
+  font-family: var(--font-mono); font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-5); border-radius: var(--radius-full);
+  border: 1px solid var(--color-accent); background: var(--color-surface);
+  color: var(--color-accent); cursor: pointer;
+  transition: all var(--duration-fast);
+}
+.btn:hover { background: var(--color-accent); color: white; }
+.btn-ghost { border-color: var(--color-border); color: var(--color-text-secondary); }
+.btn-ghost:hover { background: var(--color-border-light); color: var(--color-text); }
+
+/* ---------- glossary tooltips ---------- */
+.term {
+  border-bottom: 1.5px dashed var(--color-accent-muted);
+  cursor: pointer; position: relative;
+}
+.term:hover, .term.active { border-bottom-color: var(--color-accent); color: var(--color-accent); }
+.term-tooltip {
+  position: fixed;
+  background: var(--color-bg-code); color: #CDD6F4;
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm);
+  font-size: var(--text-sm); font-family: var(--font-body);
+  line-height: var(--leading-normal);
+  width: max(200px, min(320px, 80vw));
+  box-shadow: var(--shadow-lg); pointer-events: none;
+  opacity: 0; transition: opacity var(--duration-fast); z-index: 10000;
+}
+.term-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: var(--color-bg-code);
+}
+.term-tooltip.flip { top: auto; }
+.term-tooltip.flip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--color-bg-code); }
+.term-tooltip.visible { opacity: 1; }
+
+/* ---------- reveal ---------- */
+.animate-in { opacity: 0; transform: translateY(20px); transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out); }
+.animate-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ---------- footer ---------- */
+.course-end {
+  min-height: 50vh; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: var(--space-16) var(--space-6); scroll-snap-align: start;
+}
+.course-end h2 { font-size: var(--text-4xl); margin-bottom: var(--space-4); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 768px) {
+  :root { --text-4xl: 1.875rem; --text-5xl: 2.25rem; --text-6xl: 3rem; }
+  .translation-block { grid-template-columns: 1fr; }
+  .translation-english { border-left: none; border-top: 3px solid var(--color-accent); }
+  .pattern-cards { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  :root { --text-4xl: 1.5rem; --text-5xl: 1.875rem; --text-6xl: 2.25rem; }
+  .module { padding: var(--space-8) var(--space-4); }
+  .pattern-cards { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); align-self: center; }
+  .nav-title { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Course navigation">
+  <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  <div class="nav-inner">
+    <span class="nav-title">Inside a Framer Site</span>
+    <div class="nav-dots" id="nav-dots">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- ============================ HERO ============================ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <span class="hero-badge">Interactive course · no coding needed</span>
+      <h1>How a Framer site becomes a web page</h1>
+      <p class="hero-sub">
+        This course takes a real project — <strong>PeaceChampion</strong>, a seven-page
+        <span class="term" data-def="A 'site' here means a set of files (pages, styles, scripts, images) that a browser downloads and turns into what you see.">website</span>
+        exported from Framer, the drag-and-drop design tool — and explains exactly what
+        Framer, React, and your browser do to turn those files into the page you see.
+      </p>
+      <div class="hero-meta">
+        <span class="hero-chip">7 pages</span>
+        <span class="hero-chip">React 19</span>
+        <span class="hero-chip">Framer runtime</span>
+        <span class="hero-chip">real code, unedited</span>
+      </div>
+      <p class="hero-scroll">↓ scroll to begin</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============================ MODULE 1 ============================ -->
+<section class="module" id="module-1" style="background: var(--color-bg-warm)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">01</div>
+      <h1 class="module-title">What this site is — and what your browser actually gets</h1>
+      <p class="module-subtitle">PeaceChampion is a seven-page movement site. Familiar, uncomplicated — until you open the files and realise the page isn't in them.</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> A simple idea: vote for peace</h2>
+        <p>
+          <strong>globalpeaceyes.org</strong> asks visitors to add their "vote for peace" — a
+          movement aiming for a billion votes. The visitor journeys through a
+          <span class="term" data-def="All the pages of a website, treated as one collection — like the chapters of a book.">site</span>
+          with a hero message, films, a declaration, stats cards, and forms to
+          <span class="term" data-def="A form page where visitors can sign up or send money to support the cause.">donate / volunteer</span>.
+        </p>
+        <div class="pattern-cards">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-1)">
+            <div class="pattern-icon" style="background: var(--color-actor-1)">🏠</div>
+            <h4 class="pattern-title">Home</h4>
+            <p class="pattern-desc">Hero, two films, declaration, a live vote counter, and a card grid.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+            <div class="pattern-icon" style="background: var(--color-actor-2)">🤝</div>
+            <h4 class="pattern-title">Volunteer</h4>
+            <p class="pattern-desc">A sign-up form with validation.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">💳</div>
+            <h4 class="pattern-title">Donate</h4>
+            <p class="pattern-desc">A third-party donation widget.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-4)">
+            <div class="pattern-icon" style="background: var(--color-actor-4)">🎬</div>
+            <h4 class="pattern-title">Films</h4>
+            <p class="pattern-desc">A gallery of short videos.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> Trace one action: opening the homepage</h2>
+        <p>
+          Follow what happens from the moment you type the address. Most people never look past
+          step 2 — the surprise is in steps 3–5.
+        </p>
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <strong>You type the URL</strong>
+              <p>Your browser asks a DNS server where <code>globalpeaceyes.org</code> lives, then opens a connection to that server.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <strong>The server sends <code>index.html</code> and friends</strong>
+              <p>Seven HTML pages, one big CSS file, fonts, images, and ~35 JavaScript modules.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <strong>The browser starts painting the HTML it got</strong>
+              <p>This is the "first paint" — the rough version you'd see for a few hundred milliseconds.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <strong>A script decides the handover</strong>
+              <p><code>script_main</code> reads a JSON label on the page, picks a <em>route</em>, and fetches that route's JavaScript.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <strong>React rebuilds the visible page</strong>
+              <p>The JavaScript <em>replaces</em> most of the HTML with its own version. That's the page you actually interact with.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> The file tells you its own secret</h2>
+        <p>
+          Near the top of <code>index.html</code>, inside <code>&lt;body&gt;</code>, sits a single
+          <span class="term" data-def="A named container for content in HTML — the browser renders whatever is inside it onto the page.">div</span>
+          labelled <code>id="main"</code>. Read its attributes and it confesses the entire plan.
+        </p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line">&lt;<span class="code-tag">div</span> <span class="code-attr">id</span>=<span class="code-value">"main"</span></span>
+<span class="code-line">  <span class="code-attr">data-framer-hydrate-v2</span>=<span class="code-value">'{"routeId":"augiA20Il","localeId":"default","breakpoints":[{"hash":"72rtr7","mediaQuery":"(min-width: 1728px)"},{"hash":"1pz11xk","mediaQuery":"(min-width: 1440px) and (max-width: 1727.98px)"},{"hash":"dv7j5c","mediaQuery":"(min-width: 1200px) and (max-width: 1439.98px)"},{"hash":"1wmt56v","mediaQuery":"(min-width: 810px) and (max-width: 1199.98px)"},{"hash":"1522l99","mediaQuery":"(max-width: 809.98px)"}]}'</span></span>
+<span class="code-line">  <span class="code-attr">data-framer-generated-page</span></span>
+<span class="code-line">&gt;</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl"><strong>This div is the whole React app.</strong> Everything visible on the page lives inside it.</p>
+              <p class="tl"><strong>hydrate</strong> = the app may take the already-painted HTML and wire it up, instead of redrawing everything.</p>
+              <p class="tl"><strong>routeId <code>augiA20Il</code></strong> = "which page am I?" — a short code for the homepage's component file.</p>
+              <p class="tl"><strong>5 breakpoints</strong> = 5 screen sizes (1728, 1440, 1200, 810, ≤809px) shipped simultaneously in one file.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Key insight — the HTML is a placeholder, not the page</strong>
+            <p>This file is ~357&nbsp;KB and describes a ~96&nbsp;KB page. The runtime throws away most of what the browser first painted and rebuilds it from JavaScript. When you read a Framer export, "what's in the HTML" is not "what the user sees."</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MODULE 2 ============================ -->
+<section class="module" id="module-2" style="background: var(--color-bg)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">02</div>
+      <h1 class="module-title">Meet the players</h1>
+      <p class="module-subtitle">Seven pages, one shared skeleton, and a fleet of JavaScript modules. Here's who's who.</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> Seven doors into one house</h2>
+        <p>
+          Every page is a full copy of the same skeleton — the header, footer, nav, and all five
+          responsive layouts are baked into each file. That duplication is why each page is
+          hundreds of kilobytes.
+        </p>
+        <div class="file-tree">
+          <div class="ft-folder open">
+            <span class="ft-name">PeaceChampion/</span>
+            <span class="ft-desc">the frozen Framer export</span>
+            <div class="ft-children">
+              <div class="ft-file"><span class="ft-name">index.html</span><span class="ft-desc">homepage — 843 KB before cleanup</span></div>
+              <div class="ft-file"><span class="ft-name">about.html</span><span class="ft-desc">brand + story — 511 KB</span></div>
+              <div class="ft-file"><span class="ft-name">films.html</span><span class="ft-desc">video gallery — 451 KB</span></div>
+              <div class="ft-file"><span class="ft-name">volunteer.html</span><span class="ft-desc">sign-up form — 404 KB</span></div>
+              <div class="ft-file"><span class="ft-name">donate.html</span><span class="ft-desc">donation widget — 405 KB</span></div>
+              <div class="ft-file"><span class="ft-name">404.html</span><span class="ft-desc">not-found page — 383 KB</span></div>
+              <div class="ft-file"><span class="ft-name">privacy-policy.html</span><span class="ft-desc">legal + cookie embed — 287 KB</span></div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary)">Total: ~4.55 MB of HTML, later cleaned to ~1.22 MB (more in Module 7).</p>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> The shared skeleton</h2>
+        <p>
+          Strip any page down and you find the same five parts, in the same order. Memoize this —
+          it's the anatomy of every Framer export.
+        </p>
+        <div class="icon-rows">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">📄</div>
+            <div>
+              <strong>1 · The markup</strong>
+              <p><code>&lt;div id="main"&gt;</code> with one copy of each responsive variant, marked <code>ssr-variant</code>.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">🎨</div>
+            <div>
+              <strong>2 · One giant stylesheet</strong>
+              <p>All 11,101 Framer class rules + 150 media queries, extracted to <code>site.css</code>.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">🧬</div>
+            <div>
+              <strong>3 · Inline bootstrap scripts</strong>
+              <p>The "appear" animation payloads + a tiny animator, embedded directly in the HTML.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-4)">🌐</div>
+            <div>
+              <strong>4 · CDN module list</strong>
+              <p>~12 <code>modulepreload</code> links pointing at <code>framerusercontent.com</code>.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-5)">🚀</div>
+            <div>
+              <strong>5 · The entry script</strong>
+              <p><code>script_main.YqCkgxnJ.mjs</code> — the file that decides everything and boots React.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> The route table: one file, all destinations</h2>
+        <p>
+          The homepage's <code>script_main</code> contains a single table mapping every route id to
+          its component file. This is the website's address book — it does not download all seven
+          apps, only the one you opened.
+        </p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line">import{n as e}from"./rolldown-runtime.DaQlKkf0.mjs";</span>
+<span class="code-line">e((()=>{</span>
+<span class="code-line">  ... H={</span>
+<span class="code-line">    augiA20Il:{elements:{AW7F9vCx8:`second`,s_jdT7bhp:`first`,Xx7xVf9Q4:`third`},</span>
+<span class="code-line">      page:C(()=>import(`./LBrkLi3nukZbyrRQHXioHQCtyjVIvTmu4ieOvpLQfWQ.CD3oeThu.mjs`)),path:`/`},</span>
+<span class="code-line">    kps3uKS_g:{elements:{},page:C(()=>import(`./EXrM7VaSlbnUd3yuvE51sDEW2SbSfboiLAgWJGeiexg.uAOnmtCr.mjs`)),path:`/about`},</span>
+<span class="code-line">    OEM6A8Dal:{elements:{},page:C(()=>import(`./pkRWASm2dKAeNwMu3QgTN0nehZXt_RGNZTx9HfuD_x0.C1q4JGMK.mjs`)),path:`/privacy-policy`}</span>
+<span class="code-line">  };</span>
+<span class="code-line">  ...</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl"><strong>import</strong> — this file links to a small shared boot helper (1 KB).</p>
+              <p class="tl"><strong>An IIFE that runs immediately.</strong> The whole page table is built the moment the module loads.</p>
+              <p class="tl"><strong>H</strong> = the "address book": an <span class="term" data-def="In programming, a set of label → value pairs, like name tags on luggage.">object</span> keyed by route id.</p>
+              <p class="tl"><strong>augiA20Il → path `/`</strong> — "this id means the homepage, and its code lives in this file."</p>
+              <p class="tl"><strong>C(...)</strong> wraps the file in a lazy "I'll load only if needed" promise.</p>
+              <p class="tl">The <em>other</em> five routes each point at their own component file — but none of them download until you visit those pages.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">🔎</div>
+          <div class="callout-content">
+            <strong class="callout-title">Good to know — chunked delivery</strong>
+            <p>Only <code>script_main</code> (6 KB) loads eagerly. The framer runtime, React, and the page's own code are all <em>dynamically imported</em> — pulled on demand, in parallel, by the browser. That's the "modulepreload" trick.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MODULE 3 ============================ -->
+<section class="module" id="module-3" style="background: var(--color-bg-warm)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">03</div>
+      <h1 class="module-title">How the pieces talk — the boot sequence</h1>
+      <p class="module-subtitle">Watch the actual conversation between the HTML, the entry script, and React. This is the secret behind "how Framer works with React."</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> The cast of characters</h2>
+        <p>
+          Four actors do all the work. Keep their colours in mind — you'll see them again in the
+          chat and in the data-flow animation below.
+        </p>
+        <div class="icon-rows">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">📄</div>
+            <div>
+              <strong>index.html</strong>
+              <p>The messenger. Delivers the first paint plus a JSON note saying "I'm rout X, pruned to breakpoint Y."</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">🧭</div>
+            <div>
+              <strong>script_main.mjs (the router)</strong>
+              <p>The traffic controller. Reads the note, looks up the route in the address book, fetches the right page module.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">⚛️</div>
+            <div>
+              <strong>React 19</strong>
+              <p>The builder. Takes the page module's description and produces the DOM you interact with.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-4)">🧭</div>
+            <div>
+              <strong>framer.1egicfVa.mjs (the runtime)</strong>
+              <p>The stage manager. Prunes the served markup, drives animations, injects SVG icons, handles navigation.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> The group chat: booting the page</h2>
+        <p>
+          This is the real handshake, re-enacted as an iMessage thread. Click <strong>Play all</strong>.
+        </p>
+
+        <div class="chat-window">
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-message" data-msg="0" data-sender="html" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">H</div>
+              <div class="chat-bubble"><span class="chat-sender" style="color: var(--color-actor-1)">index.html</span><p>Here's the first paint. It even stored my <code>data-framer-hydrate-v2</code> note for you.</p></div>
+            </div>
+            <div class="chat-message" data-msg="1" data-sender="entry" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">🧭</div>
+              <div class="chat-bubble"><span class="chat-sender" style="color: var(--color-actor-2)">script_main</span><p>Got it. routeId <code>augiA20Il</code>, locale <code>default</code>. Checking my address book…</p></div>
+            </div>
+            <div class="chat-message" data-msg="2" data-sender="entry" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">🧭</div>
+              <div class="chat-bubble"><span class="chat-sender" style="color: var(--color-actor-2)">script_main</span><p>Found it. Fetching the homepage's component file — it's big (781 KB), so I'll lazy-load it in parallel with React and the runtime.</p></div>
+            </div>
+            <div class="chat-message" data-msg="3" data-sender="react" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-3)">⚛️</div>
+              <div class="chat-bubble"><span class="chat-sender" style="color: var(--color-actor-3)">React</span><p>I got the component description. Your HTML already painted roughly the same boxes. Should I take over the existing DOM, or start fresh?</p></div>
+            </div>
+            <div class="chat-message" data-msg="4" data-sender="runtime" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-4)">🧭</div>
+              <div class="chat-bubble"><span class="chat-sender" style="color: var(--color-actor-4)">framer runtime</span><p>First, let me clean up this first paint. Ignoring every <code>hidden-*</code> variant that isn't the current breakpoint… done. Empty shells removed.</p></div>
+            </div>
+            <div class="chat-message" data-msg="5" data-sender="react" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-3)">⚛️</div>
+              <div class="chat-bubble"><span class="chat-sender" style="color: var(--color-actor-3)">React</span><p>Proceeding. Hydrating the cleaned DOM… everything matches, wiring up click handlers. The page is mine now. ✅</p></div>
+            </div>
+          </div>
+
+          <div class="chat-typing" id="chat-typing" style="display:none">
+            <div class="chat-avatar" id="typing-avatar">?</div>
+            <div class="chat-typing-dots">
+              <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+            </div>
+          </div>
+          <div class="chat-controls">
+            <button class="btn" onclick="chatNext()">Next Message</button>
+            <button class="btn" onclick="chatAll()">Play All</button>
+            <button class="btn btn-ghost" onclick="chatReset()">Replay</button>
+            <span class="chat-progress" id="chat-progress">0 / 6</span>
+          </div>
+        </div>
+
+        <div class="callout callout-accent">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">The word to know: hydration</strong>
+            <p>
+              Framer pages ship ready-made HTML so they look right instantly. <em>Hydration</em> is
+              React "taking over" that ready-made HTML instead of redrawing it — it keeps what's
+              painted and attaches behavior. It's like buying a furnished flat: the furniture is
+              already in, you just turn on the lights and connect the wifi.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> The actual decision code</h2>
+        <p>
+          All that conversational booting is just a few lines in <code>script_main</code>. This is
+          the real decision point — <em>hydrate the existing HTML, or rebuild from scratch?</em>
+        </p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line"><span class="code-keyword">if</span> (e) c = JSON.parse(t.dataset.framerHydrateV2);</span>
+<span class="code-line"><span class="code-keyword">else</span> { /* read route from the URL path */ }</span>
+<span class="code-line"><span class="code-property">let</span> l = z({ routeId: r, localeId: i, pathVariables: a });</span>
+<span class="code-line"><span class="code-property">let</span> u = <span class="code-keyword">await</span> l;</span>
+<span class="code-line">e ? (</span>
+<span class="code-line">  O("<span class="code-function">framer-rewrite-breakpoints</span>", prune, () =&gt; {</span>
+<span class="code-line">    S(); <span class="code-function">y</span>(); _(t, u, { onRecoverableError: n })  <span class="code-comment">// hydrate</span></span>
+<span class="code-line">  })</span>
+<span class="code-line">) : <span class="code-function">g</span>(t, { onRecoverableError: n }).render(u)  <span class="code-comment">// fresh render</span></span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl"><strong>if (e) …</strong> — if the HTML carried a hydrate note (it did, in Module 1), read it.</p>
+              <p class="tl"><strong>else …</strong> — no note? Figure out the route from the web address instead.</p>
+              <p class="tl"><strong>z(...)</strong> — go build the page component for this route. Returns a promise.</p>
+              <p class="tl"><strong>await l</strong> — wait for that component to be ready.</p>
+              <p class="tl"><strong>Prune first.</strong> The runtime strips the non-current breakpoints from the first paint.</p>
+              <p class="tl"><strong>_(t, u)</strong> = hydrate — attach React to the cleaned HTML.</p>
+              <p class="tl"><strong>g(...).render(u)</strong> = plan B — if hydration isn't possible, render the page from scratch.</p>
+            </div>
+          </div>
+        </div>
+
+        <p><span class="term" data-def="A function that fires when something goes wrong, letting the program recover gracefully instead of crashing.">onRecoverableError</span> is the safety net — you'll meet it in Module 6, when things go wrong.</p>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 4</span> Follow the packet, end to end</h2>
+        <p>
+          Now the whole journey as a step-by-step animation. Step through it to watch the
+          "packet" travel from page load to final render.
+        </p>
+
+        <div class="flow-animation">
+          <div class="flow-actors">
+            <div class="flow-actor" id="fs-html">
+              <div class="flow-actor-icon" style="background: var(--color-actor-1); color:#fff">📄</div>
+              <span>HTML</span>
+            </div>
+            <div class="flow-actor" id="fs-entry">
+              <div class="flow-actor-icon" style="background: var(--color-actor-2); color:#fff">🧭</div>
+              <span>script_main</span>
+            </div>
+            <div class="flow-actor" id="fs-chunks">
+              <div class="flow-actor-icon" style="background: var(--color-actor-5); color:#fff">📦</div>
+              <span>Chunks <small>(runtime·React·page)</small></span>
+            </div>
+            <div class="flow-actor" id="fs-react">
+              <div class="flow-actor-icon" style="background: var(--color-actor-3); color:#fff">⚛️</div>
+              <span>React</span>
+            </div>
+            <div class="flow-actor" id="fs-dom">
+              <div class="flow-actor-icon" style="background: var(--color-actor-4); color:#fff">🖥️</div>
+              <span>DOM</span>
+            </div>
+          </div>
+          <div class="flow-track"><div class="flow-progress-arrow" id="flow-arrow">📦 →</div></div>
+          <p class="flow-step-label" id="flow-label">Click "Next Step" to watch the packet travel.</p>
+          <div class="flow-controls">
+            <button class="btn" onclick="flowNext()">Next Step</button>
+            <button class="btn btn-ghost" onclick="flowReset()">Restart</button>
+            <span class="flow-progress" id="flow-progress">Step 0 / 6</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MODULE 4 ============================ -->
+<section class="module" id="module-4" style="background: var(--color-bg)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">04</div>
+      <h1 class="module-title">The outside world — and the chunk that drifts</h1>
+      <p class="module-subtitle">Framer serves the real application from its own CDN, not from your server. That split explains the site's biggest bug.</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> What your server sends vs what the browser fetches</h2>
+        <p>
+          Your HTML names files on <code>framerusercontent.com</code>. When the browser reads the
+          skeleton from Module 2, it treats the homepage as a nightly concert: your server provides
+          the venue (HTML + CSS), but the headliner (React) arrives by tour bus from the CDN.
+        </p>
+        <div class="pattern-cards">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-1)">
+            <div class="pattern-icon" style="background: var(--color-actor-1)">🏠</div>
+            <h4 class="pattern-title">Your server</h4>
+            <p class="pattern-desc"><code>site.css</code> (1.24 MB), <code>site.js</code>, <code>site-end.js</code>, <code>fonts.css</code>, the SVG sprite.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">⚛️</div>
+            <h4 class="pattern-title">react.DjGraiHU.mjs</h4>
+            <p class="pattern-desc">React 19 + react-dom. 144 KB. Loaded from the Framer CDN.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-4)">
+            <div class="pattern-icon" style="background: var(--color-actor-4)">🎬</div>
+            <h4 class="pattern-title">framer.1egicfVa.mjs</h4>
+            <p class="pattern-desc">The runtime. 464 KB. Router, components, animations.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-5)">
+            <div class="pattern-icon" style="background: var(--color-actor-5)">📦</div>
+            <h4 class="pattern-title">page chunk</h4>
+            <p class="pattern-desc"><code>LBrkLi3nuk….CD3oeThu.mjs</code> — the homepage's own component code.</p>
+          </div>
+        </div>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary)">
+          Total runtime payload across all pages: React + runtime + route chunks ≈ 760 KB of JavaScript — before you count videos, embeds, and widgets.
+        </p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line">&lt;<span class="code-tag">link</span></span>
+<span class="code-line">  <span class="code-attr">rel</span>=<span class="code-value">"modulepreload"</span></span>
+<span class="code-line">  <span class="code-attr">fetchpriority</span>=<span class="code-value">"low"</span></span>
+<span class="code-line">  <span class="code-attr">href</span>=<span class="code-value">"https://framerusercontent.com/sites/</span></span>
+<span class="code-line">    <span class="code-value">21Hkz9s2D8H7aNrnx45o3p/react.DjGraiHU.mjs"</span></span>
+<span class="code-line">/&gt;</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl"><strong>modulepreload</strong> — tell the browser "you'll want this file soon, fetch it now."</p>
+              <p class="tl"><strong>fetchpriority="low"</strong> — don't compete with the first paint; download lazily.</p>
+              <p class="tl"><strong>href</strong> — the entire JavaScript app lives on Framer's own CDN, not on this site's server.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> The cast of external services</h2>
+        <p>
+          Beyond the core app, each page quietly pulls in its own helpers. Knowing who's who is
+          what lets you answer "why did this request happen?" without guessing.
+        </p>
+        <div class="badge-list">
+          <div class="badge-item"><code class="badge-code">events.framer.com</code><span class="badge-desc">Framer's analytics drain — every page. Empties into <code>window.__framer_events</code>.</span></div>
+          <div class="badge-item"><code class="badge-code">framer.com/edit/init.mjs</code><span class="badge-desc">The invisible "editor bar" — loads on every page, then gives up: not on a framer.app domain.</span></div>
+          <div class="badge-item"><code class="badge-code">player.vimeo.com/video/*</code><span class="badge-desc">The two films on the homepage. Each embed triggers its own Cloudflare Turnstile check.</span></div>
+          <div class="badge-item"><code class="badge-code">video.gumlet.io/…/download.mp4</code><span class="badge-desc">The homepage's second film, streamed from a video CDN, 2.36 MB.</span></div>
+          <div class="badge-item"><code class="badge-code">widgets.givebutter.com</code><span class="badge-desc">The donation experience on <code>donate.html</code> — ~9.4 MB of JS with payment providers.</span></div>
+          <div class="badge-item"><code class="badge-code">total-votes-….run.app</code><span class="badge-desc">The live "votes" counter on the homepage — a small cloud function fetched by the page chunk.</span></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">🔎</div>
+          <div class="callout-content">
+            <strong class="callout-title">A wrong attribution that was caught</strong>
+            <p>The 2.15 <span class="term" data-def="Megabyte — roughly a million bytes of data.">MB</span> of Cloudflare Turnstile traffic on the homepage was originally blamed on the site's own code. It's actually Vimeo's own bot protection, one instance per film embed. Read the frame attribution before you quote a "CAPTCHA on our homepage" metric.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> The problem: chunk drift</h2>
+        <p>
+          Here's the twist. The exported HTML expects a specific version of each CDN file — the
+          file names are locked by a content hash. But the CDN has <em>since</em> published newer
+          builds under the <strong>same names</strong>. Identical filename, different bytes.
+        </p>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">2016</div>
+            <p>Export downloaded to this repo, hash-locked chunk names.</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-num">CDN</div>
+            <p>Framer republishes; the same URLs now point at new code.</p>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-num">Browser</div>
+            <p>HTML and JS no longer describe the same page. React notices.</p>
+          </div>
+        </div>
+        <p>
+          Result: <strong>6 of the 12 chunks</strong> on <code>index.html</code> differ from the
+          local copies — including the homepage's own page chunk, which differs by
+          <strong>443 KB</strong>.
+        </p>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <strong class="callout-title">This is why "it worked when we exported it" is not true later</strong>
+            <p>The <span class="term" data-def="A copy of a file's contents identified by a calculated fingerprint, often used to guarantee the file hasn’t been changed.">content hash</span> in the filename is meant to guarantee stability. With a frozen export, the guarantee points backwards — to code that's no longer at the URL. Hydration then throws the served DOM away and re-renders from JavaScript on <em>every</em> page view. That's the bug you meet next.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MODULE 5 ============================ -->
+<section class="module" id="module-5" style="background: var(--color-bg-warm)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">05</div>
+      <h1 class="module-title">The clever tricks</h1>
+      <p class="module-subtitle">Framer is full of small engineering gambits. Three of them make this frozen site exceptional — and fragile.</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> Trick #1 — ship 5 layouts, keep 1</h2>
+        <p>
+          A Framer page contains <strong>all five breakpoints</strong> in one file (that's the five-part list in Module 1's JSON). Every element is stamped with which variants it appears in.
+        </p>
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line">&lt;<span class="code-tag">div</span> <span class="code-attr">data-framer-root</span> <span class="code-attr">class</span>=<span class="code-value">"framer-fu3UK …</span></span>
+<span class="code-line">  <span class="code-attr">framer-72rtr7</span> <span class="code-attr">pc-i-058</span>"&gt;</span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="code-comment">&lt;!-- only mobile has this hero → hidden everywhere else --&gt;</span></span>
+<span class="code-line">  &lt;<span class="code-tag">div</span> <span class="code-attr">class</span>=<span class="code-value">"ssr-variant hidden-1pz11xk</span></span>
+<span class="code-line">    <span class="code-attr">hidden-dv7j5c hidden-1wmt56v hidden-1522l99"</span>&gt;</span>
+<span class="code-line">      …mobile-only content…</span>
+<span class="code-line">  &lt;/<span class="code-tag">div</span>&gt;</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl"><strong>The root div</strong> carries a class naming the <em>active</em> layout (<code>framer-72rtr7</code> = ≥1728px).</p>
+              <p class="tl">Every responsive copy is in the file at once, marked <code>ssr-variant</code>.</p>
+              <p class="tl">Each variant is stamped with the breakpoints where it's <em>hidden</em> (<code>hidden-1pz11xk</code> = invisible at 1440px, etc.).</p>
+              <p class="tl">So at 1728px the browser first paints the ≥1728 copy and the four others — then the runtime deletes the hidden ones.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Why ship the dead layouts at all?</strong>
+            <p>Framer bakes <em>every</em> breakpoint into the served HTML so the first paint is correct no matter the device — no JavaScript needed. The cost: every page carries ~4× the layout it will actually keep. The runtime prunes the extras after load.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> Trick #2 — the appear animations</h2>
+        <p>
+          The hero elements start almost invisible (<code>opacity: 0.001</code>) and "spring" into
+          place. Framer stores that choreography as JSON in the HTML, and an inline script plays it
+          back with the Web Animations API before React ever loads.
+        </p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line"><span class="code-property">"d5kl3q"</span>: {</span>
+<span class="code-line">  <span class="code-property">"default"</span>: {</span>
+<span class="code-line">    <span class="code-property">"initial"</span>:   { <span class="code-number">"opacity":0.001</span>, <span class="code-number">"x":0</span>, <span class="code-number">"y":-16</span>, <span class="code-number">"scale":1</span> },</span>
+<span class="code-line">    <span class="code-property">"animate"</span>:   { <span class="code-number">"opacity":1</span>,  <span class="code-number">"x":0</span>, <span class="code-number">"y":0</span>,</span>
+<span class="code-line">                   <span class="code-property">"transition"</span>: { <span class="code-property">"type"</span>:<span class="code-string">"spring"</span>,</span>
+<span class="code-line">                     <span class="code-number">"bounce":0.2</span>, <span class="code-number">"duration":0.4</span> } }</span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl">Each animated element has an id and this recipe in the inline payload.</p>
+              <p class="tl"><strong>initial</strong> — 0.001 opacity (≠ 0, so search engines still "see" the text), nudged up 16px.</p>
+              <p class="tl"><strong>animate</strong> — spring to full opacity and place.</p>
+              <p class="tl"><strong>spring, bounce 0.2, 0.4s</strong> — a natural, bouncy feel, matching the original design timing.</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          The trick is the handoff: the inline <span class="term" data-def="A small piece of code embedded directly in the HTML page, running in the browser.">script</span> runs the first animation pass, then exposes a global <code>MotionHandoff</code> so the runtime can take over the same animations without restarting them. Only <code>transform</code> and <code>opacity</code> are animated — the two properties that stay smooth on the GPU.
+        </p>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> Trick #3 — SVG icons injected at runtime</h2>
+        <p>
+          Every icon on the page is an <code>&lt;svg&gt;&lt;use&gt;</code> pointing at
+          <code>assets/svg/sprite.svg#id</code>. But notice what's in the <em>served</em> HTML:
+        </p>
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line">&lt;<span class="code-tag">div</span></span>
+<span class="code-line">  <span class="code-attr">id</span>=<span class="code-value">"svg-templates"</span></span>
+<span class="code-line">  <span class="code-attr">aria-hidden</span>=<span class="code-value">"true"</span></span>
+<span class="code-line">  <span class="code-attr">class</span>=<span class="code-value">"pc-i-040"</span>&gt;</span>
+<span class="code-line">  <span class="code-comment">&lt;!-- served empty; the icon defs arrive later, injected by the runtime --&gt;</span></span>
+<span class="code-line">&lt;/<span class="code-tag">div</span>&gt;</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p><strong>#svg-templates</strong> is Framer's icon pantry — served empty.</p>
+              <p><strong>After hydration</strong> the runtime fetches the sprite file, re-injects the icon definitions in here, and points every <code>&lt;use&gt;</code> at them.</p>
+              <p><strong>The catch:</strong> the definitions actually come from the CDN page chunk. If the runtime is blocked, most icons disappear (we kept 3–9 per page from the local sprite).</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-icon">🔎</div>
+          <div class="callout-content">
+            <strong class="callout-title">The file is redundant — but blocking it changes nothing</strong>
+            <p>The runtime fetches <code>sprite.svg</code> and <em>re-injects</em> its defs into <code>#svg-templates</code>. Block that file and nothing changes; block the runtime and icons vanish. When you read "the sprite is a dependency", you must ask: a dependency of <em>what</em>?</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MODULE 6 ============================ -->
+<section class="module" id="module-6" style="background: var(--color-bg)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">06</div>
+      <h1 class="module-title">When things break</h1>
+      <p class="module-subtitle">The exported site has one visible flaw and one invisible one. Meet both — then try to spot a bug yourself.</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> The 4 errors per page</h2>
+        <p>
+          Remember Module 4's chunk drift? Because the served HTML and the CDN chunks disagree,
+          React can't trust the first paint. Every page view throws <strong>four</strong>
+          recoverable errors — and falls back to plan B (rebuild from scratch).
+        </p>
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line"><span class="code-keyword">console.warn</span>(</span>
+<span class="code-line">  <span class="code-string">`Caught a recoverable error. The site is still</span></span>
+<span class="code-line">   <span class="code-string">functional, but might have some UI flickering or</span></span>
+<span class="code-line">   <span class="code-string">degraded page load performance. … server/client</span></span>
+<span class="code-line">   <span class="code-string">mismatches: `</span>, e, r);</span>
+<span class="code-line"><span class="code-keyword">B</span>(</span>
+<span class="code-line">  <span class="code-string">`published_site_load_recoverable_error`</span>,</span>
+<span class="code-line">  { <span class="code-property">message</span>: <span class="code-function">String</span>(e), <span class="code-property">componentStack</span>: r }</span>
+<span class="code-line">);</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl"><strong>console.warn</strong> — the console message you'd actually see: React #418 (server/client mismatch) and #423 (root switches to client render).</p>
+              <p class="tl"><strong>"recoverable"</strong> — the site still works; it just rebuilds itself from JavaScript.</p>
+              <p class="tl"><strong>B(...)</strong> — the error is also pushed to <code>window.__framer_events</code> for analytics.</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-accent">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">What "recoverable" really costs</strong>
+            <p>On our export the recoverable path triggers a full client re-render on <em>every</em> load — the DOM you first painted is thrown away. Up to the visible results: 6 of 7 pages lay out 2750&nbsp;px wide at a 1440&nbsp;px viewport because a flex team stretches past the screen. <code>privacy-policy.html</code> is the only clean page.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> Spot the bug</h2>
+        <p>
+          Here's a real, hand-tuned block from this project's own CSS rules — the mobile nav. One
+          line is wrong. Click it to check, and read the reveal.
+        </p>
+
+        <div class="bug-challenge">
+          <div class="bug-code">
+            <div class="bug-line" data-bug="false" ><span class="line-num">1</span><code>.nav { position: fixed; top: 0; z-index: 2; }</code></div>
+            <div class="bug-line" data-bug="false" ><span class="line-num">2</span><code>.nav::after {</code></div>
+            <div class="bug-line" data-bug="false" ><span class="line-num">3</span><code>  inset: 0; content: "";</code></div>
+            <div class="bug-line" data-bug="true"  ><span class="line-num">4</span><code>  border-bottom: 1px solid #fff;</code></div>
+            <div class="bug-line" data-bug="false" ><span class="line-num">5</span><code>  position: absolute;</code></div>
+            <div class="bug-line" data-bug="false" ><span class="line-num">6</span><code>}</code></div>
+          </div>
+          <div class="bug-feedback" id="bug-feedback"></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">🔎</div>
+          <div class="callout-content">
+            <strong class="callout-title">Why this matters for you</strong>
+            <p>On the live site, that underline is <code>#222</code> (near-black); painted white, the header line vanishes against a light page. Off-by-one shade, visually dramatic. When you steer an AI agent, "match the header underline" is only enough if you also say <em>what colour</em> trumps the rest of the header.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> When you block the runtime entirely</h2>
+        <p>
+          The acid test: what if the CDN is unreachable? The good news — the page still renders and
+          lays out correctly. The catch — the table of losses is a map of everything the runtime owns.
+        </p>
+        <div class="pattern-cards">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-success)">
+            <div class="pattern-icon" style="background: var(--color-success)">✅</div>
+            <h4 class="pattern-title">Survives</h4>
+            <p class="pattern-desc">Nav links, text, layout (with the caveats above). First paint from the HTML alone.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-5)">
+            <div class="pattern-icon" style="background: var(--color-actor-5)">🧩</div>
+            <h4 class="pattern-title">The app code</h4>
+            <p class="pattern-desc">The page chunk imports the CDN's React + runtime. No CDN → no app → no interactivity.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-error)">
+            <div class="pattern-icon" style="background: var(--color-error)">💀</div>
+            <h4 class="pattern-title">Dies first</h4>
+            <p class="pattern-desc">Most SVG icons (only 3–9 survive), 21 of 26 hero animations (stuck at opacity 0.001), the vote counter sticks at LOADING.</p>
+          </div>
+        </div>
+        <p>
+          <strong>The lesson:</strong> "it's a static site" was true only if you also meant "static
+          HTML + <em>remote</em> JavaScript you don't control." That's the tension this whole repo is about.
+        </p>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MODULE 7 ============================ -->
+<section class="module" id="module-7" style="background: var(--color-bg-warm)">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <div class="module-number">07</div>
+      <h1 class="module-title">The big picture — and the cleanup</h1>
+      <p class="module-subtitle">One diagram ties it all together, then we look at what this repo's owners did about it (and why it mattered).</p>
+    </header>
+
+    <div class="module-body">
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 1</span> Full architecture</h2>
+        <p>
+          Click any box for its story. This is the whole journey in one picture.
+        </p>
+
+        <div class="arch-diagram">
+          <div class="arch-zone">
+            <h4 class="arch-zone-label">1 · Framer (the design tool, now frozen)</h4>
+            <div class="arch-components">
+              <div class="arch-component" data-desc="Layouts, breakpoints, animations designed on framer.com. Aim: a peace movement site asking for a billion votes."><span class="arch-icon">🎨</span>Design canvas</div>
+              <div class="arch-component" data-desc="Framer compiles the canvas into React components plus the enormous runtime and a set of chunked JS files."><span class="arch-icon">⚙️</span>Compiler</div>
+            </div>
+          </div>
+          <div class="arch-zone">
+            <h4 class="arch-zone-label">2 · This repo (the frozen export)</h4>
+            <div class="arch-components">
+              <div class="arch-component" data-desc="7 pages, each ~300–850 KB, each a full copy of the skeleton with all 5 breakpoints baked in."><span class="arch-icon">📄</span>HTML pages</div>
+              <div class="arch-component" data-desc="site.css — every Framer class in the project (~1.24 MB), extracted from inline styles."><span class="arch-icon">🎨</span>site.css</div>
+              <div class="arch-component" data-desc="The local mirror of the runtime chunks. Identical to what was on the CDN at export time — which is no longer true."><span class="arch-icon">📦</span>assets/scripts</div>
+              <div class="arch-component" data-desc="sprite.svg (shared icon defs) + extracted bg art + fonts.css (whose @font-face URLs are remote)."><span class="arch-icon">🧩</span>svg · fonts</div>
+            </div>
+          </div>
+          <div class="arch-zone">
+            <h4 class="arch-zone-label">3 · The CDN (runs the app today)</h4>
+            <div class="arch-components">
+              <div class="arch-component" data-desc="script_main (6 KB) + React (144 KB) + runtime (464 KB) + per-page chunks. The real application."><span class="arch-icon">🌐</span>framerusercontent.com</div>
+              <div class="arch-component" data-desc="Analytics, the editor bar, Vimeo films, Gumlet video, Givebutter, the vote counter, Turnstile."><span class="arch-icon">🛰️</span>External services</div>
+            </div>
+          </div>
+          <div class="arch-zone">
+            <h4 class="arch-zone-label">4 · The browser</h4>
+            <div class="arch-components">
+              <div class="arch-component" data-desc="Paints the served HTML immediately — correct layout for the viewport's breakpoint."><span class="arch-icon">🖨️</span>First paint</div>
+              <div class="arch-component" data-desc="script_main reads the hydrate note, imports chunks, React hydrates (or re-renders after drift), runtime prunes breakpoints & injects icons."><span class="arch-icon">⚛️</span>Boot + hydrate</div>
+            </div>
+          </div>
+          <div class="arch-description" id="arch-desc">Click any box to learn what it does.</div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 2</span> The 4.55 MB → 1.22 MB cleanup</h2>
+        <p>
+          The owners knew this. So they set out to slim the served files — without touching what the
+          runtime needs. The numbered moves are the story of a careful, measurable cleanup.
+        </p>
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div class="step-body"><strong>Extract inline CSS</strong><p>17 <code>&lt;style&gt;</code> blocks → one shared <code>site.css</code>. Heads dropped from ~135–225 KB to ~3.5 KB.</p></div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div class="step-body"><strong>Externalise inline SVG</strong><p>Data-URI artwork → <code>uri_1-3.svg</code>, shared icon defs → <code>sprite.svg</code>. Saved ~1.45 MB.</p></div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div class="step-body"><strong>Inline styles → classes</strong><p>2,557 repeated <code>style="…"</code> → generated <code>.pc-i-NNN</code> rules in <code>site.css</code>. ~470 KB removed.</p></div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div class="step-body"><strong>Strip editor metadata</strong><p>Framer-editor-only attributes removed (~116 KB). Runtime-required attrs carefully kept.</p></div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div class="step-body"><strong>De-duplicate inline scripts</strong><p>5 identical blocks → <code>site.js</code> (head) + <code>site-end.js</code> (body tail). −29 KB, +4 KB cacheable JS.</p></div>
+          </div>
+        </div>
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">code</span>
+            <pre><code><span class="code-line"><span class="code-comment">/* in index.html, 749× this class name is served */</span></span>
+<span class="code-line">&lt;<span class="code-tag">div</span> <span class="code-attr">class</span>=<span class="code-value">"pc-i-043"</span>&gt;&lt;/<span class="code-tag">div</span>&gt;</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment">/* …in site.css, its rule is a single declaration: */</span></span>
+<span class="code-line"><span class="code-selector">.pc-i-043</span> { <span class="code-property">display</span>: <span class="code-value">contents</span> }</span></code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">plain english</span>
+            <div class="translation-lines">
+              <p class="tl">The cleanup replaced thousands of repeated inline styles with numbered classes, <code>pc-i-NNN</code>.</p>
+              <p class="tl"><code>display: contents</code> — this element simply "opens" its children into the flow, adding no box of its own. It's a layout helper.</p>
+              <p class="tl"><strong>The honest catch:</strong> after hydration the runtime's React render ignores these — the served count (749) drops to 1 in the live DOM. The savings are pure transfer weight.</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-icon">🔎</div>
+          <div class="callout-content">
+            <strong class="callout-title">Do not deploy the current export as-is</strong>
+            <p>All that cleanup makes the files smaller — but remember the runtime <em>re-injects</em> the metadata and generates its own classes after hydration. The transfer savings are real; the rendering bug is not fixed by cleanup. Smaller ≠ fixed. That's why this course separates "what's in the file" from "what the browser ends up with."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen animate-in">
+        <h2 class="screen-heading"><span class="eyebrow">Screen 3</span> What you'd tell an AI about this project</h2>
+        <p>
+          You now have the vocabulary to direct an agent precisely. Here's the cheat sheet every
+          one of these terms is now yours to use.
+        </p>
+        <div class="pattern-cards">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+            <div class="pattern-icon" style="background: var(--color-actor-2)">🗣️</div>
+            <h4 class="pattern-title">Say "export track"</h4>
+            <p class="pattern-desc">The 7 Framer pages = HTML + <em>remote</em> React runtime. Improving them means reducing transfer size, <em>not</em> fixing rendering.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">🧭</div>
+            <h4 class="pattern-title">Say "chunk drift"</h4>
+            <p class="pattern-desc">CDN and export disagree → hydration fails (#418/#423) → 4 recoverable errors per page, full client re-render.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-4)">
+            <div class="pattern-icon" style="background: var(--color-actor-4)">🧼</div>
+            <h4 class="pattern-title">Say "runtime-required attrs"</h4>
+            <p class="pattern-desc">The attributes you must keep (<code>data-framer-hydrate-v2</code>, appear ids, component types) vs the editor-only ones you can strip.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-5)">
+            <div class="pattern-icon" style="background: var(--color-actor-5)">🔥</div>
+            <h4 class="pattern-title">Say "no pipeline"</h4>
+            <p class="pattern-desc">This is a one-time migration; the Framer site is frozen. That's the constraint you must never let a tool re-add a "re-sync" step.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-accent">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">The whole course in one sentence</strong>
+            <p>A Framer export is instructions for a performance that must be delivered by JavaScript from a CDN — read the six files carefully, and you can tell agents exactly what to keep, what to strip, and what will break.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<footer class="course-end">
+  <div>
+    <h2>You've seen the whole pipeline.</h2>
+    <p style="color: var(--color-text-secondary)">Now you know why a Framer export looks nothing like the page it produces.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============ nav dots + progress ============ */
+  var MODULES = [
+    ['module-1', 'What this site is'],
+    ['module-2', 'Meet the players'],
+    ['module-3', 'The boot sequence'],
+    ['module-4', 'The outside world'],
+    ['module-5', 'The clever tricks'],
+    ['module-6', 'When things break'],
+    ['module-7', 'The big picture']
+  ];
+
+  var dotsWrap = document.getElementById('nav-dots');
+  MODULES.forEach(function (m, i) {
+    var b = document.createElement('button');
+    b.className = 'nav-dot';
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-label', m[1]);
+    b.setAttribute('data-target', m[0]);
+    b.addEventListener('click', function () {
+      document.getElementById(m[0]).scrollIntoView({ behavior: 'smooth' });
+    });
+    dotsWrap.appendChild(b);
+  });
+  var dots = dotsWrap.children;
+
+  var progressBar = document.getElementById('progress-bar');
+
+  function onScroll() {
+    var top = window.scrollY;
+    var height = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = height > 0 ? (top / height) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    progressBar.setAttribute('aria-valuenow', String(Math.round(pct)));
+
+    var current = 'hero';
+    for (var i = 0; i < MODULES.length; i++) {
+      var el = document.getElementById(MODULES[i][0]);
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.5) current = MODULES[i][0];
+    }
+    for (var j = 0; j < dots.length; j++) {
+      dots[j].classList.remove('current', 'visited');
+      if (MODULES[j][0] === current) dots[j].classList.add('current');
+      else if (document.getElementById(MODULES[j][0]).getBoundingClientRect().top < 0) dots[j].classList.add('visited');
+    }
+  }
+
+  window.addEventListener('scroll', function () { requestAnimationFrame(onScroll); }, { passive: true });
+  onScroll();
+
+  /* keyboard nav */
+  function focusModule(dir) {
+    var top = window.scrollY;
+    var id = 'hero';
+    for (var i = 0; i < MODULES.length; i++) {
+      var el = document.getElementById(MODULES[i][0]);
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.5) id = MODULES[i][0];
+      else break;
+    }
+    var idx = MODULES.map(function (m) { return m[0]; }).indexOf(id);
+    idx = Math.max(0, Math.min(MODULES.length - 1, idx + dir));
+    document.getElementById(MODULES[idx][0]).scrollIntoView({ behavior: 'smooth' });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (['INPUT', 'TEXTAREA'].indexOf(e.target.tagName) !== -1) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { focusModule(1); e.preventDefault(); }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { focusModule(-1); e.preventDefault(); }
+  });
+
+  /* ============ reveal ============ */
+  var revealObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+  document.querySelectorAll('.animate-in').forEach(function (el) {
+    revealObs.observe(el);
+  });
+
+  /* ============ group chat ============ */
+  var chatMsgs = Array.prototype.slice.call(document.querySelectorAll('#chat-messages .chat-message'));
+  var chatIndex = 0;
+  var chatTotal = chatMsgs.length;
+  var chatActors = {
+    html:   { initials: 'H',   color: 'var(--color-actor-1)' },
+    entry:  { initials: '🧭',  color: 'var(--color-actor-2)' },
+    react:  { initials: '⚛️',  color: 'var(--color-actor-3)' },
+    runtime:{ initials: '🧭',  color: 'var(--color-actor-4)' }
+  };
+
+  function chatUpdateProgress() {
+    document.getElementById('chat-progress').textContent = chatIndex + ' / ' + chatTotal;
+  }
+  window.chatNext = function () {
+    if (chatIndex >= chatTotal) return;
+    var msg = chatMsgs[chatIndex];
+    var sender = msg.dataset.sender;
+    var typing = document.getElementById('chat-typing');
+    var av = document.getElementById('typing-avatar');
+    av.textContent = chatActors[sender].initials;
+    av.style.background = chatActors[sender].color;
+    typing.style.display = 'flex';
+    setTimeout(function () {
+      typing.style.display = 'none';
+      msg.style.display = 'flex';
+      msg.style.animation = 'chatIn 0.3s var(--ease-out)';
+      chatIndex++;
+      chatUpdateProgress();
+    }, 700);
+  };
+  window.chatAll = function () {
+    if (chatIndex >= chatTotal) { chatReset(); }
+    var iv = setInterval(function () {
+      if (chatIndex >= chatTotal) { clearInterval(iv); return; }
+      window.chatNext();
+    }, 1300);
+  };
+  window.chatReset = function () {
+    chatIndex = 0;
+    chatMsgs.forEach(function (m) { m.style.display = 'none'; });
+    chatUpdateProgress();
+  };
+  chatUpdateProgress();
+
+  /* ============ data flow ============ */
+  var flowSteps = [
+    { to: 'fs-html',  label: 'Browser downloads index.html — first paint renders immediately.', pct: 4 },
+    { to: 'fs-entry', label: 'script_main module loads (6 KB) and reads the hydrate note.', pct: 20 },
+    { to: 'fs-chunks',label: 'It imports React, the runtime, and the homepage chunk in parallel.', pct: 38 },
+    { to: 'fs-react', label: 'React constructs the page component tree from the chunk.', pct: 58 },
+    { to: 'fs-dom',   label: 'React hydrates the cleaned DOM. Page is live.', pct: 82 }
+  ];
+  var flowIndex = 0;
+  function flowSet() {
+    var ids = ['fs-html', 'fs-entry', 'fs-chunks', 'fs-react', 'fs-dom'];
+    ids.forEach(function (id) { document.getElementById(id).classList.remove('active'); });
+    var arrow = document.getElementById('flow-arrow');
+    if (flowIndex === 0) {
+      arrow.style.left = '4%';
+      document.getElementById('flow-label').textContent = 'Click "Next Step" to watch the packet travel.';
+    } else {
+      var step = flowSteps[flowIndex - 1];
+      document.getElementById(step.to).classList.add('active');
+      arrow.style.left = step.pct + '%';
+      document.getElementById('flow-label').textContent = step.label;
+    }
+    document.getElementById('flow-progress').textContent = 'Step ' + flowIndex + ' / 5';
+  }
+  window.flowNext = function () {
+    if (flowIndex >= flowSteps.length) return;
+    flowIndex++;
+    flowSet();
+  };
+  window.flowReset = function () { flowIndex = 0; flowSet(); };
+  flowSet();
+
+  /* ============ architecture diagram ============ */
+  var archDesc = document.getElementById('arch-desc');
+  document.querySelectorAll('.arch-component').forEach(function (c) {
+    c.addEventListener('click', function () {
+      document.querySelectorAll('.arch-component').forEach(function (x) { x.classList.remove('sel'); });
+      c.classList.add('sel');
+      archDesc.textContent = c.dataset.desc;
+    });
+    c.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { c.click(); e.preventDefault(); }
+    });
+    c.setAttribute('tabindex', '0');
+  });
+
+  /* ============ spot the bug ============ */
+  window.checkBugLine = function (el, isCorrect) {
+    var fb = el.closest('.bug-challenge').querySelector('.bug-feedback');
+    if (isCorrect) {
+      el.classList.add('correct');
+      fb.innerHTML = '<strong>Found it!</strong> The live header line is <code>#222</code> (near-black). Painting it white (<code>#fff</code>) makes the header border invisible against a light page. Border-line-colour bugs hide in plain sight — always double-check the exact value.';
+      fb.className = 'bug-feedback show success';
+    } else {
+      el.classList.add('incorrect');
+      fb.innerHTML = 'Not this line — look at the colour value on line 4.';
+      fb.className = 'bug-feedback show error';
+      var self = el;
+      setTimeout(function () { self.classList.remove('incorrect'); fb.className = 'bug-feedback'; }, 900);
+    }
+  };
+  document.querySelectorAll('.bug-line').forEach(function (el) {
+    el.addEventListener('click', function () {
+      window.checkBugLine(el, el.dataset.bug === 'true');
+    });
+  });
+
+  /* ============ glossary tooltips ============ */
+  var activeTip = null;
+
+  function positionTip(term, tip) {
+    var rect = term.getBoundingClientRect();
+    var w = tip.offsetWidth || 300;
+    var left = rect.left + rect.width / 2 - w / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
+    tip.style.left = left + 'px';
+    document.body.appendChild(tip);
+    var h = tip.offsetHeight;
+    if (rect.top - h - 8 < 0) {
+      tip.style.top = (rect.bottom + 8) + 'px';
+      tip.classList.add('flip');
+    } else {
+      tip.style.top = (rect.top - h - 8) + 'px';
+      tip.classList.remove('flip');
+    }
+  }
+
+  document.querySelectorAll('.term').forEach(function (term) {
+    var tip = document.createElement('span');
+    tip.className = 'term-tooltip';
+    tip.textContent = term.dataset.def;
+
+    function hide() {
+      tip.classList.remove('visible');
+      setTimeout(function () { if (!tip.classList.contains('visible')) tip.remove(); }, 150);
+      activeTip = null;
+    }
+    function show() {
+      if (activeTip && activeTip !== tip) { activeTip.classList.remove('visible'); activeTip.remove(); }
+      positionTip(term, tip);
+      requestAnimationFrame(function () { tip.classList.add('visible'); });
+      activeTip = tip;
+    }
+    term.addEventListener('mouseenter', show);
+    term.addEventListener('mouseleave', hide);
+    term.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (tip.classList.contains('visible')) hide();
+      else show();
+    });
+  });
+  document.addEventListener('click', function () {
+    if (activeTip) { activeTip.classList.remove('visible'); activeTip.remove(); activeTip = null; }
+  });
+})();
+</script>
+
+</body>
+</html>
