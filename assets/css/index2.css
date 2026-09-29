@@ -427,10 +427,17 @@ ul {
    own height on mobile. Deliberately no `max-width`, so it stays 577px wide at
    every width; the page's `overflow-x: clip` keeps it from adding a scrollbar.
    It also carries the stacking that puts the film above the lattice, matching
-   the live's full-width `z-index: 1` video wrapper. */
+   the live's full-width `z-index: 1` video wrapper.
+
+   That 1 is load-bearing. `.hero-grid` is also `z-index: 1`, so the film still
+   paints over the lattice (it comes later in the DOM, and equal z-index is
+   resolved by document order) - but both now sit *below* the fixed header's
+   `z-index: 2`, which is what the live does. This was previously `z-index: 2`,
+   tying with the header: equal z-index goes to DOM order, the film comes after
+   the header, so the video painted on top of the bar as you scrolled past it. */
 .hero-video-box {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   width: 577px;
   /* Not `auto`: between 600 and 810 the 577px box is wider than its container,
      and auto margins resolve to 0 when over-constrained, which left the box
