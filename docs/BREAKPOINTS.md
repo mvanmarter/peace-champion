@@ -476,3 +476,58 @@ Two consequences for the diff tools:
   says `2025`. Not a regression.
 - `films MISSING` at mobile is the long-standing false positive documented in
   `AGENTS.md`, not new.
+
+---
+
+## 10. Generic breakpoint advice, considered and declined
+
+[chats/breakpoint-recommendations.md](chats/breakpoint-recommendations.md) is a
+general "what are recommended breakpoint sizes these days" answer, kept for
+reference. It is **not** a prescription for this repo — the recommendations assume
+a new site being designed from scratch, while `index2.html` is a measured
+reproduction of a frozen one. Why each suggestion does not apply:
+
+- **Keep 810 and 1200 as-is.** They are not design choices here — they are spec,
+  read off the live site via CDP (§3, `bp-tiers.js`). The recommended
+  768/1024/1280 would put viewports 1024–1199 in our desktop branch where the live
+  uses the tablet branch (§5.2), and would flip five of the widths `cmp.js`
+  actually tests.
+- **The "add 480 for small phones" and "1440px+/large desktop" tiers are already
+  covered.** The mobile tier is fluid off `100vw` — the cluster is
+  `calc(2.4444*100vw - 47.67px)` with `repeat(3, 1fr)` rows, verified at
+  390/450/550/650/750/800/809 — so a 480 query would have nothing to switch. And
+  `.container`'s 1200px cap makes everything above 1200 a **constant** 1152px
+  layout, so there is provably nothing for 1440 or 1728 to switch either. That is
+  the structural reason §4's collapse is safe, and is stronger than the
+  measured-`h2` argument already in that section.
+- **"Use a max-width for your content" and "content-driven breakpoints" are
+  already satisfied** (§6.6). 1200 is genuinely content-driven: the desktop grids
+  sum to it exactly — `392 + 760 = 1152` for `.hero-lower` and `536 + 616 = 1152`
+  for `.slide`. 810, by contrast, is *not* fit-driven — the inline nav fits down
+  to roughly 680px. What flips at 810 is topology: the cluster (fixed 760×604
+  composition → full-bleed linear one) and the hero film (577/435 → 342/381), not
+  a squeeze.
+- **The only real takeaway was de-duplication**, not breakpoint values: the nav
+  and footer rules are byte-identical in the two `≥810` blocks (§6.7), and
+  hoisting them into one `@media (min-width: 810px)` would be byte-identical
+  output. Deliberately **not applied** — §6.3's "duplicate a nav rule into both
+  blocks" footgun stands as-is.
+
+⚠️ **If `--measure` is ever raised, the `@media (min-width: 1200px)` query has to
+move with it**, or the desktop grid gets a content box wider than the
+`392 + 760` it was tuned for.
+
+- **Unverified:** a `@media (width)` query is evaluated against a viewport width
+  that *includes* a classic scrollbar, while `.container`'s `100%` resolves
+  against the layout viewport, which *does not*. So at a window viewport of
+  roughly 1200–1214px the desktop branch can engage with a content box around
+  1137px rather than 1152, leaving the cluster's grid track ~15px short. The live
+  Framer site inherits the identical quirk, so parity holds either way. Flagged
+  from the CSS spec, not measured — see §8 if it ever needs checking.
+
+**In plain English:** the page's two layout switch points (810 and 1200) aren't a
+choice we made — they're exactly where the original website switches, and the entire
+goal of this rebuild is to look identical to the original at every screen width, so
+they have to stay put. The parts of the advice that *do* make sense to copy — a
+mobile layout that flows smoothly instead of jumping, and a content area that stops
+growing on huge screens — are already in place, so there's nothing left to change.
