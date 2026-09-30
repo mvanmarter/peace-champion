@@ -1,0 +1,16 @@
+{
+  "_note": "The two embed URLs below carry pre-escaped &amp; because they are injected into an HTML attribute verbatim. Nunjucks runs with autoescape off (see eleventy.config.mjs), so they are emitted exactly as written here. If autoescape is ever turned back on these will double-escape.",
+  "homeHref": "index2.html",
+  "brandLabel": "Global Peace Yes — home",
+  "sprite": "assets/svg/sprite.svg",
+  "headerSymbol": "svg-1141485548_13698",
+  "footerSymbol": "svg-1864332813_13682",
+  "footerRule": "svg-1743055197_189",
+  "voteUrl": "https://app.globalpeaceyes.org/",
+  "eventsUrl": "https://www.eventbrite.com/o/global-peace-yes-89857821323",
+  "appStoreUrl": "https://apps.apple.com/us/app/peace-champion/id6746622214",
+  "clusterVideoUrl": "https://video.gumlet.io/67611a6011dd4f4720ae667f/67611a695cc742573266c4e2/download.mp4",
+  "declarationEmbed": "https://player.vimeo.com/video/1132612772?muted=1&amp;autopause=0&amp;loop=1&amp;app_id=122963",
+  "legacyEmbed": "https://player.vimeo.com/video/1054015738?muted=1&amp;autoplay=1&amp;autopause=0&amp;loop=1&amp;app_id=122963",
+  "voteCountApi": "https://total-votes-rzszi6ndna-uc.a.run.app/"
+}

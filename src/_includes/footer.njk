@@ -1,0 +1,29 @@
+    <footer class="site-footer container">
+      <svg
+        class="footer-rule"
+        viewBox="0 0 1154 4"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="{{ site.sprite }}#{{ site.footerRule }}"></use>
+      </svg>
+      <div class="footer-inner">
+        <ul class="footer-links">
+          {%- for group in nav.footerGroups %}
+          <li>
+            {%- for id in group.links %}
+            {%- set item = nav.byId[id] %}
+            <a href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+            {%- endfor %}
+          </li>
+          {%- endfor %}
+        </ul>
+        <div class="footer-brand">
+          <svg class="footer-logo" viewBox="0 0 127 33" aria-hidden="true" focusable="false">
+            <use href="{{ site.sprite }}#{{ site.footerSymbol }}"></use>
+          </svg>
+          <p class="footer-copy">&copy; 2026 Global Peace Yes, Inc. All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>

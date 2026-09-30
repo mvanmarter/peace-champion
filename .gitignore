@@ -1,0 +1,6 @@
+node_modules
+
+# Eleventy's default output dir. Not produced today (eleventy.config.mjs sets
+# dir.output to the repo root), but a stray run without the config would drop a
+# second copy of the site into the deploy folder.
+/_site/

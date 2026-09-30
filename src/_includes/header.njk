@@ -1,0 +1,64 @@
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="{{ site.homeHref }}" aria-label="{{ site.brandLabel }}">
+          <svg viewBox="0 0 127 32" aria-hidden="true" focusable="false">
+            <use href="{{ site.sprite }}#{{ site.headerSymbol }}"></use>
+          </svg>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          {%- for id in nav.primary %}
+          {%- set item = nav.byId[id] %}
+          <a href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+          {%- endfor %}
+        </nav>
+        <a class="btn header-cta" href="{{ site.voteUrl }}" target="_blank" rel="noopener">Vote Now</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-panel"
+          aria-label="Open menu"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="nav-panel" id="nav-panel">
+          {%- for id in nav.primary %}
+          {%- set item = nav.byId[id] %}
+          <a href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+          {%- endfor %}
+          <a class="btn" href="{{ site.voteUrl }}" target="_blank" rel="noopener">Vote Now</a>
+        </div>
+      </div>
+    </header>
+
+    <script>
+      (function () {
+        var btn = document.querySelector(".nav-toggle");
+        var panel = document.getElementById("nav-panel");
+        if (!btn || !panel) return;
+        btn.addEventListener("click", function () {
+          var open = panel.hasAttribute("data-open");
+          if (open) {
+            panel.removeAttribute("data-open");
+            btn.setAttribute("aria-expanded", "false");
+            btn.setAttribute("aria-label", "Open menu");
+          } else {
+            panel.setAttribute("data-open", "");
+            btn.setAttribute("aria-expanded", "true");
+            btn.setAttribute("aria-label", "Close menu");
+          }
+        });
+      })();
+    </script>

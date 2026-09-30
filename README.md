@@ -1,18 +1,63 @@
 # Peace Champion — local site
 
-Static export of the 7-site pages from <https://globalpeaceyes.org/> moved off
-Framer into `C:\Dev\PeaceChampion`. The full tree is:
+Two things live in `C:\Dev\PeaceChampion`, and they are **not** interchangeable:
+
+|                | what it is                                                                                | deploy it?                        |
+| -------------- | ----------------------------------------------------------------------------------------- | --------------------------------- |
+| `index2.html`  | the rebuilt homepage, **generated** by Eleventy from `src/`                                | **yes** — this is the good page   |
+| the other 6    | the Framer static export (`index.html`, `about.html`, …)                                   | **no** — see `AGENTS.md` §0       |
+
+`AGENTS.md` is the authoritative account of why. The short version: the export does
+not hydrate, reports a `scrollWidth` of 2750px at a 1440px viewport, and lays out
+correctly on only 1 of its 7 pages.
+
+## The build
+
+`index2.html` is **generated**. Edit `src/`, never the HTML file.
+
+```powershell
+npm install        # once
+npm run build      # writes index2.html into the repo root, Prettier-formatted
+npm run format     # prettier --check — fails if the committed file isn't formatted
+npm run watch      # rebuild + serve on http://localhost:8080
+```
+
+The build reads templates from `src/`, writes **one** file (`index2.html`) back into
+the repo root, then runs Prettier over that output so the committed file is a
+formatted fixed point. It creates no cache directories and deletes nothing. The
+*templates* are never formatted — `.prettierignore` excludes `src/` because Prettier
+has poor Nunjucks support and would mangle the tags.
 
 ```
-index.html          (homepage)
-about.html          (About)
-donate.html         (Donate — includes Givebutter widget)
-films.html          (Films)
-privacy-policy.html (Privacy Policy)
-volunteer.html      (Volunteer)
-404.html            (not-found page)
+src/
+  _data/site.json      sprite ids, brand, external URLs
+  _data/nav.js         every link defined once; nav order + footer groups by id
+  _includes/base.njk   doctype/head/body, block for page content
+  _includes/header.njk <header> plus the burger-menu script
+  _includes/footer.njk <footer>
+  pages/index2.njk     the <main> children
+```
+
+Run `npm run build` and commit the regenerated `index2.html` alongside your `src/`
+changes, otherwise the two drift apart and the diff is misleading. `npm run watch`
+serves *unformatted* output — harmless, since formatting is invisible in a browser.
+
+## Full tree
+
+```
+index2.html         GENERATED - the homepage
+index.html          (Framer export - superseded, do not deploy)
+about.html          (Framer export)
+donate.html         (Framer export - includes Givebutter widget)
+films.html          (Framer export)
+privacy-policy.html (Framer export)
+volunteer.html      (Framer export)
+404.html            (Framer export - not-found page)
+eleventy.config.mjs (Eleventy config: input src/, output ".")
+package.json        (the build; only @11ty/eleventy, a dev dependency)
+src/                (templates - see above)
 assets/
-  css/              (site.css — the shared stylesheet every page links)
+  css/              (site.css for the export, index2.css for the homepage)
   js/               (site.js loaded in <head>, site-end.js at the tail of <body>)
   svg/              (sprite.svg with the shared <svg> defs, uri_1..3.svg artwork)
   images/           (33 images, incl. favicon + og-image)
@@ -23,57 +68,80 @@ assets/
   data/             (2 Framer search-index JSON)
 ```
 
-It is ready to deploy to any static host as-is.
-
 > **Important:** the pages use ES-module JavaScript (`import("./x.mjs")`) and
 > relative asset paths. You must serve them over **HTTP** — opening
 > `index.html` directly (or the VS Code "Simple Browser" / `file://`) blocks the
 > modules and the page will not render (missing images, unstyled layout).
 
-## Run locally (pick one)
+## Run locally
 
-### 1. VS Code — Live Server (recommended if you edit in VS Code)
+Build first — otherwise you are looking at whatever `index2.html` happened to be
+committed, not your edits:
+
+```powershell
+npm install     # once
+npm run watch   # rebuilds on save and serves http://localhost:8080
+```
+
+`npm run watch` is the only option below that rebuilds automatically. If you use one
+of the static servers, re-run `npm run build` after every edit to `src/`.
+
+### 1. VS Code — Live Server (if you edit in VS Code)
 
 **Live Server is already installed** (extension `ritwickdey.LiveServer`). Just:
 
-1. Open this folder in VS Code.
-2. Right-click `index.html`, choose **"Open with Live Server"**.
+1. Run `npm run build`.
+2. Open this folder in VS Code.
+3. Right-click `index2.html`, choose **"Open with Live Server"**.
 
    A browser tab opens at <http://127.0.0.1:5500> with live auto-reload on save.
 
 ### 2. Python (no installs)
 
 ```powershell
+npm run build
 python -m http.server 8000
 ```
 
-Open <http://localhost:8000> (or <http://localhost:8000/index.html>). Run it
-from this folder so the relative `assets/...` paths resolve.
+Open <http://localhost:8000/index2.html>. Run it from this folder so the relative
+`assets/...` paths resolve.
 
-### 3. Node.js (no install saved to the project)
+### 3. Node.js
 
 ```powershell
 npx --yes serve .
 ```
 
-or
-
-```powershell
-npx --yes http-server . -p 8080
-```
-
-then open the printed URL (e.g. <http://localhost:3000>).
+then open the printed URL.
 
 ## Hosting/deploying
 
-No build step, no package.json, no bundler — the folder is the deploy unit.
+There **is** a build step now: `npm install && npm run build`. The deploy unit is
+still the repo root — the build writes `index2.html` back into it rather than into a
+`_site/` folder, precisely so the root keeps being the thing you upload.
 
-- Copy this folder (or the files at its root) to any static host: Netlify,
-  Vercel, GitHub Pages, S3/CloudFront, nginx, etc.
-- The `404.html` file is picked up as the custom not-found page by most hosts
-  (Netlify/Vercel/GitHub Pages do this natively when named `404.html`).
-- Relative URLs (e.g. `about.html`, `assets/...`) mean the site works served
-  from any sub-path or domain.
+**Exclude these from the upload.** They are build inputs and config, not site content:
+
+```
+node_modules/  src/  package.json  package-lock.json  eleventy.config.mjs
+.prettierrc  .prettierignore
+```
+
+- Any static host works: Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, nginx.
+- `404.html` is picked up as the custom not-found page by most hosts when named
+  `404.html`. **Note:** that is currently still the Framer export, not a rebuilt page.
+- Relative URLs (`about.html`, `assets/...`) mean the site works served from any
+  sub-path or domain. This is why the build outputs in place instead of to a
+  subdirectory — moving the output would break every one of those paths.
+- If your host runs a build command, use `npm run build` and set the publish
+  directory to the repo root. Be aware that a bare `package.json` at the root can
+  make Vercel and Netlify start a build step where there previously was none.
+
+**What you can actually deploy today:** `index2.html` plus `assets/`. The other six
+pages are still the Framer export and are not safe to publish — see `AGENTS.md` §0 for
+the measurements. Renaming `index2.html` to `index.html` and deleting the export is
+the obvious end state, but it changes what `/` serves, so treat it as a deliberate
+step rather than a build detail.
 
 ## What was done in the migration
 
