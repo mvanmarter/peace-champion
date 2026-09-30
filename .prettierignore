@@ -1,15 +1,16 @@
 # Prettier exists in this repo for exactly ONE job: formatting the generated
-# index2.html so the committed build output is a stable fixed point (see
+# index.html so the committed build output is a stable fixed point (see
 # package.json "build"). Everything else is explicitly out of scope, so that a
 # stray `npx prettier --write .` is a complete no-op.
 #
 # Verify that property with:  npx prettier --list-different .   (expect no output)
+#
+# NOTE: index.html is deliberately NOT listed here - it is the one file Prettier is
+# supposed to touch.
 
 # --- not ours to reformat ---
 
-# The 6 remaining export pages. index2.html is deliberately absent - it is the one
-# file Prettier is supposed to touch.
-/index.html
+# The 6 remaining Framer export pages.
 /about.html
 /donate.html
 /films.html
@@ -27,14 +28,14 @@
 # Not deploy content, and far too large to be worth a reformat diff.
 /course.html
 
-# Long-form analysis docs, hand-written and heavily wrapped. Same reasoning as the
-# markdown below.
-/docs/
-
 # Hand-written markdown with deliberately wrapped tables and code fences.
 # Prettier's markdown reflow would be a large unwanted diff.
 /AGENTS.md
 /README.md
+
+# Long-form analysis docs, hand-written and heavily wrapped. Same reasoning as the
+# markdown above.
+/docs/
 
 # Build inputs. Prettier has poor Nunjucks support and would mangle the tags, and
 # the config here exists only to be read by the build.

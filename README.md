@@ -2,27 +2,30 @@
 
 Two things live in `C:\Dev\PeaceChampion`, and they are **not** interchangeable:
 
-|                | what it is                                                                                | deploy it?                        |
-| -------------- | ----------------------------------------------------------------------------------------- | --------------------------------- |
-| `index2.html`  | the rebuilt homepage, **generated** by Eleventy from `src/`                                | **yes** — this is the good page   |
-| the other 6    | the Framer static export (`index.html`, `about.html`, …)                                   | **no** — see `AGENTS.md` §0       |
+|                                     | what it is                                                                    | deploy it?                      |
+| ----------------------------------- | ----------------------------------------------------------------------------- | ------------------------------- |
+| `index.html`                        | the rebuilt homepage, **generated** by Eleventy from `src/`                    | **yes** — this is the good page |
+| `about`, `donate`, `films`,         | the Framer static export (6 pages)                                            | **no** — see `AGENTS.md` §0     |
+| `privacy-policy`, `volunteer`, `404` |                                                                           |                                 |
 
 `AGENTS.md` is the authoritative account of why. The short version: the export does
 not hydrate, reports a `scrollWidth` of 2750px at a 1440px viewport, and lays out
-correctly on only 1 of its 7 pages.
+correctly on only 1 of the 7 pages it was measured across. The export's own
+homepage (`index.html`) was deleted in commit `fa89e88`; this is what replaced it.
+
 
 ## The build
 
-`index2.html` is **generated**. Edit `src/`, never the HTML file.
+`index.html` is **generated**. Edit `src/`, never the HTML file.
 
 ```powershell
 npm install        # once
-npm run build      # writes index2.html into the repo root, Prettier-formatted
+npm run build      # writes index.html into the repo root, Prettier-formatted
 npm run format     # prettier --check — fails if the committed file isn't formatted
 npm run watch      # rebuild + serve on http://localhost:8080
 ```
 
-The build reads templates from `src/`, writes **one** file (`index2.html`) back into
+The build reads templates from `src/`, writes **one** file (`index.html`) back into
 the repo root, then runs Prettier over that output so the committed file is a
 formatted fixed point. It creates no cache directories and deletes nothing. The
 *templates* are never formatted — `.prettierignore` excludes `src/` because Prettier
@@ -35,17 +38,17 @@ src/
   _includes/base.njk   doctype/head/body, block for page content
   _includes/header.njk <header> plus the burger-menu script
   _includes/footer.njk <footer>
-  pages/index2.njk     the <main> children
+  pages/index.njk     the <main> children
 ```
 
-Run `npm run build` and commit the regenerated `index2.html` alongside your `src/`
+Run `npm run build` and commit the regenerated `index.html` alongside your `src/`
 changes, otherwise the two drift apart and the diff is misleading. `npm run watch`
 serves *unformatted* output — harmless, since formatting is invisible in a browser.
 
 ## Full tree
 
 ```
-index2.html         GENERATED - the homepage
+index.html         GENERATED - the homepage
 index.html          (Framer export - superseded, do not deploy)
 about.html          (Framer export)
 donate.html         (Framer export - includes Givebutter widget)
@@ -57,7 +60,7 @@ eleventy.config.mjs (Eleventy config: input src/, output ".")
 package.json        (the build; only @11ty/eleventy, a dev dependency)
 src/                (templates - see above)
 assets/
-  css/              (site.css for the export, index2.css for the homepage)
+  css/              (site.css for the export, site-new.css for the homepage)
   js/               (site.js loaded in <head>, site-end.js at the tail of <body>)
   svg/              (sprite.svg with the shared <svg> defs, uri_1..3.svg artwork)
   images/           (33 images, incl. favicon + og-image)
@@ -75,7 +78,7 @@ assets/
 
 ## Run locally
 
-Build first — otherwise you are looking at whatever `index2.html` happened to be
+Build first — otherwise you are looking at whatever `index.html` happened to be
 committed, not your edits:
 
 ```powershell
@@ -92,7 +95,7 @@ of the static servers, re-run `npm run build` after every edit to `src/`.
 
 1. Run `npm run build`.
 2. Open this folder in VS Code.
-3. Right-click `index2.html`, choose **"Open with Live Server"**.
+3. Right-click `index.html`, choose **"Open with Live Server"**.
 
    A browser tab opens at <http://127.0.0.1:5500> with live auto-reload on save.
 
@@ -103,7 +106,7 @@ npm run build
 python -m http.server 8000
 ```
 
-Open <http://localhost:8000/index2.html>. Run it from this folder so the relative
+Open <http://localhost:8000/index.html>. Run it from this folder so the relative
 `assets/...` paths resolve.
 
 ### 3. Node.js
@@ -117,7 +120,7 @@ then open the printed URL.
 ## Hosting/deploying
 
 There **is** a build step now: `npm install && npm run build`. The deploy unit is
-still the repo root — the build writes `index2.html` back into it rather than into a
+still the repo root — the build writes `index.html` back into it rather than into a
 `_site/` folder, precisely so the root keeps being the thing you upload.
 
 **Exclude these from the upload.** They are build inputs and config, not site content:
@@ -137,11 +140,11 @@ node_modules/  src/  package.json  package-lock.json  eleventy.config.mjs
   directory to the repo root. Be aware that a bare `package.json` at the root can
   make Vercel and Netlify start a build step where there previously was none.
 
-**What you can actually deploy today:** `index2.html` plus `assets/`. The other six
+**What you can actually deploy today:** `index.html` plus `assets/`. The other six
 pages are still the Framer export and are not safe to publish — see `AGENTS.md` §0 for
-the measurements. Renaming `index2.html` to `index.html` and deleting the export is
-the obvious end state, but it changes what `/` serves, so treat it as a deliberate
-step rather than a build detail.
+the measurements. This is now the real homepage: the export's own `index.html` was
+deleted in commit `fa89e88`, and the six remaining export pages reach it through
+`href="./"`, so their home links resolve here without modification.
 
 ## What was done in the migration
 

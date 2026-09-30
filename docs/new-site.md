@@ -16,7 +16,7 @@ the homepage.
 > **⚠️ Correction (added after the rebuild was built and measured).** The 2.15 MB
 > "CAPTCHA on the homepage" is **Vimeo's, not ours.** It is Cloudflare Turnstile
 > initiated _inside_ the two `player.vimeo.com` iframes, one per embed — not loaded by the
-> page's own code. Proven by `index2.html`, which contains zero Turnstile references yet
+> page's own code. Proven by `index.html`, which contains zero Turnstile references yet
 > produces the identical request set, and by frame attribution of every
 > `challenges.cloudflare.com` request. It is therefore **not** a saving available to us
 > short of dropping Vimeo. §4.3 below still frames it as removable; treat that part as
@@ -508,7 +508,7 @@ difference is the HTML each one is served.
 
 ---
 
-## Appendix B — what was actually built: `index2.html`
+## Appendix B — what was actually built: `index.html`
 
 Sections 0–9 above are the _plan_, written against the export. This appendix records the
 _result_: a hand-built, dependency-free replacement for the homepage, and how it was
@@ -516,14 +516,14 @@ verified.
 
 ### B.1 What it is
 
-`index2.html` is a single static page that reproduces `globalpeaceyes.org` without any
+`index.html` is a single static page that reproduces `globalpeaceyes.org` without any
 Framer code. `index.html` and the other six exported pages are untouched and remain the
 reference.
 
 | file                                                   | bytes   | what                                      |
 | ------------------------------------------------------ | ------- | ----------------------------------------- |
-| `index2.html`                                          | 19,217  | the page — semantic markup, no build step |
-| `assets/css/index2.css`                                | 43,101  | all styling, hand-tuned per breakpoint    |
+| `index.html`                                          | 19,217  | the page — semantic markup, no build step |
+| `assets/css/site-new.css`                                | 43,101  | all styling, hand-tuned per breakpoint    |
 | `assets/vendor/dotlottie-player-2.5.6.js`              | 779,388 | vendored animation player (see B.3)       |
 | `assets/animations/lxuQ2oapgQUgWt9Wml9hBUHUnfI.lottie` | 12,501  | crisis animation                          |
 | `assets/animations/tjI5sUfMEowhcWXqGcU72bPwns.lottie`  | 5,050   | solution animation (mobile)               |
@@ -536,7 +536,7 @@ remove while Vimeo is embedded.
 
 ### B.2 Verification, and the final numbers
 
-`cmp.js` (%TEMP%\opencode) loads the live site and `http://127.0.0.1:8137/index2.html`
+`cmp.js` (%TEMP%\opencode) loads the live site and `http://127.0.0.1:8137/index.html`
 in the same browser at each width, then compares document height, `scrollWidth`, ~25
 landmarks, and every text node's box.
 
@@ -552,7 +552,7 @@ landmarks, and every text node's box.
 exact-to-quantized at every width: all 5/10 card boxes land within 1px (desktop) or
 6–9px (mobile) and every box height matches (`dh=0`).
 
-Final measured spacing facts baked into `index2.css` (tune nothing by eye — these are
+Final measured spacing facts baked into `site-new.css` (tune nothing by eye — these are
 the live's live values):
 
 - Declaration note `margin-top` is **60px at every width** (not 84/80 as the first
@@ -779,7 +779,7 @@ painted over a box that already has its full measured size. So a live element th
 `[536,1124,760,604]` and paints a 1px frame occupies those exact pixels — the frame is drawn
 inside the box, not added to it.
 
-Three of them were reproduced in `index2.css`:
+Three of them were reproduced in `site-new.css`:
 
 | box                      | rule                                           | note                                     |
 | ------------------------ | ---------------------------------------------- | ---------------------------------------- |

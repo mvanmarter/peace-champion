@@ -11,11 +11,11 @@ const OUTPUT = ".";
  * land next to the Framer export they replace, because:
  *
  *   - every asset URL in the markup is file-relative from the root
- *     (`assets/css/index2.css`, `assets/svg/sprite.svg#...`), so moving the
+ *     (`assets/css/site-new.css`, `assets/svg/sprite.svg#...`), so moving the
  *     output into a subdirectory would break all of them or force `../`;
  *   - the repo root is the deploy unit (README), not a build directory;
  *   - `cmp.js`, the live-parity harness, hardcodes
- *     `http://127.0.0.1:8137/index2.html`.
+ *     `http://127.0.0.1:8137/index.html`.
  *
  * This is safe because `dir.input` is `src/`, so the only files Eleventy can
  * write are the ones a template in `src/pages/` explicitly names via its

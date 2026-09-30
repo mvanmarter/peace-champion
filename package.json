@@ -2,11 +2,11 @@
   "name": "peace-champion",
   "version": "1.0.0",
   "private": true,
-  "description": "Static build for the Global Peace Yes rebuild: index2.html from templates in src/.",
+  "description": "Static build for the Global Peace Yes rebuild: index.html from templates in src/.",
   "type": "module",
   "scripts": {
-    "build": "eleventy && prettier --write index2.html",
-    "format": "prettier --check index2.html",
+    "build": "eleventy && prettier --write index.html",
+    "format": "prettier --check index.html",
     "watch": "eleventy --serve",
     "serve": "python -m http.server 8137"
   },

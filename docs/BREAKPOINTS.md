@@ -12,14 +12,14 @@ Everything marked **verified** was measured, not inferred. The commands are in
 
 There are **two real breakpoints**: **810px** and **1200px**.
 
-| range           | name    | `index2.css` query                                     |
+| range           | name    | `site-new.css` query                                     |
 | --------------- | ------- | ------------------------------------------------------ |
 | ≤ 809.98px      | mobile  | `@media (max-width: 809.98px)`                         |
 | 810 – 1199.98px | tablet  | `@media (min-width: 810px) and (max-width: 1199.98px)` |
 | ≥ 1200px        | desktop | `@media (min-width: 1200px)`                           |
 
 The live Framer site has **four** tiers, not two — it also splits at **1440px** and
-**1728px**. `index2.css` deliberately collapses those two into the `≥ 1200px`
+**1728px**. `site-new.css` deliberately collapses those two into the `≥ 1200px`
 branch, because on the homepage they change nothing visible (see [§4](#4-the-two-tiers-we-collapsed)).
 
 **Both breakpoints are 810 and 1200 on the live site, verified at the exact
@@ -35,11 +35,11 @@ and this is the single most confusing thing in the repo.
 |                   | file                                                  | authoritative for                                  |
 | ----------------- | ----------------------------------------------------- | -------------------------------------------------- |
 | **export track**  | `assets/css/site.css` (1.28 MB, 7 pages concatenated) | the 6 non-homepage exported pages                  |
-| **`index2.html`** | `assets/css/index2.css`                               | **the homepage — this is the deployable artifact** |
+| **`index.html`** | `assets/css/site-new.css`                               | **the homepage — this is the deployable artifact** |
 
-If you are changing the homepage, `index2.css` is the only file that matters.
-`site.css` is the frozen Framer export and does **not** control `index2.html` at
-all — `index2.html` does not link it.
+If you are changing the homepage, `site-new.css` is the only file that matters.
+`site.css` is the frozen Framer export and does **not** control `index.html` at
+all — `index.html` does not link it.
 
 ---
 
@@ -69,7 +69,7 @@ exactly these four queries, all in `.98` form. Confirmed: 4 media blocks contain
 
 ## 4. The two tiers we collapsed
 
-`index2.css` has **no** 1440px or 1728px query. The live homepage's `1440–1727`
+`site-new.css` has **no** 1440px or 1728px query. The live homepage's `1440–1727`
 tier and its `≥1728` base tier both render the same as our `≥1200px` branch.
 
 Supporting evidence, in descending order of strength:
@@ -232,7 +232,7 @@ Verified: at 1440 the slide columns resolve to `536px 616px`.
 ### 6.1 The `.98` suffix is load-bearing
 
 **Do not "clean up" `809.98px` to `809px`.** The live really does use `809.98px`,
-`1199.98px`, `1439.98px` and `1727.98px`, and `index2.css` matches it deliberately.
+`1199.98px`, `1439.98px` and `1727.98px`, and `site-new.css` matches it deliberately.
 
 The suffix is what keeps the ranges from overlapping or leaving a gap when a
 viewport lands on a fractional CSS pixel (browser zoom at a non-integer scale, or a
@@ -249,7 +249,7 @@ matches at 809.5px, so the handoff is continuous.
 
 ### 6.2 The base rules are DESKTOP, not mobile
 
-`index2.css` is **mobile-last**. Unconditional rules carry the desktop values and
+`site-new.css` is **mobile-last**. Unconditional rules carry the desktop values and
 the two media queries override them downward:
 
 | selector        | base value (= desktop)                  |
@@ -272,7 +272,7 @@ it to the tablet query.
 
 ### 6.3 The nav is mobile-first, the one exception
 
-Everything else in `index2.css` is mobile-last (§6.2). **The header nav is the
+Everything else in `site-new.css` is mobile-last (§6.2). **The header nav is the
 opposite, and this will bite you.**
 
 The _base_ (unconditional) rules are the mobile/burger state:
@@ -306,7 +306,7 @@ silently wrong.
 
 ### 6.4 `.js` is not a breakpoint
 
-`index2.html`'s head does `document.documentElement.className += " js"`. The nav
+`index.html`'s head does `document.documentElement.className += " js"`. The nav
 rules are scoped `.js .nav-toggle`, `.js .nav`, `.js .nav-panel`.
 
 That is **progressive enhancement, not a media query**: without JS the inline nav
@@ -316,7 +316,7 @@ prefix only decides _who gets the burger_.
 
 ### 6.5 There is no JavaScript breakpoint logic at all
 
-Verified: `index2.html` contains **no** `matchMedia`, **no** `innerWidth`, **no**
+Verified: `index.html` contains **no** `matchMedia`, **no** `innerWidth`, **no**
 `resize` listener. All three inline scripts are:
 
 1. the `.js` class,
@@ -324,7 +324,7 @@ Verified: `index2.html` contains **no** `matchMedia`, **no** `innerWidth`, **no*
 3. the burger click handler toggling `data-open` / `aria-expanded`.
 
 Every responsive behaviour on the page is pure CSS. If you need a new
-breakpoint-dependent behaviour, it belongs in `index2.css`. Do not introduce a
+breakpoint-dependent behaviour, it belongs in `site-new.css`. Do not introduce a
 JS media-query listener.
 
 ### 6.6 The container is NOT a breakpoint
@@ -364,7 +364,7 @@ When changing anything structural, test `810` _and_ `809`, not `810` and `800`.
 
 ## 7. The export track's breakpoints
 
-Only relevant if you ever rebuild the other 6 pages the `index2.html` way
+Only relevant if you ever rebuild the other 6 pages the `index.html` way
 (undecided — see `AGENTS.md`). `assets/css/site.css` contains **14 distinct**
 media queries. They fall into two families:
 
@@ -407,7 +407,7 @@ python -m http.server 8137
 ```
 
 The sanctioned comparison tool is **`cmp.js`** (`%TEMP%\opencode\`) — it loads the
-live site and `http://127.0.0.1:8137/index2.html` side by side and compares
+live site and `http://127.0.0.1:8137/index.html` side by side and compares
 document height, `scrollWidth`, ~25 landmarks and every text node's box. Use the
 boundary widths:
 
@@ -437,23 +437,23 @@ only check that reads the _live_ tier set rather than a local stylesheet.
 
 ## 9. Stale claims to be aware of
 
-`AGENTS.md` and `docs/NEW_SITE.md` predate the current `index2.html` in places.
+`AGENTS.md` and `docs/NEW_SITE.md` predate the current `index.html` in places.
 Two things asserted there are **not true of the files as they stand now**:
 
 - **The DotLottie players are gone from the page.** `AGENTS.md` describes
-  `index2.html` as carrying two vendored `.lottie` players and a 779 KB
+  `index.html` as carrying two vendored `.lottie` players and a 779 KB
   `dotlottie-player-2.5.6.js`. The slide panels are now static `<ul class="cards">`
-  lists. `grep` finds **no** `dotlottie`/`lottie` reference in `index2.html` or
-  `index2.css`. The asset files are still on disk in `assets/vendor/` and
+  lists. `grep` finds **no** `dotlottie`/`lottie` reference in `index.html` or
+  `site-new.css`. The asset files are still on disk in `assets/vendor/` and
   `assets/animations/` but **unreferenced** — dead weight. There is also a fourth
   animation, `DpX3m5yT5Z.lottie` (7,324 B), that `AGENTS.md` never mentions.
 - **The `--lot-y: -318px` rule does not exist.** `AGENTS.md` lists "the DotLottie
   player is 318px too high from 1200px up" as an open one-line fix in the
-  `@media (min-width: 1200px)` block. There is no `--lot-y` in `index2.css`. The
+  `@media (min-width: 1200px)` block. There is no `--lot-y` in `site-new.css`. The
   `≥1200px` block contains only the rules listed in §5.3.
 
 Also note the live site's document height has drifted since `AGENTS.md`'s table was
-recorded. Measured 29 Sep 2026 (live vs `index2.html`):
+recorded. Measured 29 Sep 2026 (live vs `index.html`):
 
 | width | live docH | ours docH | delta     | `AGENTS.md` recorded |
 | ----- | --------- | --------- | --------- | -------------------- |
@@ -484,7 +484,7 @@ Two consequences for the diff tools:
 [chats/breakpoint-recommendations.md](chats/breakpoint-recommendations.md) is a
 general "what are recommended breakpoint sizes these days" answer, kept for
 reference. It is **not** a prescription for this repo — the recommendations assume
-a new site being designed from scratch, while `index2.html` is a measured
+a new site being designed from scratch, while `index.html` is a measured
 reproduction of a frozen one. Why each suggestion does not apply:
 
 - **Keep 810 and 1200 as-is.** They are not design choices here — they are spec,

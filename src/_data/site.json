@@ -1,6 +1,6 @@
 {
   "_note": "The two embed URLs below carry pre-escaped &amp; because they are injected into an HTML attribute verbatim. Nunjucks runs with autoescape off (see eleventy.config.mjs), so they are emitted exactly as written here. If autoescape is ever turned back on these will double-escape.",
-  "homeHref": "index2.html",
+  "homeHref": "index.html",
   "brandLabel": "Global Peace Yes — home",
   "sprite": "assets/svg/sprite.svg",
   "headerSymbol": "svg-1141485548_13698",
