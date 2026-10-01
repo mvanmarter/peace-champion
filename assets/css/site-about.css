@@ -107,6 +107,21 @@
   display: flex;
   align-items: stretch;
   background: rgba(0, 107, 212, 0.1);
+  position: relative;
+}
+
+/* Both mission rules are `::after` overlays with `inset: 0` drawn inside a box
+   that already has its measured size - NOT real CSS `border`s. A real border
+   would add 2px to the section's height and break the document-height parity.
+   Measured on the live: the tinted box's `::after` is `1px solid #000` on all
+   four sides at every width (1440 1152x400, 1000 952x400, 810 762x400, 600
+   552x452.219, 390 342x531.031). */
+.mission-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
 }
 
 /* The gap between the heading and the paragraph is NOT a margin - it is the
@@ -123,6 +138,20 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 40px;
+  position: relative;
+}
+
+/* The divider between the two halves is the copy column's own `::after`, not a
+   border on either column. Measured on the live: `1px solid #000` on the RIGHT
+   only at 1440/1000/810 (576x400, 476x400, 381x400 - the media column carries
+   no rule of its own, the box's `::after` already closes it), and on the BOTTOM
+   only at 600/390 where the halves stack (552x252.219, 342x331.031). */
+.mission-copy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: 1px solid #000;
+  pointer-events: none;
 }
 
 /* The label and heading are one group. Measured live at every width: the label
@@ -154,7 +183,38 @@
 
 /* ---------- timeline ---------- */
 .about-timeline {
-  padding-top: 80px;
+  padding-top: 0;
+}
+
+/* The intro band is a full-bleed 5%-black tint carrying a 1px black rule on its
+   TOP and BOTTOM edges only - no left or right. Measured on the live at 1440
+   (1440x260), 1000 (1000x286), 810 (810x286) and 390 (390x371.844): the band is
+   always viewport-wide at x=0 and always pads 80px above and below its content,
+   with the heading and paragraph 16px apart. The heading is a 290x32 box
+   centred on the viewport (`width: fit-content`), the paragraph runs the full
+   container width.
+
+   As everywhere else, the rule is an `::after` with `inset: 0`, never a real
+   `border` - the band already has its measured height, and a real border would
+   add 2px and break document-height parity.
+
+   This block's 80px padding is NOT additional to what used to be there: it
+   replaces `.about-timeline`'s former `padding-top: 80px` above and the lead
+   rail's former `margin-top: 80px` below. Both of those are now 0, so the
+   band's own edges land on the live's at 1128 and 1388. */
+.tl-band {
+  position: relative;
+  padding: 80px 0;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.tl-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  pointer-events: none;
 }
 
 .about-timeline .about-h3 {
@@ -182,9 +242,16 @@
   fill: none;
 }
 
+/* `margin-top` is 0, not 80: the band's own `padding-bottom: 80px` now
+   supplies the gap between the closing paragraph and the top of this rail. The
+   flat 160px the paragraph's bottom edge to the rail's top (1688 -> 1854 at
+   800, 1616 -> 1776 at 700, and the same at every other width) is therefore
+   split 80/80 between the paragraph and the band rather than one 160px
+   margin. 74px of it is the rail's own height, so the gap above it is 86px -
+   not the 63px this file used to claim. */
 .tl-rail--lead {
   height: 74px;
-  margin-top: 80px;
+  margin-top: 0;
   margin-bottom: 40px;
 }
 
@@ -210,9 +277,26 @@
      1000 -> 323
    The live's year type steps at the same breakpoints: 72/64.8 at 1440+,
    68/61.2 at 1200-1439.98, 48/43.2 at 810-1199.98, 40/36 at 809.98 down. */
+/* No min-height: the row's height comes from its parts, exactly as on the live.
+   Decomposed from the live at 1440, where the first row is 304.8 tall and the
+   rows sit on a 345 pitch:
+
+      64.8   the year, 72px/64.8
+      40     gap between the year and the cards
+     170     the cards' row (min-height: 170px below - the 1940's cards are only
+             112 tall but sit in a 170 row, which is what keeps rows 1-6 on a
+             single pitch)
+      30     the 14x30 connector dot, last child of the row (`::after`)
+     ----
+     304.8   the row, then 40px to the next decade = the 345 pitch
+
+   This file used to carry `min-height: 345px` on `.decade` as a hand-tuned
+   stand-in for that dot. It happened to sum correctly, so it was invisible -
+   until the cards grew their real 24px/32px padding, at which point it was
+   40.2px too tall on every row. */
 .decade {
   position: relative;
-  min-height: 345px;
+  min-height: 0;
 }
 
 .tl-rail--line {
@@ -230,6 +314,45 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* The 14x30 connector dot that closes every row, and the 14x24 stub that closes
+   the last one. On the live this is a real element inside the row (an empty
+   14x30 div, and an `svg` for the 24px one at the very end); here it is the
+   row's `::after`, which lands in the same place because `.decade` has no other
+   children after `.decade-items`. Measured on the live at 1440: six 14x30 dots
+   at y=1777/2122/2466/2811/3156/3501 and one 14x24 stub at y=3846; at 1000,
+   810 and 390 the same 14x30/14x24 pairing. The background is the 14x30 dot
+   asset squashed to the box, which is how the live's own
+   `preserveAspectRatio="none"` stub behaves. */
+.decade::after {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 30px;
+  margin-inline: auto;
+  background: url("../images/tl-dot.svg") center / 100% 100% no-repeat;
+}
+
+/* The last row's closing stub is a real element rather than a `::after`,
+   because it has to be followed by the Vote Now button - and a `::after` always
+   paints after every real child. The live's last items box is 229.2 tall at 1440
+   and 508.83 at 390, which decomposes exactly as
+   170 (cards) + 24 (stub) + 35.2 (button) at 1440; the button is 103.34 wide and
+   centred in the 1152 row (x=668 = 144 + (1152 - 103.34) / 2). */
+.tl-rail--laststub {
+  position: static;
+  display: block;
+  width: 14px;
+  height: 24px;
+  margin-inline: auto;
+}
+
+.decade:last-child::after {
+  display: none;
 }
 
 .decade-year {
@@ -241,16 +364,65 @@
   text-align: center;
 }
 
+/* `padding-inline: 0` and a 94px gap, so the cards span the full 1152 container:
+   529 + 94 + 529 = 1152, landing them at x=144 and x=767 - the live's exact
+   boxes. The 32px inset that used to sit HERE was compensating for the missing
+   card padding below: the content width was right (465) while the card box was
+   64px too narrow, which an invisible border had been hiding. */
 .decade-items {
   display: flex;
-  gap: 158px;
-  margin-top: 64px;
-  padding-inline: 32px;
+  /* `flex-start`, not the default `stretch`: the live's cards are always their
+     own content height and sit at the TOP of the 170px row. Measured at 1440 -
+     a 112px card in a 170px row, 150.406 at 810, 131.203 and 150.406 on the
+     later 1440 rows - so the row is floored at 170 but each card keeps its own
+     height and they differ within the same row. */
+  align-items: flex-start;
+  gap: 94px;
+  margin-top: 40px;
+  padding-inline: 0;
+  min-height: 170px;
 }
 
 .decade-item {
   flex: 1 1 0;
   min-width: 0;
+  position: relative;
+  background: #faf9f6;
+  padding: 24px 32px;
+}
+
+/* Every one of the 14 cards - including the last, "GLOBAL PEACE YES CAMPAIGN"
+   - is framed with a 1px solid #000 border on TOP, RIGHT, and BOTTOM at every
+   width. The LEFT border is wider (10px) and coloured by column:
+   - LEFT column (first item in each row): 10px solid #000 (black)
+   - RIGHT column (second item): alternating 10px solid --dot-blue / --dot-green
+     down the rows (blue, green, blue, green, blue, green, blue).
+   Measured on the live at 1440/1000/810/390: every box reports ::after with
+   inset: 0 and these border widths/colours. Nothing varies by breakpoint. */
+.decade-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  border-left-width: 10px;
+  pointer-events: none;
+}
+
+/* Left column = first item in each .decade-items: black left border (already
+   set by the base rule above). */
+
+/* Right column = second item: alternating blue/green per decade row. */
+.timeline > .decade:nth-child(1) .decade-item:nth-child(2)::after,
+.timeline > .decade:nth-child(3) .decade-item:nth-child(2)::after,
+.timeline > .decade:nth-child(5) .decade-item:nth-child(2)::after,
+.timeline > .decade:nth-child(7) .decade-item:nth-child(2)::after {
+  border-left-color: var(--dot-blue);
+}
+
+.timeline > .decade:nth-child(2) .decade-item:nth-child(2)::after,
+.timeline > .decade:nth-child(4) .decade-item:nth-child(2)::after,
+.timeline > .decade:nth-child(6) .decade-item:nth-child(2)::after {
+  border-left-color: var(--dot-green);
 }
 
 .decade-item h3 {
@@ -279,8 +451,26 @@
 }
 
 /* ---------- volunteer ---------- */
+/* NO top padding. The live's volunteer row is `1440x412` at y=3985 with none of
+   its own - the 40px at the top of the collage comes from `.volunteer-media`'s
+   `padding: 40px 40px 40px 0` (live `framer-ara9tv`, 720x412 at y=3985). An 80px
+   `padding-top` here stacked on top of that and pushed the whole section 80px
+   down, which is what made the doc 67px tall at 1440 once the timeline itself
+   was fixed.
+
+   The 12px between the timeline section's bottom (3973) and the volunteer row's
+   top (3985) is the live's own; `padding-top: 12px` reproduces it exactly.
+   The live also has a 10% --dot-green tint and 1px black rules top/bottom.
+   The BOTTOM border sits on the INNER container so the foot rail renders
+   below it, matching the live's flush placement. */
 .about-volunteer {
-  padding-top: 80px;
+  padding-top: 12px;
+  background: rgba(0, 138, 23, 0.1);
+  border-top: 1px solid #000;
+}
+
+.about-volunteer > .container {
+  border-bottom: 1px solid #000;
 }
 
 /* The live's volunteer section is FULL BLEED: a two-column flex whose halves
@@ -331,11 +521,13 @@
   margin-top: 32px;
 }
 
-/* The live's "Get in Touch" is a button-shaped link with a transparent
-   background and no border — reproduced rather than "fixed". */
+/* The live's "Get in Touch" is a button-shaped link with transparent
+   background, black 1px border, 52px radius, and black text. */
 .btn--ghost {
   background: none;
-  color: var(--ink);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 52px;
 }
 
 /* The collage is a uniform grid, but the live changes its COLUMN COUNT at two
@@ -450,10 +642,6 @@
    pitch by 4px (345 -> 341) in this range only. Measured at 1440 and 1200:
    year rows are 274.8/271.2 tall with a 345/341 pitch. */
 @media (min-width: 1200px) and (max-width: 1439.98px) {
-  .decade {
-    min-height: 341px;
-  }
-
   .decade-year {
     font-size: 68px;
     line-height: 61.2px;
@@ -657,11 +845,17 @@
 
   /* Below 810px the live's copy column is content-height and uses a real 40px
      gap (its computed `gap` is 40px at 800 and below, against space-between at
-     810px up), so space-between has to be undone here. */
+     810px up), so space-between has to be undone here. Its divider also turns
+     from a right rule into a bottom one - verified at 600 and 390. */
   .mission-copy {
     justify-content: flex-start;
     gap: 40px;
     padding: 24px;
+  }
+
+  .mission-copy::after {
+    border-right: 0;
+    border-bottom: 1px solid #000;
   }
 
   .mission-copy .about-body {
@@ -674,12 +868,13 @@
 
   /* timeline: one column, shorter rails */
   .about-timeline {
-    padding-top: 80px;
+    padding-top: 0;
   }
 
   /* 74 + 24 = the measured 98px run from the lead rail's top to the first
      decade (1537 -> 1635 at 390, 1854 -> 1952 at 800 - identical at every
-     width). The base rule's 80px margin-top is already right; only the 40px
+     width). The base rule's `margin-top` is already right at 0, because the
+     band's `padding-bottom` now supplies the gap above the rail; only the 40px
      bottom margin has to become 24. */
   .tl-rail--lead {
     margin-bottom: 24px;
@@ -715,8 +910,13 @@
     order: 1;
   }
 
+  /* `padding-inline: 0`, not 32px: stacked cards are the full 342 container
+     width and take their own 32px padding, so an inset here as well would leave
+     only 214px of content and re-wrap every description. `min-height: 0` undoes
+     the base rule's 170px floor - the live's mobile rows are content-height. */
   .decade-items {
     order: 2;
+    min-height: 0;
   }
 
   .timeline {
@@ -738,22 +938,25 @@
     line-height: 36px;
   }
 
+  /* `padding-inline: 0`, not 32px: stacked cards are the full 342 container
+     width and take their own 32px padding, so an inset here as well would leave
+     only 214px of content and re-wrap every description. */
   .decade-items {
     flex-direction: column;
     gap: 16px;
     margin-top: 24px;
-    padding-inline: 32px;
+    padding-inline: 0;
   }
 
   /* live: the title and body are flex children of the item with `gap: 4px`, and
-     the item is padded `24px 0` - BOTH sides. Measured at 390: item y=1695,
-     title y=1719, body 4 lines, item height 150.41 = 24 + 21.59 + 4 + 76.82
-     + 24. Desktop must stay unpadded, so this is mobile-only. */
+     the item is padded `24px 32px` at EVERY width - not just mobile. Measured
+     at 390: item y=1695, title y=1719, body 4 lines, item height 150.41 =
+     24 + 21.59 + 4 + 76.82 + 24. The base rule now carries that padding, so
+     this block only sets the flex/gap. */
   .decade-item {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding-block: 24px;
   }
 
   .decade-item p {
@@ -785,12 +988,22 @@
     background: url("../images/tl-dot.svg") center / 100% 100% no-repeat;
   }
 
-  /* the live keeps a closing connector on the last decade row; it’s the 14×24
-     stub at the end, not hidden. The tail rail is a separate piece after it. */
-  .decade:last-child::after {
-    display: block;
-    height: 24px;
+  /* the last row's 24px stub and its Vote Now button, in the live's child order:
+     the 40px rail (2028), the 14x24 stub (5280) and the button (5304) at 390.
+     They need explicit `order` because `order` defaults to 0 and the year, cards
+     and rail above are all pinned to 1-4. */
+  .tl-rail--laststub {
+    order: 4;
   }
+
+  .about-timeline-cta {
+    order: 5;
+  }
+
+  /* the live keeps a closing connector on the last decade row; it's the 14×24
+     stub at the end, not hidden - but it is the real `.tl-rail--laststub`
+     element above, ordered just before the Vote Now button, so the `::after`
+     dot stays off for this row. (The tail rail is a separate piece after it.) */
 
   /* The 14x75 connector that follows the timeline has no counterpart below 810:
      on the live the last decade's 24px closing dot is followed *immediately* by
@@ -878,3 +1091,255 @@
     width: 100%;
     max-width: 100%;
   }
+}
+
+/* =========================================================
+   FILMS page
+   ========================================================= */
+
+.films-hero {
+  padding: 120px 0 80px;
+  text-align: center;
+}
+
+.films-hero__eyebrow {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21.6px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.films-hero__title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 56px;
+  line-height: 64px;
+  margin: 0 0 24px;
+}
+
+.films-hero__copy {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 32px;
+  max-width: 720px;
+  margin: 0 auto 16px;
+}
+
+.film {
+  padding: 80px 0;
+  border-top: 1px solid #e1e0dd;
+}
+
+.film:first-of-type {
+  border-top: none;
+  padding-top: 40px;
+}
+
+.film__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+  margin-bottom: 80px;
+}
+
+.film__video {
+  width: 100%;
+}
+
+.film__copy {
+  padding-top: 16px;
+}
+
+.film__title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 56px;
+  margin: 0 0 24px;
+}
+
+.film__desc {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28.8px;
+  margin: 0 0 16px;
+}
+
+.film__credits {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--muted);
+  margin: 24px 0 8px;
+}
+
+.film__runtime {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 21px;
+  margin: 16px 0 24px;
+}
+
+.film__watch {
+  display: inline-flex;
+  margin-bottom: 16px;
+}
+
+.film__donate a {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--btn);
+  text-decoration: underline;
+}
+
+.film__donate a:hover {
+  color: var(--ink);
+}
+
+.film__about {
+  border-top: 1px solid #e1e0dd;
+  padding-top: 80px;
+}
+
+.film__about-eyebrow {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19.2px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.film__about-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 44px;
+  margin: 0 0 32px;
+}
+
+.film__about-copy p {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28.8px;
+  margin: 0 0 24px;
+}
+
+.film__press {
+  border-top: 1px solid #e1e0dd;
+  padding-top: 80px;
+}
+
+.film__press-title {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19.2px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.film__press-headline {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 44px;
+  margin: 0 0 32px;
+}
+
+.film__press-link a {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--btn);
+  text-decoration: underline;
+}
+
+.film__rep {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--muted);
+  margin-top: 24px;
+}
+
+/* Responsive: stack at 810px and below */
+@media (max-width: 809.98px) {
+  .films-hero {
+    padding: 80px 0 60px;
+  }
+
+  .films-hero__title {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  .films-hero__copy {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .film {
+    padding: 60px 0;
+  }
+
+  .film:first-of-type {
+    padding-top: 24px;
+  }
+
+  .film__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+
+  .film__title {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  .film__desc {
+    font-size: 17px;
+    line-height: 27.2px;
+  }
+
+  .film__about,
+  .film__press {
+    padding-top: 60px;
+  }
+
+  .film__about-title,
+  .film__press-headline {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+/* Ensure Vimeo embeds fill their containers */
+.film__video .embed {
+  width: 100%;
+}
+
+.film__video .embed iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
