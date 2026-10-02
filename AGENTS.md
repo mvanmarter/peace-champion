@@ -287,6 +287,43 @@ not exist; it now lives on `.value` instead of on the list. The old 276/292 was
 inflated by exactly the missing 16px/32px of padding, so `.about-cta` no longer needs
 a breakpoint override at all.
 
+### `.about-cta` is the live's closing block, not just the CTA row (Oct 2026)
+
+The 260 above is **not one gap**, and treating it as one hid a missing 1px black rule
+across the top of the section. Walking up from the live's closing heading shows
+`div.framer-FtLI0` (Framer names it `Desktop 2` / `Tablet` / `Phone`) carrying **all**
+of: the heading, the button, the 4px divider, **and the footer link groups**. It is
+full-bleed (`x=0`, `w=100vw` at 1440/1199/810/390), `padding: 80px 24px`, and its
+`::after` is `inset: 0` with a `1px solid rgb(0,0,0)` **border-top**. There is no
+`<footer>` element on the live `/about` at all — the last thing on the page is this
+wrapper.
+
+Measured at all five widths, the 260 decomposes into the same four numbers every time:
+
+| part                                              | value |
+| ------------------------------------------------- | ----- |
+| last value frame bottom → section top (the rule)  | **80** |
+| section `padding-top`                             | **80** |
+| an **empty 60px** group (`Group 133`, `html=""`)  | **60** |
+| the inner frame's flex `gap`                      | **40** |
+
+So `.about-cta` is now `margin-top: 80px; padding-top: 180px` plus
+`.about-cta::after { inset: 0; border-top: 1px solid #000; pointer-events: none }` —
+the same overlay idiom as `.welcome::after`, never a real `border`. 80 + 180 = the old
+260, so **the heading does not move and no doc-height delta changes** (re-measured: all
+12 widths byte-identical to the table below, `scrollWidth +0` throughout). Verified at
+1440/1199/810/800/390: frames→rule 80, rule→heading 180, frames→heading 260, all
+delta 0.00, computed `::after` identical, and a screenshot→canvas probe finds a single
+1px black row at the section top on both pages (live 5177/6258/7957 at 1440/810/390,
+ours 5179/6203/7883 — the differences are the pre-existing doc drift, not the rule).
+
+Two things deliberately **not** copied: the 60px empty `Group 133` is expressed as part
+of the 180px rather than as an empty element (it is 60px of dead space at every width,
+and dropping it would move the heading up 60px), and the footer links stay in their own
+`<footer>` element. The live puts them 40px under the divider inside this wrapper; ours
+already reproduces that pitch via `.site-footer { margin-top: 40px }`, `.footer-rule`
+and `.footer-inner { padding-top: 40px }`, so merging the DOM would buy nothing.
+
 **The Unity icon — the earlier "the live draws no icon" comment was wrong.** The live
 *does* render one; it just isn't an `<svg>`. It is a `<div class="framer-ps0rf6">`
 81×81 whose `background-image` is a `data:image/svg+xml` URI, which is why a
@@ -324,6 +361,47 @@ shows `t-poly` at +14 and `h-volunteer` at −49 — a single ~63px error in the
 between the timeline and the volunteer section, which then propagates down through
 everything below (`label-values` −49, `h-cta` −55). At 800–390 the same seam reads
 −67/−68. Not investigated; not touched here.
+
+> **Superseded Oct 2026, partly — see "The timeline's closing rail" below.** Adding the
+> 80px container margin shifted this seam +80px, so `h-volunteer` now reads **+31** at
+> 810 and **+13** at 1728/1440/1200, and the page is no longer short anywhere. The
+> −49…−68 figures and the doc-height table above are kept as the pre-change record; the
+> current numbers are the ones in that section.
+
+### The timeline's closing rail (Oct 2026)
+
+The 14×75 `<svg class="tl-rail tl-rail--tail">` that closed `.about-timeline` was
+removed from `about.html` at the user's request, and its space replaced with
+`.about-timeline > .container { margin-bottom: 80px }`. Verified: the element is gone
+(0 `.tl-rail--tail` in the DOM), the container's last child is now `ol.timeline`, and
+the `<ol>` bottom → `.about-volunteer` top gap is exactly **80** at 1728/1440/1200/
+1199/1000/810/800/390.
+
+**It was only ever painted from 1200 up.** `.tl-rail--tail` was `display: none` in both
+the 810–1199 and the ≤809 bands, so removing it is **+12px** at ≥1200 (68px of rail out,
+80px in) and **+80px** below 1200. Sprite def `svg822913003_248` stays — `.tl-rail--
+laststub` and `.tl-rail--foot` still use it.
+
+All three now-dead `.tl-rail--tail` rules were deleted with it (base `height: 68px`,
+plus a `display: none` in each breakpoint band); their still-relevant measurements are
+folded into the comments that replaced them. Restoring the rail means restoring all
+three.
+
+Current doc-height delta (ours − live), `cmp-about.js`, `scrollWidth +0` at all 12:
+
+| width                             | delta  |
+| --------------------------------- | ------ |
+| 1728 / 1440                       | **+14** |
+| 1200                              | **+12** |
+| 1199                              | **+7**  |
+| 1000                              | **+10** |
+| 810                               | **+25** |
+| 800 / 700 / 600 / 500 / 450 / 390 | **+13 … +14** |
+
+Worst landmark `dy` across all 12 widths is **13**, down from 74. This is a net
+improvement: the page previously ran 55–73px short at 810–1199 and is now marginally
+long everywhere. Do not "correct" the +80 without re-measuring — the live's own value
+for the `<ol>` → volunteer gap at this seam was never verified as 80.
 
 ## Key findings (load-bearing, easy to get wrong)
 

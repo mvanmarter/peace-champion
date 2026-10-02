@@ -2200,11 +2200,13 @@ ul {
   margin-bottom: 40px;
 }
 
-/* The live's run from the last descriptions to the button is 68px (a 44px gap
-   plus a squashed 24px dot). Drawing the dot at its natural 75px and pulling
-   the button up to match keeps the circle round. */
-.tl-rail--tail {
-  height: 68px;
+/* The 14x75 rail that used to close the timeline is gone from the markup (Oct
+   2026). Its space is now the container's own 80px margin-bottom below. Note it
+   was only ever painted from 1200 up - `.tl-rail--tail` was `display: none` in
+   both the 810-1199 and the <=809 bands - so this is +80px below 1200 and +12px
+   above it (68px of rail removed, 80px added). */
+.about-timeline > .container {
+  margin-bottom: 80px;
 }
 
 /* Every decade on the live sits on a constant 345px pitch: the year is 65px,
@@ -2609,13 +2611,43 @@ ul {
 }
 
 /* ---------- closing CTA ---------- */
-/* The live's frame bottom -> CTA heading top gap is 260.0px at EVERY width
-   measured (1440, 1199, 810, 800, 390 - all 260.0 to the pixel). This was 276
-   here at 1200+ and 292 below, i.e. inflated by exactly the 16px/32px of frame
-   padding that did not exist; now that the frames carry their own padding the
-   gap is the live's real 260 at every width and needs no breakpoint override. */
+/* On the live this is not merely the CTA row: it is the page's closing block,
+   full-bleed, and it carries the CTA heading, the button, the 4px divider and
+   the footer link groups. Its top edge is a black 1px rule, and the heading sits
+   260.0px below the last value frame at EVERY width measured (1440, 1199, 810,
+   800, 390 - all 260.0 to the pixel).
+
+   That 260 is not one gap, though. Measured at all five widths it is the same
+   four numbers every time:
+     80  last value frame's bottom edge -> this section's top edge (the rule)
+     80  the section's own padding-top
+     60  an empty 60px group ("Group 133") heading the inner frame
+     40  the inner frame's flex gap
+   So the rule belongs 80px below the frames and the heading 180px below the
+   rule. Written as `margin-top` + `padding-top` rather than the single 260
+   padding this used to be, which is why the heading does not move at all and
+   the measured doc-height deltas are unaffected.
+
+   The live's footer links sit inside this same wrapper, 40px below the divider.
+   Ours keeps them in their own `<footer>`, which already reproduces that pitch
+   (`.site-footer` 40px margin-top, `.footer-rule`, `.footer-inner` 40px
+   padding-top), so nothing about the footer needs to move. */
 .about-cta {
-  padding-top: 260px;
+  position: relative;
+  margin-top: 80px;
+  padding-top: 180px;
+}
+
+/* The 1px black rule on the section's top edge, full-bleed (the live's wrapper
+   measures x=0..100vw at 1440, 1199, 810 and 390). Drawn as an `::after`
+   overlay, never a real `border`, so it adds no height - the same idiom as
+   `.welcome::after` above. */
+.about-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  pointer-events: none;
 }
 
 .cta-row {
@@ -2696,13 +2728,9 @@ ul {
     height: 170px;
   }
 
-  /* The live has no 14x75 rail after the timeline in this band either: its only
-     14x75 is the one at the top of the values section (4439 at 900), which
-     `.tl-rail--foot` already is. What the live puts here instead is a 14x189
-     rail plus a 14x24 stub (3550 and 3739 at 900). */
-  .tl-rail--tail {
-    display: none;
-  }
+  /* No `tl-rail--tail` rule here any more: the 14x75 connector that followed the
+     timeline is gone from the markup, replaced by the container's own 80px
+     margin-bottom. */
 
   /* and this band closes each row with the same 14x30 connector dot the mobile
      band uses: 253.2 row + 30 dot + 40 gap = the live's 323.2 pitch. */
@@ -3012,16 +3040,9 @@ ul {
   /* the live keeps a closing connector on the last decade row; it's the 14×24
      stub at the end, not hidden - but it is the real `.tl-rail--laststub`
      element above, ordered just before the Vote Now button, so the `::after`
-     dot stays off for this row. (The tail rail is a separate piece after it.) */
-
-  /* The 14x75 connector that follows the timeline has no counterpart below 810:
-     on the live the last decade's 24px closing dot is followed *immediately* by
-     the Vote Now button (dot ends 5304, button starts 5304 at 390), while this
-     rail would insert 68px there. The live's only 14x75 rail at mobile is the
-     one at the top of the values section, which `.tl-rail--foot` already is. */
-  .tl-rail--tail {
-    display: none;
-  }
+     dot stays off for this row. On the live the last decade's 24px closing dot
+     is followed *immediately* by the Vote Now button (dot ends 5304, button
+     starts 5304 at 390), which is why nothing else belongs between them. */
 
   .tl-rail--line {
     top: 64px;
@@ -3099,8 +3120,9 @@ ul {
     margin-top: 32px;
   }
 
-  /* No `.about-cta` override here: the live's frame-bottom -> CTA-heading gap is
-     260.0px at 800 and 390 as well, so the base value now serves every width. */
+  /* No `.about-cta` override here either: the 80 + 80 + 60 + 40 that make up the
+     live's 260.0px frame-bottom -> CTA-heading gap are the same at 800 and 390,
+     so the base value serves every width. */
 
   .cta-row {
     flex-direction: column;
