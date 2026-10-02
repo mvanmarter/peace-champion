@@ -1520,7 +1520,7 @@ ul {
 
 /* =========================================================
    Static sub-pages - shared shell
-   (films2 / donate2 / volunteer2 - about2 is never grouped)
+   (films / donate / volunteer - about is never grouped)
    Rules hoisted out of two or more page files, de-duplicated.
    ========================================================= */
 
@@ -1940,10 +1940,10 @@ ul {
 }
 
 /* =========================================================
-   about2.html
+   about.html
    ========================================================= */
 
-/* Global Peace Yes — about2.html
+/* Global Peace Yes — about.html
    Static rebuild of https://globalpeaceyes.org/about.
    Loads after site-new.css, which supplies the fonts, tokens, reset,
    .container, .btn, the header and the footer. Everything here is
@@ -3035,7 +3035,7 @@ ul {
     max-width: 100%;
   }}
 /* =========================================================
-   films2.html
+   films.html
    ========================================================= */
 
 
@@ -3772,7 +3772,7 @@ ul {
     transition-duration: 0.01ms !important;
   }}
 /* =========================================================
-   donate2.html
+   donate.html
    ========================================================= */
 
 
@@ -4025,7 +4025,7 @@ ul {
     padding: 40px 0 0;
   }}
 /* =========================================================
-   volunteer2.html
+   volunteer.html
    ========================================================= */
 
 

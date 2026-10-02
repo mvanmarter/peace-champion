@@ -2,16 +2,19 @@
 
 Two things live in `C:\Dev\PeaceChampion`, and they are **not** interchangeable:
 
-|                                     | what it is                                                                    | deploy it?                      |
-| ----------------------------------- | ----------------------------------------------------------------------------- | ------------------------------- |
-| `index.html`                        | the rebuilt homepage, **generated** by Eleventy from `src/`                    | **yes** — this is the good page |
-| `about`, `donate`, `films`,         | the Framer static export (6 pages)                                            | **no** — see `AGENTS.md` §0     |
-| `privacy-policy`, `volunteer`, `404` |                                                                           |                                 |
+| file                                                       | what it is                                                     | deploy it?                      |
+| ---------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------- |
+| `index.html`                                               | the rebuilt homepage, **generated** by Eleventy from `src/`     | **yes** — this is the good page |
+| `about.html`, `films.html`, `volunteer.html`, `donate.html` | hand-built static replacements for the deleted Framer export   | yes — no build step             |
 
-`AGENTS.md` is the authoritative account of why. The short version: the export does
-not hydrate, reports a `scrollWidth` of 2750px at a 1440px viewport, and lays out
+`AGENTS.md` is the authoritative account of why. The short version: the export did
+not hydrate, reported a `scrollWidth` of 2750px at a 1440px viewport, and laid out
 correctly on only 1 of the 7 pages it was measured across. The export's own
 homepage (`index.html`) was deleted in commit `fa89e88`; this is what replaced it.
+The remaining export pages were deleted in commit `c9622f4`, and `about`, `films`,
+`volunteer` and `donate` have since been rebuilt as static pages under their
+original names — they were `about2.html` etc. until Oct 2026, while the export
+copies they were avoiding a collision with still existed.
 
 
 ## The build
@@ -49,14 +52,11 @@ serves *unformatted* output — harmless, since formatting is invisible in a bro
 
 ```
 index.html         GENERATED - the homepage
-index.html          (Framer export - superseded, do not deploy)
-about.html          (Framer export)
-donate.html         (Framer export - includes Givebutter widget)
-films.html          (Framer export)
-privacy-policy.html (Framer export)
-volunteer.html      (Framer export)
-404.html            (Framer export - not-found page)
-eleventy.config.mjs (Eleventy config: input src/, output ".")
+about.html         hand-built static page (was about2.html)
+films.html         hand-built static page (was films2.html)
+volunteer.html     hand-built static page (was volunteer2.html)
+donate.html        hand-built static page (was donate2.html; includes Givebutter widget)
+eleventy.config.mjs (Eleventy config: input src/, output ".") - index.html only
 package.json        (the build; only @11ty/eleventy, a dev dependency)
 src/                (templates - see above)
 assets/
@@ -131,8 +131,8 @@ node_modules/  src/  package.json  package-lock.json  eleventy.config.mjs
 ```
 
 - Any static host works: Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, nginx.
-- `404.html` is picked up as the custom not-found page by most hosts when named
-  `404.html`. **Note:** that is currently still the Framer export, not a rebuilt page.
+- There is no `404.html` any more — the export's copy was deleted in `c9622f4` and no
+  replacement has been built, so most hosts will serve their own default not-found page.
 - Relative URLs (`about.html`, `assets/...`) mean the site works served from any
   sub-path or domain. This is why the build outputs in place instead of to a
   subdirectory — moving the output would break every one of those paths.
@@ -140,11 +140,11 @@ node_modules/  src/  package.json  package-lock.json  eleventy.config.mjs
   directory to the repo root. Be aware that a bare `package.json` at the root can
   make Vercel and Netlify start a build step where there previously was none.
 
-**What you can actually deploy today:** `index.html` plus `assets/`. The other six
-pages are still the Framer export and are not safe to publish — see `AGENTS.md` §0 for
-the measurements. This is now the real homepage: the export's own `index.html` was
-deleted in commit `fa89e88`, and the six remaining export pages reach it through
-`href="./"`, so their home links resolve here without modification.
+**What you can actually deploy today:** `index.html` plus `assets/`. The four other
+pages (`about.html`, `films.html`, `volunteer.html`, `donate.html`) are hand-written
+static pages with their own header and footer — no build step, nothing generated —
+so they are served as-is. They were named `about2.html` etc. until Oct 2026 to avoid
+colliding with the Framer export, which has since been deleted (`c9622f4`).
 
 ## What was done in the migration
 

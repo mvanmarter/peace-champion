@@ -10,12 +10,17 @@
 
 # --- not ours to reformat ---
 
-# The 6 remaining Framer export pages.
+# The hand-written static pages. Renamed from *2.html on Oct 2026 (the Framer export
+# they replaced was deleted in c9622f4). Not Eleventy output — only index.html is —
+# and reformatting them would be a large unwanted diff.
 /about.html
 /donate.html
 /films.html
-/privacy-policy.html
 /volunteer.html
+
+# Not present today; excluded ahead of time so a rebuilt page of the same name is
+# not reformatted by a stray `prettier --write .`.
+/privacy-policy.html
 /404.html
 
 # The Framer export's stylesheet and the rest of the 20 MB asset tree. These are

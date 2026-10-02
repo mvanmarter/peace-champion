@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Donate — GLOBAL PEACE YES</title>
+    <title>Volunteer — GLOBAL PEACE YES</title>
     <meta
       name="description"
-      content="Support Global Peace Yes with a tax-deductible donation and help make peace a global practice."
+      content="Get in touch about volunteering with Global Peace Yes at events, promoting the campaign and with the organization."
     />
     <link rel="stylesheet" href="assets/css/site-new.css" />
   </head>
-  <body class="page-donate">
+  <body class="page-volunteer">
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="index.html" aria-label="Global Peace Yes — home">
@@ -19,16 +19,16 @@
           </svg>
         </a>
         <nav class="nav desktop-nav" aria-label="Primary">
-          <a href="about2.html">About</a>
+          <a href="about.html">About</a>
           <a
             href="https://www.eventbrite.com/o/global-peace-yes-89857821323"
             target="_blank"
             rel="noopener"
             >Events</a
           >
-          <a href="donate2.html" aria-current="page">Donate</a>
-          <a href="volunteer.html">Volunteer</a>
-          <a href="films2.html">Films</a>
+          <a href="donate.html">Donate</a>
+          <a href="volunteer.html" aria-current="page">Volunteer</a>
+          <a href="films.html">Films</a>
         </nav>
         <a
           class="btn header-cta"
@@ -40,16 +40,16 @@
         <details class="mobile-menu">
           <summary aria-label="Toggle navigation menu"><span></span></summary>
           <nav class="mobile-menu__panel" aria-label="Mobile primary">
-            <a href="about2.html">About</a>
+            <a href="about.html">About</a>
             <a
               href="https://www.eventbrite.com/o/global-peace-yes-89857821323"
               target="_blank"
               rel="noopener"
               >Events</a
             >
-            <a href="donate2.html" aria-current="page">Donate</a>
-            <a href="volunteer.html">Volunteer</a>
-            <a href="films2.html">Films</a>
+            <a href="donate.html">Donate</a>
+            <a href="volunteer.html" aria-current="page">Volunteer</a>
+            <a href="films.html">Films</a>
             <a
               class="btn"
               href="https://app.globalpeaceyes.org/"
@@ -63,93 +63,119 @@
     </header>
 
     <main>
-      <section class="donate-hero">
-        <div class="donate-hero__grid" aria-hidden="true"></div>
+      <section class="volunteer-hero">
+        <div class="volunteer-hero__grid" aria-hidden="true"></div>
+        <div class="volunteer-hero__art" aria-hidden="true">
+          <img
+            src="assets/images/2SZrfD5iqU974LmqpG0z5MBRw.png"
+            alt=""
+            width="290"
+            height="290"
+          />
+        </div>
         <svg
-          class="donate-hero__logo"
-          viewBox="0 0 290 290"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <use href="assets/svg/sprite.svg#svg554920431_3920"></use>
-        </svg>
-        <svg
-          class="donate-hero__wave"
+          class="volunteer-hero__wave"
           viewBox="0 0 290 146"
+          preserveAspectRatio="none"
           aria-hidden="true"
           focusable="false"
         >
           <use href="assets/svg/sprite.svg#svg516828625_18208"></use>
         </svg>
         <svg
-          class="donate-hero__wave donate-hero__wave--lower"
+          class="volunteer-hero__wave volunteer-hero__wave--lower"
           viewBox="0 0 290 146"
+          preserveAspectRatio="none"
           aria-hidden="true"
           focusable="false"
         >
           <use href="assets/svg/sprite.svg#svg516828625_18208"></use>
         </svg>
-        <div class="donate-hero__copy">
-          <div class="donate-hero__inner">
-            <div class="donate-hero__col">
-              <h1>Make a donation</h1>
+        <div class="volunteer-hero__copy">
+          <div class="volunteer-hero__inner">
+            <div class="volunteer-hero__col">
+              <h1>volunteer with our team</h1>
               <p>
-                Help us continue to work towards making peace a global practice
-                with a financial contribution.
+                Get in touch about volunteering at events, promoting the
+                campaign and with the organization.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="donate-main">
-        <div class="donate-main__form">
-          <iframe
-            class="donate-form"
-            src="https://givebutter.com/embed/c/globalpeaceyes"
-            title="Donate to Global Peace Yes"
-            loading="lazy"
-          ></iframe>
-        </div>
-        <div class="donate-main__copy">
-          <div class="donate-copy">
-            <h2>Move the needle</h2>
+      <section class="volunteer-main">
+        <div class="volunteer-main__inner">
+          <!-- The live's form carries no action and no method - it relies on
+               the Framer runtime to submit, so it cannot actually post
+               anywhere. Mirrored faithfully: every real field is here, but
+               choosing an endpoint is a deliberate future decision. -->
+          <form class="volunteer-form">
+            <label>
+              <span class="volunteer-form__caption">NAME</span>
+              <span class="volunteer-form__field">
+                <input
+                  type="text"
+                  name="Name"
+                  placeholder="Jane Smith"
+                  required
+                />
+              </span>
+            </label>
+            <label>
+              <span class="volunteer-form__caption">EMAIL</span>
+              <span class="volunteer-form__field">
+                <input
+                  type="email"
+                  name="Email"
+                  placeholder="example@example.com"
+                  required
+                />
+              </span>
+            </label>
+            <label>
+              <span class="volunteer-form__caption">LOCATION</span>
+              <span class="volunteer-form__field">
+                <input
+                  type="text"
+                  name="Location"
+                  placeholder="San Francisco, CA"
+                  required
+                />
+              </span>
+            </label>
+            <label>
+              <span class="volunteer-form__caption">MESSAGE</span>
+              <span
+                class="volunteer-form__field volunteer-form__field--message"
+              >
+                <textarea
+                  name="Message"
+                  placeholder="Type your message here..."
+                  required
+                ></textarea>
+              </span>
+            </label>
+            <button class="volunteer-form__submit" type="submit">Submit</button>
+          </form>
+          <div class="volunteer-aside">
+            <h2>REWARDING VOLUNTEER SERVICE IS AT OUR CORE</h2>
             <p>
-              Your tax-deductible donation goes toward our not-for-profit
-              mission to support the evolution of human values and capacities to
-              their highest realization by cultivating global peace awareness
-              and offering platforms to practice peace together through art,
-              education and rewarding service enabled by technology for the
-              greater good.
+              GLOBAL PEACE YES emerged from thousands of hours of pure volunteer
+              efforts which remain a driving force behind our work. We are
+              seeking talent and passion in many areas, especially at this time
+              in social media marketing. Are you a yoga, dance, or meditation
+              teacher who is interested to lead a class in your area? We are
+              excited to hear from you.
             </p>
-            <p>
-              Make a donation here or click below to view our profile on the
-              verified charity giving service provider.
-            </p>
-          </div>
-          <a
-            class="btn btn--ghost"
-            href="https://givebutter.com/globalpeaceyes"
-            target="_blank"
-            rel="noopener"
-            >View on Givebutter</a
-          >
-          <div class="donate-widget">
-            <a
-              class="donate-widget__btn"
-              href="https://givebutter.com/globalpeaceyes"
-              target="_blank"
-              rel="noopener"
-              >Donate</a
-            >
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="donate-footer">
-      <div class="donate-footer__inner">
-        <div class="donate-cta">
+    <footer class="volunteer-footer">
+      <div class="volunteer-footer__inner">
+        <div class="volunteer-cta">
           <h2>Vote yes for global peace</h2>
           <a
             class="btn"
@@ -168,10 +194,10 @@
         >
           <use href="assets/svg/sprite.svg#svg-1743055197_189"></use>
         </svg>
-        <div class="donate-footer__row">
+        <div class="volunteer-footer__row">
           <ul class="footer-links">
             <li>
-              <a href="about2.html">About</a>
+              <a href="about.html">About</a>
               <a
                 href="https://www.eventbrite.com/o/global-peace-yes-89857821323"
                 target="_blank"
@@ -180,7 +206,7 @@
               >
             </li>
             <li>
-              <a href="donate2.html">Donate</a>
+              <a href="donate.html">Donate</a>
               <a href="volunteer.html">Volunteer</a>
             </li>
             <li>
@@ -240,13 +266,5 @@
         </div>
       </div>
     </footer>
-
-    <a
-      class="donate-fab"
-      href="https://givebutter.com/globalpeaceyes"
-      target="_blank"
-      rel="noopener"
-      >Donate</a
-    >
   </body>
 </html>

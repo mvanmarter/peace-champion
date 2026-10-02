@@ -229,6 +229,32 @@ Turnstile 401s. Two videos, both iframes, the hero and the vote counter
 match exactly; the mobile cluster lands within ~22px. Full write-up:
 `docs/NEW_SITE.md` Appendix B.
 
+## The four sub-pages (renamed Oct 2026)
+
+`about.html`, `films.html`, `volunteer.html` and `donate.html` are hand-written static
+rebuilds of the matching live pages — no Framer, no React, no build step, each with its
+own header and footer. They share `assets/css/site-new.css` with `index.html` and are
+**not** part of the Eleventy build (deliberately: `src/pages/` holds only `index.njk`).
+
+> **Renamed Oct 2026.** They were `about2.html`, `films2.html`, `volunteer2.html` and
+> `donate2.html`, to avoid colliding with the Framer export of the same names. The
+> export pages were deleted in commit `c9622f4`, so the collision is gone and the
+> temporary names are retired: `about2.html` → `about.html`, and likewise for the
+> other three. Nothing was lost — the export copies were already deleted.
+>
+> Renamed with `git mv`, so history follows the files. References updated:
+> every `href` inside the four pages, the section comments in `assets/css/site-new.css`,
+> `.prettierignore` (whose entries already named the final filenames, so the pages
+> became excluded from `npm run format` again), `README.md` and this file. **One
+> deliberate exception:** `docs/PROMPTS.md` is a verbatim record of past prompts and
+> still says `films2.html` / `donate2.html` / `volunteer2.html` — rewriting it would
+> falsify the history, exactly as for the `index2.html` rename above.
+>
+> Nothing else moved. `privacy-policy.html` and `404.html` were part of the deleted
+> export and have **no** replacement yet — the four pages still link to
+> `privacy-policy.html` in their footers, which is a broken link inherited from the
+> live site's own nav, not something the rename introduced.
+
 ## Key findings (load-bearing, easy to get wrong)
 
 - **Turnstile is Vimeo's, not ours.** Every `challenges.cloudflare.com` request on both
