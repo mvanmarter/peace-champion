@@ -255,6 +255,76 @@ own header and footer. They share `assets/css/site-new.css` with `index.html` an
 > `privacy-policy.html` in their footers, which is a broken link inherited from the
 > live site's own nav, not something the rename introduced.
 
+### `about.html` values block: frames + the Unity icon (Oct 2026)
+
+The eight `<li class="value">` items are now framed, and Unity's icon is real. Both
+were verified against the live `/about` at 1440, 1199, 810, 800 and 390.
+
+**The frames.** Each live value is a `div` with `padding: 16px` and a
+`::after { inset: 0; border: 1px solid #000 }` overlay, and the eight are **flush** —
+no column gap, no row gap, no inset on the list. The frames do the separating. At
+1440 the cells measure 288 wide at x=144/432/720/1008 (1152/4) and 280 tall at
+y=4537/4817, i.e. the container split exactly. Ours were a 256×248 box inset 16px
+with 32px gaps, which is why there were no frames: the geometry had nowhere to put
+them.
+
+The overlay paints **only the sides facing out of the grid**, so each shared edge is
+drawn once: top+left always, right only on the last column (`:nth-child(4n)`),
+bottom only on the last row (`:nth-child(n+5)`). Below 1200 the grid is one column,
+so every cell also needs its right edge and only `:last-child` needs its bottom —
+both breakpoint blocks override the 4-column rule accordingly. Verified: all 8 cells
+match the live's computed `border-*-Width` on all four sides at every width measured.
+
+Two spacing facts fell out of this and are now single base values:
+
+| gap on the live                             | value  | was here |
+| ------------------------------------------- | ------ | -------- |
+| values label bottom → frame top             | **24** at 1440/1199/810/800/390 | 39 / 40 |
+| last frame bottom → closing-CTA heading top | **260.0** at 1440/1199/810/800/390 | 276 / 292 |
+
+The old 39 put the *copy* in the right place, because the 16px of frame padding did
+not exist; it now lives on `.value` instead of on the list. The old 276/292 was
+inflated by exactly the missing 16px/32px of padding, so `.about-cta` no longer needs
+a breakpoint override at all.
+
+**The Unity icon — the earlier "the live draws no icon" comment was wrong.** The live
+*does* render one; it just isn't an `<svg>`. It is a `<div class="framer-ps0rf6">`
+81×81 whose `background-image` is a `data:image/svg+xml` URI, which is why a
+`querySelector("svg")` probe finds nothing in that cell and the other seven all carry
+a `framer-component-type="SVG"` element. That data URI is **byte-identical** to
+`assets/svg/uri_3.svg` — the file the 6.3 export pass already extracted — same
+viewBox `0 0 81 81`, same 2715-char `d`, same fill. It is now sprite def
+`svg-unity-81` (id deliberately *not* a Framer hash, since this artwork was never a
+Framer-hosted asset), and `about.html` uses a normal `<svg><use>` like its seven
+siblings. All 8 icons verified to paint (`getBBox()` non-empty ⇒ the `<use>` resolved).
+
+Document height moved, because the block genuinely got taller (two 280px rows at
+1200+, eight padded rows below). Measured with `cmp-about.js`, doc-height delta:
+
+| width                             | before | after  |
+| --------------------------------- | ------ | ------ |
+| 1728 / 1440                       | +1     | **+2** |
+| 1200                              | −1     | **0**  |
+| 1199 / 1000                       | −50 / −47 | −73 / −70 |
+| 810                               | −32    | −55    |
+| 800 / 700 / 600 / 500 / 450 / 390 | −66 … −67 | **−66 … −67 (unchanged)** |
+
+At 1200+ the −15 margin change, the +32 block and the −16 CTA gap nearly cancel, so
+the page is as close as it was. Below 810 the per-row pitch is unchanged (the old
+16px icon margin plus 48px row-gap equals the new 32px margin plus 32px of padding),
+so nothing moves. The 810–1199 range worsens by ~23px because the live's
+frame-bottom → CTA gap is 260 and this page was padding it out to 276; removing that
+fudge makes the pre-existing upstream drift visible instead of hiding it. **The
+values block's internal span is now correct to ~5px at every width** (e.g. at 1440,
+live label-bottom → CTA-heading = 1804, ours = 1804); what remains is the drift
+*above* it.
+
+**The remaining drift is upstream and is not in this section.** At 810 `cmp-about.js`
+shows `t-poly` at +14 and `h-volunteer` at −49 — a single ~63px error in the gap
+between the timeline and the volunteer section, which then propagates down through
+everything below (`label-values` −49, `h-cta` −55). At 800–390 the same seam reads
+−67/−68. Not investigated; not touched here.
+
 ## Key findings (load-bearing, easy to get wrong)
 
 - **Turnstile is Vimeo's, not ours.** Every `challenges.cloudflare.com` request on both

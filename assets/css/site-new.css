@@ -2518,9 +2518,25 @@ ul {
   }
 
 /* ---------- values ----------
-   Four columns at 810px up, inset a further 16px inside the container. The
-   live reserves a uniform 77px for every description so that all eight icons
-   sit on one baseline — reproduced with min-height below 810px removed. */
+   Four columns at 1200px up. The live frames every value in its own 1px black
+   box: the cell is a full-bleed `div` with `padding: 16px` and a
+   `::after { inset: 0; border: 1px solid #000 }` overlay, and the eight cells
+   are FLUSH - no column or row gap, no inset on the list. The frames, not the
+   gaps, do the separating, so the grid carries none (measured at 1440: cells at
+   x=144/432/720/1008, each 288 wide, rows 280 tall at y=4537 and 4817, i.e.
+   1152/4 and 560/2 exactly).
+
+   The overlay draws only the sides that face OUT of the grid, so each shared
+   edge is painted once rather than twice: top+left on every cell, right only on
+   the last column (`:nth-child(4n)`), bottom only on the last row
+   (`:nth-child(n+5)`). Measured at 1440: Goodwill/Unity/Energy T1 R0 B0 L1,
+   Connection T1 R1 B0 L1, Interdependence/Caretaking/Balance T1 R0 B1 L1,
+   Trust T1 R1 B1 L1. Below 1200 the grid is one column, so every cell also
+   needs its right edge and only `:last-child` needs its bottom - see the two
+   overrides in the breakpoint blocks.
+
+   Per the repo convention this is an `::after` overlay, never a real `border`:
+   a real border would add 2px to every cell's height. */
 .about-values {
   padding-top: 24px;
 }
@@ -2530,13 +2546,36 @@ ul {
   margin-inline: auto;
 }
 
+/* label bottom -> frame top is 24px on the live at EVERY width (1440, 1199,
+   810, 800, 390 all measure 24). It used to be 39/40 here, which put the copy
+   itself in the right place - the frame simply did not exist, so the 16px of
+   padding now lives on `.value` instead of on the list. */
 .values {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 32px;
-  row-gap: 32px;
-  margin-top: 39px;
-  padding-inline: 16px;
+  margin-top: 24px;
+}
+
+.value {
+  position: relative;
+  padding: 16px;
+}
+
+.value::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  pointer-events: none;
+}
+
+.value:nth-child(4n)::after {
+  border-right: 1px solid #000;
+}
+
+.value:nth-child(n + 5)::after {
+  border-bottom: 1px solid #000;
 }
 
 .value h3 {
@@ -2555,9 +2594,14 @@ ul {
   min-height: 77px;
 }
 
+/* Every icon is an <svg> (block via site-new.css's reset) drawn from the
+   sprite. The live renders each at its own intrinsic size - 80x81 for four of
+   them, 81x81 for three, 81x80 for Trust - and this page has always forced a
+   uniform 80x81, which leaves the 81-wide ones a pixel narrow. Left alone: the
+   icons share a top edge and a bottom edge either way, so the only difference
+   is one column of sub-pixel width, and changing it would move Trust's bottom
+   edge by a pixel and therefore the cell height. */
 .value-icon {
-  /* the real icons are <svg> (block via site-new.css's reset) but Unity's
-     empty slot is a <span>, which would ignore width/height if inline */
   display: block;
   width: 80px;
   height: 81px;
@@ -2565,8 +2609,13 @@ ul {
 }
 
 /* ---------- closing CTA ---------- */
+/* The live's frame bottom -> CTA heading top gap is 260.0px at EVERY width
+   measured (1440, 1199, 810, 800, 390 - all 260.0 to the pixel). This was 276
+   here at 1200+ and 292 below, i.e. inflated by exactly the 16px/32px of frame
+   padding that did not exist; now that the frames carry their own padding the
+   gap is the live's real 260 at every width and needs no breakpoint override. */
 .about-cta {
-  padding-top: 276px;
+  padding-top: 260px;
 }
 
 .cta-row {
@@ -2698,22 +2747,39 @@ ul {
   }
 
   /* Between 810 and 1199.98 the live drops to ONE full-width value per row.
-     Measured at 1199 and 810: the row is a plain stack (h3 18px, 5px gap,
-     p 19px) spanning the container's full 1119/730px content width, with the
+     Measured at 1199 and 810: the row is a plain stack (h3 18px, 4px gap,
+     p 19.2px) spanning the container's full 1119/730px content width, with the
      icon still sitting *below* the copy — there is no side-by-side icon
-     column at this range. */
+     column at this range. Cells stay flush and full-container-width (the live
+     measures 1151 wide at 1199 and 762 at 810, x=24 at both), so the grid
+     still carries no gap and the list no inset. */
   .values {
     grid-template-columns: 1fr;
-    /* Measured pitch at 1199 and 810 is 186px per value (Goodwill 4621 ->
-       Unity 4807). Row content is 42px (18px name, 5px gap, 19px body), so
-       the icon's 81px box plus its margin is the remaining 144px: 63 + 81.
-       That means there is NO extra grid gap in this range. */
-    row-gap: 0;
-    padding-inline: 16px;
   }
 
+  /* One column: every cell now closes its own right edge, and only the last
+     one closes the bottom. Measured at 1199 and 810: the first seven cells are
+     T1 R1 B0 L1 and Trust alone is T1 R1 B1 L1. */
+  .value::after {
+    border-right: 1px solid #000;
+  }
+
+  .value:nth-child(n + 5)::after {
+    border-bottom: 0;
+  }
+
+  .value:last-child::after {
+    border-bottom: 1px solid #000;
+  }
+
+  /* The live's cell is a flex column with `gap: 32px` between the copy and the
+     icon (measured p-bottom -> icon-top of 32 at 1199), and 16px of padding top
+     and bottom. That makes the row 186.2 tall: 16 + 18 + 4 + 19.2 + 32 + 81 +
+     16. The 63px here was the same 144px icon allowance (63 + 81) measured
+     against the row *pitch* rather than against the copy — which happened to
+     land on the right total only because the 16px of padding was missing. */
   .value-icon {
-    margin-top: 63px;
+    margin-top: 32px;
   }
 
   /* At full width the live's descriptions are a single 19.2px line, so the
@@ -3003,22 +3069,38 @@ ul {
 
   .values {
     grid-template-columns: 1fr;
-    row-gap: 48px;
-    margin-top: 40px;
-    padding-inline: 16px;
   }
 
   .value p {
     min-height: 0;
   }
 
-  .value-icon {
-    margin-top: 16px;
+  /* Same one-column frame as 810-1199.98: right edge on every cell, bottom edge
+     on the last only. Measured at 800 and 390: the first seven cells are
+     T1 R1 B0 L1 and Trust alone is T1 R1 B1 L1. */
+  .value::after {
+    border-right: 1px solid #000;
   }
 
-  .about-cta {
-    padding-top: 292px;
+  .value:nth-child(n + 5)::after {
+    border-bottom: 0;
   }
+
+  .value:last-child::after {
+    border-bottom: 1px solid #000;
+  }
+
+  /* The live's copy-bottom -> icon-top gap is 32px here too (measured 31-33 at
+     800 and 390), which with the frame's 16px of padding makes the row 224.6
+     tall at 390: 16 + 18 + 4 + 57.6 + 32 + 81 + 16. That is the live's 225.
+     The 16px here plus the old 48px row-gap added up to the same 224.6 pitch,
+     which is why the block's total height does not move at this width. */
+  .value-icon {
+    margin-top: 32px;
+  }
+
+  /* No `.about-cta` override here: the live's frame-bottom -> CTA-heading gap is
+     260.0px at 800 and 390 as well, so the base value now serves every width. */
 
   .cta-row {
     flex-direction: column;

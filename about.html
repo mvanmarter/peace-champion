@@ -518,13 +518,21 @@
                 We unite with our neighbors on our home of planet earth, which
                 contains life and safety for all of us.
               </p>
-              <!-- The live draws no icon for Unity but still reserves its
-                   81px slot, which is what keeps all eight values on one
-                   225px rhythm. An empty placeholder does the same. -->
-              <span
-                class="value-icon value-icon--empty"
+              <!-- Unity's icon is real, but the live does not ship it as an
+                   inline <svg>: it is a `div` whose `background-image` is a
+                   data-URI SVG, which is why the other seven all carry a
+                   `framer-component-type="SVG"` element and this one does not.
+                   That data URI is byte-identical to assets/svg/uri_3.svg, the
+                   copy the 6.3 export pass already extracted - and that is the
+                   path `svg-unity-81` below, so the artwork is the live's. -->
+              <svg
+                class="value-icon"
+                viewBox="0 0 81 81"
                 aria-hidden="true"
-              ></span>
+                focusable="false"
+              >
+                <use href="assets/svg/sprite.svg#svg-unity-81"></use>
+              </svg>
             </li>
             <li class="value">
               <h3>Energy</h3>
