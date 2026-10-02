@@ -1,0 +1,799 @@
+/* Standalone volunteer page styles. Shared tokens, header and footer primitives
+   come from site-new.css, which is loaded first.
+
+   Everything here is measured against the live page (globalpeaceyes.org/volunteer)
+   at 390 / 600 / 810 / 1200 / 1440. Where a value looks arbitrary it is the
+   live's own number - 145.5px, 63%, 435px, 400px - and is not to be rounded. */
+
+/* site-new.css gates the desktop nav and the mobile panel on a `.js` class that
+   index.html's script adds. This page ships no script at all, so the toggle is
+   expressed in CSS instead: the desktop nav is the base state and the burger
+   takes over below 810. Same approach as site-films.css / site-donate.css. */
+.desktop-nav {
+  display: flex;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+/* =========================================================
+   hero
+   ========================================================= */
+
+/* The live's hero is a 581px box from 810 up and 125vw below it (measured
+   487.5 at 390), holding a lattice, the centre artwork, two waves at >=810
+   (one below), and an absolutely positioned copy block. */
+.volunteer-hero {
+  position: relative;
+  height: 581px;
+  overflow: hidden;
+}
+
+/* Measured on the live site: every lattice line is 2px, not 1px. The live
+   builds the grid from 145x145 cells each carrying its own 1px border, so a
+   shared edge gets the bottom border of one cell AND the top border of the
+   next - two 1px rules straddling the boundary (y=211/212, 356/357, ...). The
+   live tiles those cells as a fixed 7 x 580px = 4060px lane centred on the
+   viewport, which is why the phase moves with the width: the first 2px pair
+   sits at 114/115 at 810, 64/65 at 1000, 19/20 at 1200, 139/140 at 1440 - in
+   every case (100vw - 4060) / 2 + 145k. background-size has to be pinned too:
+   left at auto the gradient image is the element's own size, so shifting it
+   makes the image tile at that size and restart the 145px pattern at a hard
+   seam. Pinning the tile to 145px makes the period and the tiling the same
+   thing. Identical rule to site-films.css / site-donate.css - the three pages
+   share one hero lattice. */
+.volunteer-hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+      to right,
+      #e1e0dd 0 1px,
+      transparent 1px 144px,
+      #e1e0dd 144px 145px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      #e1e0dd 0 1px,
+      transparent 1px 144px,
+      #e1e0dd 144px 145px
+    );
+  background-size: 145px 145px;
+  background-position: calc(50vw - 2030px) 0;
+  pointer-events: none;
+}
+
+/* The centre artwork is the live's own 1152x1152 PNG at a 290x290 box, centred
+   on the viewport's centre line and one lattice row (145px) below the hero's
+   top. Measured [720,212.5,290,290] at 1440 and [405,212.5,290,290] at 810 -
+   i.e. 145.5px below the hero, the live's own half-pixel (its block sits at
+   t=290.5px with a -145px translate). Do not round it to 145. */
+.volunteer-hero__art {
+  position: absolute;
+  top: 145.5px;
+  left: 50%;
+  width: 290px;
+  height: 290px;
+}
+
+.volunteer-hero__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The live does NOT show the PNG's own greys. It paints a #006bd4 box over the
+   artwork with `mix-blend-mode: screen`, which is what makes the mark read as
+   light blue in a screenshot (screen of the PNG's #ababab with #006bd4 is
+   #abd2f1). Measured on the live: an absolutely positioned 290x290 box stacked
+   over the image wrapper, carrying `background-color: rgb(0,107,212)` and
+   `mix-blend-mode: screen`. Reproducing the artwork without it leaves ~98% of
+   the hero's pixels more than 40 levels away from the live's. */
+.volunteer-hero__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #006bd4;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* The wave is a 290x146 sprite: a #FAF9F6 fill with black stroke paths. At
+   >=810 the live paints two copies in the lane immediately right of the
+   artwork - which is also the lane whose 580px block starts at the viewport
+   centre - at the lane's top and at its 435px mark (three lattice rows down).
+   Measured live boxes: [1009,67,292,147] and [1009,502,292,147] at 1440,
+   [694,67,292,147] and [694,502,292,147] at 810.
+
+   The element is 292x147, not the sprite's own 290x146, and that is not
+   cosmetic: the live's <svg> carries preserveAspectRatio="none", so its
+   content stretches to fill the box and the strokes sit 0.7% further apart -
+   nearly 2px by the wave's right edge. Rendering the sprite 1:1 (the obvious
+   "clean" choice) put 2.6% of the hero's pixels more than 40 levels away from
+   the live's, all of it along these strokes. The live's box is copied exactly
+   and both <svg>s carry preserveAspectRatio="none" so the artwork lands in the
+   same places - see the mobile rule below for why that attribute is
+   load-bearing there too. */
+.volunteer-hero__wave {
+  position: absolute;
+  top: 0;
+  left: calc(50% + 289px);
+  width: 292px;
+  height: 147px;
+}
+
+.volunteer-hero__wave--lower {
+  top: 435px;
+}
+
+/* The live's copy block is absolutely positioned, not a centred flex child:
+   `.framer-1vplbvp` is `top: 63%` with a translateY(-50%) and a 435px
+   min-height, and its inner box is pinned to the top with 145px reserved at
+   the bottom. That combination is what puts the heading's top edge at 277.52
+   at 1200/1440 and 244.52 at 810 - a plain centring of the 581px hero lands
+   several pixels away, so the structure is reproduced rather than simplified.
+   The 1px/-1px insets are the live's own and are invisible; they only matter
+   because the inner box measures from the overlay's edges. */
+.volunteer-hero__copy {
+  position: absolute;
+  top: 63%;
+  right: -1px;
+  left: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 435px;
+  overflow: hidden;
+  transform: translateY(-50%);
+}
+
+.volunteer-hero__inner {
+  position: absolute;
+  top: 0;
+  bottom: 145px;
+  left: calc(50% - min(1160px, 100%) / 2);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1160px;
+}
+
+/* Half the inner width, capped at 870, with the live's 16px/24px padding. At
+   1440 that is a 532px text column at x=165; at 810 a 357px column at x=25 -
+   both measured. */
+/* Note the absence of `align-items: flex-start`: the live's heading and lead
+   paragraph both measure the column's full content width (532 at 1440, 357 at
+   810), because on the live each sits inside a stretched block wrapper. With
+   flex-start here the heading would shrink to its text and report a shorter
+   box - the same pixels painted, a different box. */
+.volunteer-hero__col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  width: 50%;
+  max-width: 870px;
+  height: 100%;
+  padding: 16px 24px;
+}
+
+.volunteer-hero__col h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 52px;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   main row
+   ========================================================= */
+
+/* The live's `.framer-1uhb1l8`: a centred row, items pinned to the top, 80px/24px
+   of padding and clipped. 40px between its children at >=1200 and 24px from 810
+   to 1199 (both inert - it only ever holds one), and the bottom padding drops
+   to 40 below 1200. */
+.volunteer-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  padding: 80px 24px;
+  overflow: hidden;
+}
+
+/* The live's `.framer-6mqdp3`: a row of two columns with 40px between them,
+   capped at the same 1152px measure as the footer and grown into it - measured
+   1152 at 1440 (leaving 120px either side of the 24px padding), 762 at 810 and
+   342 at 390. */
+.volunteer-main__inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1 0 0;
+  gap: 40px;
+  width: 100%;
+  max-width: var(--measure);
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* The live's copy column: a 32px-gapped stack that grows to fill the row and
+   carries the live's 64px top offset at >=1200 (40px below that), which is what
+   puts the heading's top at 792 at 1440 and 768 at 810. */
+.volunteer-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1 0 0;
+  gap: 17px;
+  min-width: 0;
+  padding: 64px 0 0;
+  overflow: hidden;
+}
+
+/* 32/32 at every width (the live does not step this heading), and the live's
+   own 17px between it and the paragraph below. */
+.volunteer-aside h2 {
+  width: 100%;
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 32px;
+  text-transform: uppercase;
+}
+
+.volunteer-aside p {
+  width: 100%;
+  margin: 0;
+}
+
+/* =========================================================
+   form
+   ========================================================= */
+
+/* The live's form is a white box with a 1px #222 frame drawn as a full-box
+   ::after overlay (a real border would add 2px of document height), 20px of
+   padding and a 20px gap between its five children. Measured 576x477.63 at
+   1440, 381 at 810 and 342 at 390 - exactly half the row at and above 810. */
+.volunteer-form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: none;
+  gap: 20px;
+  width: 50%;
+  padding: 20px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.volunteer-form::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #222;
+  pointer-events: none;
+}
+
+/* Each control is a 10px-gapped column: a mono caption and the field box. */
+.volunteer-form label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+/* PP Supply Mono, 12px on a 14.4px line box, in #888. */
+.volunteer-form__caption {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14.4px;
+  color: #888;
+}
+
+/* The live's field box: 40px tall, 10px radius, a 15% #bbb wash and a 1px
+   rgba(136,136,136,0.1) frame, with 12px of padding around a 16px-tall input. */
+.volunteer-form__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(187, 187, 187, 0.15);
+  overflow: hidden;
+}
+
+.volunteer-form__field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(136, 136, 136, 0.1);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* The message field is different on the live: its wrapper is 100px tall with no
+   padding, and the textarea itself carries the 12px padding (measured
+   536x100 at 1440, 342x100 at 390). */
+.volunteer-form__field--message {
+  height: 100px;
+  padding: 0;
+}
+
+.volunteer-form input,
+.volunteer-form textarea {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16.8px;
+  color: var(--ink);
+}
+
+/* The live's inputs *compute* `line-height: 16.8px` (1.2em), but their
+   placeholder is not placed by it: forcing the live input's line-height to
+   16px, 18px or 20px leaves its placeholder ink on rows 788..797 at 1440. Ours
+   does follow it, so at 16.8px our placeholder inks one row high (787..796);
+   both pages' ::placeholder pseudo-element computes `line-height: normal`, and
+   that is the position the live actually renders. `normal` puts our ink on the
+   live's 788..797 with the input's box unchanged (measured 176,784.40625,512,16
+   on both pages, i.e. identical to six decimals). */
+.volunteer-form input {
+  flex: 1 1 0%;
+  min-width: 0;
+  height: 16px;
+  line-height: normal;
+}
+
+/* The live leaves the textarea vertically resizable; the handle is part of its
+   rendering, so it is copied rather than removed. */
+.volunteer-form textarea {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  resize: vertical;
+}
+
+/* Every placeholder on the live's form is #999, including the message one. */
+.volunteer-form ::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+/* The live's submit is a full-width 40px black pill on a 400px radius with a
+   14px/600 label - not the shared 35px .btn, whose radius is 52px. */
+.volunteer-form__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  border: 0;
+  border-radius: 400px;
+  background: #000;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 16.8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================================
+   CTA + footer
+   ========================================================= */
+
+/* On the live page these are a single component with 80px of padding, and it
+   opens with an empty 60px spacer div before the CTA row. The spacer paints
+   nothing, but it is a flex item, so it also draws its own 40px gap - which is
+   why the CTA's heading sits 180px below the section's top rather than 80. It
+   is reproduced as a pseudo-element rather than a filler <div> so the markup
+   stays clean while the boxes stay exact: the inner measures 302.2 at 1200,
+   349.4 at 810 and 463.2 at 390, all matching the live's 302 / 349.41 / 463.2. */
+.volunteer-footer {
+  position: relative;
+  padding: 80px 24px;
+}
+
+/* The live paints a 1px black rule on the footer's first row, full-bleed
+   (measured: a 1px/0/0/0 #000 border on the section's own ::after at both 1440
+   and 390). Drawn as an overlay so it adds no height. */
+.volunteer-footer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  pointer-events: none;
+}
+
+.volunteer-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.volunteer-footer__inner::before {
+  content: "";
+  height: 60px;
+}
+
+/* Above 1200 the live lays the heading and the button out on one row with
+   space-between; below that they stack with a 16px gap and the button sits at
+   the left edge. */
+.volunteer-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.volunteer-cta h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 32px;
+  text-transform: uppercase;
+}
+
+.volunteer-footer__row {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* -------------------------------------------------------------------------
+   Footer metric correction.
+
+   site-new.css sets `.footer-links { line-height: 22px }` with a 22px gap
+   between the links in a group. The live runs 16px/500 on a 19.2px line box
+   with a 24px gap - measured group heights of 62.41 / 63 / 66.2 at 1440 and
+   390. These three rules restore the live's own numbers for this page only;
+   site-new.css is shared with the other pages and is not edited here.
+   ------------------------------------------------------------------------- */
+.volunteer-footer .footer-links {
+  line-height: 19.2px;
+  /* The live's link row centres its groups rather than stretching them: the
+     third group is 66.2px tall (Privacy Policy + the 23px social row) and the
+     two 2-line groups are 62.41px, so the live's first two groups start 1.9px
+     lower than the third. With site-new.css's default stretch ours align at the
+     top, which puts every glyph in groups 1 and 2 two pixels high - measured in
+     a screenshot as identical ink profiles offset by exactly 2 rows. */
+  align-items: center;
+}
+
+.volunteer-footer .footer-links li {
+  gap: 24px;
+}
+
+/* The live authors the first group as a fixed 52px column: its class carries
+   `width: 52px`, and forcing `width: auto` on it collapses to its 51.2031
+   content width (measured on the live). That 0.8px only shows below 810, where
+   the groups are left-aligned; above 810 the row is right-aligned, so it
+   cancels out. */
+.volunteer-footer .footer-links li:first-child {
+  width: 52px;
+}
+
+/* The live's social row is 64x23 and its two anchors are each a 20x23 flex box
+   carrying a 20x20 icon, and that 23px is what makes the third link group 66.2px
+   tall. site-new.css sizes the anchors 20x20, which lifts the icons 1.5px and
+   shortens the group. The icon itself sits at the TOP of the 23px anchor: the
+   live's rounded-square outline inks rows 1645..1664 where the anchor starts at
+   1644.83, so top-align it rather than centring it (our centre-aligned version
+   inked 1646..1665 - identical glyphs, one pixel low). */
+.volunteer-footer .footer-social {
+  display: flex;
+  gap: 24px;
+  height: 23px;
+  align-items: center;
+}
+
+.volunteer-footer .footer-social a {
+  display: flex;
+  align-items: flex-start;
+  width: 20px;
+  height: 23px;
+}
+
+.volunteer-footer .footer-social svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+/* =========================================================
+   <= 809.98  (Framer 1wmt56v — mobile)
+   ========================================================= */
+@media (max-width: 809.98px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+    position: static;
+    margin-left: auto;
+  }
+
+  .mobile-menu summary {
+    display: block;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-menu summary::before,
+  .mobile-menu summary::after,
+  .mobile-menu summary span {
+    position: absolute;
+    left: 2px;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    content: "";
+  }
+
+  .mobile-menu summary::before {
+    top: 5px;
+  }
+
+  .mobile-menu summary span {
+    top: 11px;
+  }
+
+  .mobile-menu summary::after {
+    top: 17px;
+  }
+
+  /* `display` is deliberately NOT set here. The UA hides everything under a
+     closed <details> except the <summary>, and an author `display: flex` would
+     override that and leave the panel on screen at every mobile width - which
+     is what a naive copy of the live's panel rules does. */
+  .mobile-menu__panel {
+    position: absolute;
+    z-index: 20;
+    top: 83px;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 24px;
+    background: var(--bg);
+    font-size: 16px;
+    line-height: 19.2px;
+  }
+
+  .mobile-menu[open] .mobile-menu__panel {
+    display: flex;
+  }
+
+  .mobile-menu__panel .btn {
+    align-self: stretch;
+  }
+
+  /* The live's mobile hero is 125vw tall and its copy block is centred in it
+     rather than offset: the overlay fills the hero, the header rules come off,
+     and the column becomes full width with 24px of padding on every side. That
+     puts the heading at 238.89 at 390 - measured. */
+  .volunteer-hero {
+    height: 125vw;
+  }
+
+  /* Below 810 the live switches to a fluid lattice: four columns spanning the
+     viewport, so the cell is always 100vw/4 - measured 97.5 at 390, 150 at
+     600, 202.5 at 809 - with five rows down from the hero's top. The live's
+     mobile lattice is exactly 20 cells, so it stops at 125vw; letting the
+     gradients repeat would keep drawing verticals all the way down. */
+  .volunteer-hero__grid {
+    background-image: repeating-linear-gradient(
+        to right,
+        #e1e0dd 0 1px,
+        transparent 1px calc(25vw - 1px),
+        #e1e0dd calc(25vw - 1px) 25vw
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        #e1e0dd 0 1px,
+        transparent 1px calc(25vw - 1px),
+        #e1e0dd calc(25vw - 1px) 25vw
+      );
+    background-size: 25vw 25vw;
+    background-position: 0 0;
+    bottom: auto;
+    height: 125vw;
+  }
+
+  /* The mobile artwork sits in a single cell - column 4, row 5 of the 4x5 grid
+     (measured [292.5,457,97.5,97.5] at 390). */
+  .volunteer-hero__art {
+    top: 100vw;
+    left: 75vw;
+    width: 25vw;
+    height: 25vw;
+  }
+
+  /* One wave only, rooted at the hero's top-left corner, half the viewport
+     wide. The live sizes this one 1.98:1 rather than the sprite's own
+     290/146, so the box is 50vw x 25.2525vw - measured 195 x 98.4844 at 390
+     and 404.5 x 204.3125 at 809, i.e. exactly 50vw/1.98 (Chromium quantises
+     those to 1/64px).
+
+     That 0.3% box/viewBox mismatch is why both <svg>s carry
+     preserveAspectRatio="none": with the default (`xMidYMid meet`) the
+     content is letterboxed inside the box rather than stretched to it, and at
+     these sizes that flips anti-aliasing along every stroke. Measured at
+     600px, the wave alone accounted for 5,089 >40 pixels before the attribute
+     and 326 after; forcing the live's exact 1/64px height takes that 326 to
+     zero. That residue is Framer's own rounded height, not a shape difference
+     - see the desktop note above. The attribute is not needed at 292x147
+     because that box is within 0.005% of the viewBox ratio, which is why the
+     desktop page measured clean while the mobile one did not. */
+  .volunteer-hero__wave {
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: auto;
+    aspect-ratio: 1.98;
+  }
+
+  .volunteer-hero__wave--lower {
+    display: none;
+  }
+
+  .volunteer-hero__copy {
+    top: 0;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    transform: none;
+  }
+
+  /* The live's hero is a column flex whose copy lane sits 0.0625vw below the
+     hero's top rather than centred inside it: measured lane offsets are
+     +0.25 at 390, +0.375 at 600, +0.4375 at 700, +0.5 at 800 and +0.515625 at
+     809 - i.e. exactly w/1600, quantised to 1/64px. Centring ours puts the
+     copy 0.25-0.44px high, which is 767 differing pixels at 390 and 4,448 at
+     700. This is a Framer layout artifact and NOT a value to design around;
+     it is reproduced only because the published page is the reference. */
+  .volunteer-hero__inner {
+    top: 0.0625vw;
+    bottom: auto;
+    height: 100%;
+  }
+
+  .volunteer-hero__col {
+    width: 100%;
+    height: min-content;
+    padding: 24px;
+  }
+
+  .volunteer-hero__col h1 {
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  /* Below 810 the live's CTA heading fills the column (measured 342 at 390)
+     while the button inside stays at its own 103.34 - so the heading is
+     stretched, not its parent. The same is true of the hero heading above. */
+  .volunteer-cta h2 {
+    width: 100%;
+  }
+
+  .volunteer-main {
+    flex-direction: column;
+    padding: 80px 24px 40px;
+  }
+
+  .volunteer-main__inner {
+    flex: none;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .volunteer-form {
+    width: 100%;
+  }
+
+  .volunteer-aside {
+    flex: none;
+    width: 100%;
+    padding: 40px 0 0;
+  }
+
+  /* Groups stack with a 32px gap: the live's link row is a column at this
+     width and the brand column follows it, stretched to the full width
+     (measured 342 at 390) rather than sitting at its own text width. */
+  .volunteer-footer__row {
+    gap: 32px;
+  }
+
+  .volunteer-footer .footer-brand {
+    width: 100%;
+  }
+
+  /* Below 810 the live's link row switches back to top alignment: all three
+     groups start on the same row (measured y=1934.98), unlike the centred row
+     it uses from 810 up. */
+  .volunteer-footer .footer-links {
+    align-items: flex-start;
+  }
+}
+
+/* =========================================================
+   810 - 1199.98  (Framer 1wmt56v — tablet)
+   ========================================================= */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .volunteer-hero__col h1,
+  .volunteer-cta h2 {
+    font-size: 48px;
+    line-height: 48px;
+  }
+
+  .volunteer-main {
+    gap: 24px;
+    padding: 80px 24px 40px;
+  }
+
+  .volunteer-aside {
+    padding: 40px 0 0;
+  }
+
+  .volunteer-footer__row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+  }
+}
+
+/* =========================================================
+   >= 1200  (Framer dv7j5c / 1pz11xk / 72rtr7 — desktop)
+   ========================================================= */
+@media (min-width: 1200px) {
+  .volunteer-cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .volunteer-cta h2 {
+    font-size: 52px;
+    line-height: 52px;
+  }
+
+  .volunteer-footer__row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+  }
+}
