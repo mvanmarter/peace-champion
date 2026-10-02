@@ -1068,6 +1068,6 @@ Three things worth knowing if you re-run any of this:
   lives under `%TEMP%\opencode\node_modules`. `require('playwright')` fails.
 - Patching `console.error` from an `addInitScript` does **not** capture React's hydration
   warnings — the array comes back empty. Use `page.on('console')`, which does.
-- Snapshotting at `DOMContentLoaded` is misleading for anything the runtime does: DCL
+- Snapshotting at `DOMContentLoaded` is misleading for anything the runtime does: DCL 
   fires _before_ the breakpoint rewrite, before hydration, and before the sprite re-injection.
   To observe a pre-React state, listen for the `framer-hydration-start` **mark** instead.
