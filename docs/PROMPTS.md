@@ -30,3 +30,7 @@ Do not change the substantive content. Only improve the Markdown formatting.
 Format the file in place.
 
 ---
+
+Can you build a new page called films2.html that is a mirror copy of the same page found here:  https://globalpeaceyes.org/films ? Please use all the .md files found in the /docs folder for reference (except for the PROMPTS.md file).  Please build the new films2.html page as a static page that does NOT have any React or Framer scripts in it.  I want the simplest, most modern HTML page with the same breakpoints as the current index.html page.  It should be as simple as possible, with the least HTML possible, and everything rendered on the server.  You can exclude all scripts, including analytics scripts and anything else that does not help the page perform its most basic duties.  We just went through this exercise rebuilding the index2.html file (now renamed to index.html) and the about2.html, so please build this new films2.html file in the same manner.  Do NOT integrate this films2.html with the Eleventy static site build.  We will do this task after we've nailed down the statis HTML.  So, this file should contain its own header, footer, etc. for now.
+
+--

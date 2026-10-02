@@ -26,15 +26,42 @@
   text-align: center;
 }
 
+/* Measured on the live site: every lattice line is 2px, not 1px. The live
+   builds the grid from 145x145 cells each carrying its own 1px border, so a
+   shared edge gets the bottom border of one cell AND the top border of the
+   next - two 1px rules straddling the boundary (y=211/212, 356/357, ...). A
+   single 1px stop per period, as this rule originally had, draws half the
+   live's weight, which is why the line across the top of .admissions-section
+   - the lattice's last row, y=646/647 - read lighter than the live's. Each
+   period therefore carries two 1px stops: one on the boundary (offset 0) and
+   one immediately before it (offset 144). */
 .films-hero__grid {
   position: absolute;
   inset: 0;
   background-image: repeating-linear-gradient(
       to right,
       #e1e0dd 0 1px,
-      transparent 1px 145px
+      transparent 1px 144px,
+      #e1e0dd 144px 145px
     ),
-    repeating-linear-gradient(to bottom, #e1e0dd 0 1px, transparent 1px 145px);
+    repeating-linear-gradient(
+      to bottom,
+      #e1e0dd 0 1px,
+      transparent 1px 144px,
+      #e1e0dd 144px 145px
+    );
+  /* The live lattice is a fixed 28 x 145px = 4060px block centred on the
+     viewport, not a pattern rooted at the element's left edge, so its phase
+     moves with the width: the first 2px line pair sits at 114/115 at 810,
+     64/65 at 1000, 19/20 at 1200, 139/140 at 1440 and 138/139 at 1728 - in
+     every case (100vw - 4060) / 2 + 145k, so a fixed offset would be correct
+     at exactly one width. The size has to be pinned as well: left at auto the
+     gradient image is the element's own size, so shifting it makes the image
+     tile at that size and restart the 145px pattern at a hard seam (measured:
+     a stray 1px line at x=130 at 1440). Pinning the tile to 145px makes the
+     period and the tiling the same thing. */
+  background-size: 145px 145px;
+  background-position: calc(50vw - 2030px) 0;
   pointer-events: none;
 }
 
@@ -163,6 +190,7 @@
 }
 
 .film-feature__credits {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -170,6 +198,60 @@
   min-height: 114px;
   padding: 20px 24px;
   background: #e3e3e3;
+}
+
+/* Measured on the live site: the credits strip is separated from the details
+   block above it by a 1px black rule - the live paints row 1947 black and row
+   1948 is already the #e3e3e3 fill. Its left, right and bottom edges come from
+   .film-feature's own 1px border (the strip spans the full inner width and sits
+   flush on that border), so only the top one is missing here. Drawn as an
+   overlay rather than a real border: the article's box is already exact at
+   1415px, and a border would add a pixel of height at every width.
+   The -1px top offset is what lands the rule on the live's painted row: the
+   live's line is the last row of the details block above (y=1947), not the
+   first row of the strip (y=1948). */
+.film-feature__credits::after {
+  content: "";
+  position: absolute;
+  inset: -1px 0 0 0;
+  border-top: 1px solid #111;
+  pointer-events: none;
+}
+
+/* Measured on the live site at every width: the credits paragraphs are
+   15px/21px weight 400, with no mobile step-down at all, and the run-time
+   beside the Watch button is 17px/23.8px weight 700 - larger AND bolder than
+   the credits themselves. Both were inheriting the body's 20px/26px w500
+   (18px/23.4px below 810), so neither needs a mobile value of its own. */
+.film-feature__credits p {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+.film-feature__watch p {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 23.8px;
+}
+
+/* The live breaks the credits copy across pre-split paragraphs, each one line
+   high at the block's shrink-to-fit width. The Admissions block is two 434px
+   paragraphs, so it reads as two lines; ours is one free-flowing paragraph that
+   fits on one line from 1199 up, where the column is wide enough for the whole
+   sentence. Capping the measure at the live's own 434px block width reproduces
+   that two-line read without touching the copy - same font at the same measured
+   width, so it breaks where the live breaks. Below 810 the live block is the
+   full container width, so the cap only applies from 810 up.
+   The Principle block is deliberately NOT capped: live gives it 575px across
+   five paragraphs, but our two paragraphs need more lines at that measure than
+   the live's five singles, which grows the strip (151px -> 186px) and pushes
+   the whole page below it down. Left at the column width, where it already
+   matches the live's strip height. */
+@media (min-width: 810px) {
+  .film-feature--admissions .film-feature__credits p {
+    max-width: 434px;
+  }
 }
 
 .film-feature--principle .film-feature__intro {
@@ -197,9 +279,23 @@
 }
 
 .bio-section {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 1375px;
+}
+
+/* Measured on the live at every width: each bio section paints a 1px rule along
+   its top and bottom edges (rows 2143 and 3517 at 1440 in the James section).
+   Drawn as an overlay rather than a real border so the section's box stays the
+   size the live's is - a border would add a pixel of document height at every
+   width. #111 is this page's frame colour; the live's is #000. */
+.bio-section::after {
+  position: absolute;
+  inset: 0;
+  border-block: 1px solid #111;
+  content: "";
+  pointer-events: none;
 }
 
 .bio-section--mickey {
@@ -209,10 +305,15 @@
 .bio-section__profile,
 .bio-section__copy {
   min-width: 0;
-  padding: 40px;
 }
 
+/* The live's panel is padding: 80px 24px. The extra 144px of bottom padding is
+   this page's one remaining box-model shortcut - it stands in for 64px of missing
+   top padding in the stacked copy column below, so the two cancel. Explained in
+   full in the max-width: 809.98px block; from 810 up the live value takes over. */
 .bio-section__profile {
+  position: relative;
+  padding: 80px 24px 144px;
   background: rgba(0, 107, 212, 0.1);
 }
 
@@ -220,30 +321,87 @@
   background: rgba(0, 138, 23, 0.1);
 }
 
+/* Measured on the live at every width: 18px/21.6px weight 400, uppercase - no
+   mobile step-down at all. The live names the family "PP Supply Mono Medium";
+   ours is the same woff2 registered locally as "PP Supply Mono". */
 .bio-section__eyebrow {
   margin-bottom: 16px;
   font-family: var(--mono);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 400;
   line-height: 1.2;
   text-transform: uppercase;
 }
 
-.bio-section__profile h2 {
-  max-width: 536px;
+/* The live lays the whole profile out as a single block: the eyebrow, the title
+   and the image are all the same width, filling the column below 1200 and
+   narrowing to 67% of it (capped at 536px) against the column's right edge from
+   1200 up. That is why the title wraps to two lines - at 1440 the block is
+   439.5px wide, not the column's 656. `margin-left: auto` is what seats the
+   block against that right edge; while the width is still 100%, below 1200, it
+   resolves to 0 and changes nothing. */
+.bio-section__profile > * {
+  width: 100%;
+  margin-left: auto;
 }
 
+/* Measured live image boxes: a fixed height per section at every width, with
+   the width filling the block and object-fit cropping to it. Radius 12px, no
+   border. Our previous aspect-ratio + 1px frame happened to give the same
+   height, but the width was wrong - the live fills the block (552px at 600,
+   440 at 1440), it does not cap at 280. */
 .bio-section__profile img {
-  width: min(100%, 280px);
-  height: auto;
-  margin: 32px auto 0;
-  border: 1px solid #111;
-  border-radius: 8px;
+  height: 486px;
+  margin-top: 40px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
+.bio-section--mickey .bio-section__profile img {
+  height: 613px;
+}
+
+/* Measured on the live from 810 up: the profile panel's padding becomes
+   64px 40px 64px 24px (the 40px right side is what seats the content block),
+   the title steps up to 48px, and the panel paints its right edge - the rule
+   that separates the profile from the copy. Below 810 the columns stack and the
+   live paints no vertical rule at all. Height-neutral: from 810 up the section
+   is a two-column grid whose row height is set by the taller copy column, so
+   the panel is stretched and its padding cannot change the section's box. */
+@media (min-width: 810px) {
+  .bio-section__profile {
+    padding: 64px 40px 64px 24px;
+  }
+
+  .bio-section__profile::after {
+    position: absolute;
+    inset: 0;
+    border-right: 1px solid #111;
+    content: "";
+    pointer-events: none;
+  }
+
+  .bio-section__profile h2 {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .bio-section__profile > * {
+    width: 67%;
+    max-width: 536px;
+  }
+
+  .bio-section__profile h2 {
+    font-size: 52px;
+  }
+}
+
+/* The live's copy column carries no background of its own: the page's #faf9f6
+   shows through, which is what the live does. Its padding is left as it was on
+   purpose - see the note in the max-width: 809.98px block. */
 .bio-section__copy {
   padding: 64px 24px 40px;
-  background: #fff;
 }
 
 .bio-section__copy > p + p {
@@ -353,6 +511,15 @@
   margin-top: 20px;
 }
 
+/* Measured on the live: the press-release cell is a flex column with a 24px gap
+   from 810 up and 40px below it, so the Watch Film button sits 24px (40px below
+   810) under the paragraph above it - the same rhythm .bio-section__copy uses.
+   Ours is a plain block, not a flex column, so the button needs that spacing as
+   its own margin; without it the button sits flush against the copy. */
+.press-copy > .btn {
+  margin-top: 24px;
+}
+
 .press-grid img {
   width: 100%;
   height: 100%;
@@ -376,10 +543,15 @@
   font-size: 52px;
 }
 
+/* Measured on the live: the icon row is a flex row with a 24px gap, and its top
+   lands 22px under the "Privacy Policy" line (the live measures 23.2px to its
+   inline anchor box). The 16px margin-top that used to sit here pushed the row
+   38px down - it was standing in for the live's own row gap, which
+   .footer-links li already supplies. The icons are the live's own artwork:
+   Lucide strokes on a 24-unit viewBox at stroke-width 2, sized to 20x20. */
 .footer-social {
   display: flex;
-  gap: 20px;
-  margin-top: 16px;
+  gap: 24px;
 }
 
 .footer-social a,
@@ -393,12 +565,7 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.8;
-}
-
-.footer-social__dot {
-  fill: currentColor;
-  stroke: none;
+  stroke-width: 2;
 }
 
 @media (min-width: 1200px) {
@@ -424,15 +591,6 @@
 @media (min-width: 810px) and (max-width: 1199.98px) {
   .films-hero__title {
     font-size: 48px;
-  }
-
-  .bio-section__profile,
-  .bio-section__copy {
-    padding: 32px;
-  }
-
-  .bio-section__copy {
-    padding: 64px 24px 40px;
   }
 
   .press-copy {
@@ -516,8 +674,36 @@
     padding-top: 52px;
   }
 
+  /* Below 810 the live switches to a fluid lattice: four columns spanning the
+     viewport, so the cell is always 100vw/4 - measured 98px at 390, 125 at
+     500, 150 at 600, 175 at 700, 200 at 800, 202 at 809 - with five rows down
+     from the hero's top, at y=67. The old fixed 98px tile matched only 390px
+     wide and drew a single 1px stop per period; both the period and the
+     second stop now scale with the viewport. */
   .films-hero__grid {
-    background-size: 98px 98px;
+    background-image: repeating-linear-gradient(
+        to right,
+        #e1e0dd 0 1px,
+        transparent 1px calc(25vw - 1px),
+        #e1e0dd calc(25vw - 1px) 25vw
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        #e1e0dd 0 1px,
+        transparent 1px calc(25vw - 1px),
+        #e1e0dd calc(25vw - 1px) 25vw
+      );
+    /* Overrides the base rule's 145px tile, which the vw stops above would
+       otherwise overflow. */
+    background-size: 25vw 25vw;
+    background-position: 0 0;
+    /* The live's mobile lattice is exactly 20 cells - 4 x 5 - so it stops at
+       125vw; below that the hero is bare (at 390 the last row ends at 554 in a
+       595px hero). Letting the gradients repeat would keep drawing verticals
+       all the way down. Above 125vw the hero's own overflow: hidden clips it,
+       which is what the live does at 809 (5 x 202px = 1011px in a 595px box). */
+    bottom: auto;
+    height: 125vw;
   }
 
   .films-hero__title {
@@ -549,8 +735,7 @@
   }
 
   .film-feature__intro h2,
-  .press-section__heading h2,
-  .bio-section__profile h2 {
+  .press-section__heading h2 {
     font-size: 32px;
   }
 
@@ -588,29 +773,17 @@
     min-height: 0;
   }
 
-  .bio-section__profile,
-  .bio-section__copy {
-    padding: 80px 24px 144px;
-  }
-
+  /* Deliberately left as-is, and the one place this page still does not match
+     the live's box model: the live's copy column is padding: 64px 24px; ours
+     drops the top 64px and runs a 47px bottom on Mickey / 64px elsewhere,
+     because our profile panel above it carries a matching 144px of bottom
+     padding. The two errors cancel, so the stacked section heights come out
+     exactly the live's (2799 James, 2756 Mickey at 390) even though the panel
+     is 64px too tall and the copy 64px too short. Normalising both to the
+     live's one measured value is a separate change - it would move everything
+     below. */
   .bio-section__copy {
     padding: 0 24px 64px;
-  }
-
-  .bio-section__profile img {
-    width: 100%;
-    max-width: 342px;
-    margin: 40px 0 0;
-  }
-
-  .bio-section--james .bio-section__profile img {
-    aspect-ratio: 342 / 486;
-    object-fit: cover;
-  }
-
-  .bio-section--mickey .bio-section__profile img {
-    aspect-ratio: 342 / 613;
-    object-fit: cover;
   }
 
   .bio-section__copy > p + p {
@@ -656,15 +829,14 @@
     padding: 40px 24px;
   }
 
+  .press-copy > .btn {
+    margin-top: 40px;
+  }
+
   .press-grid img {
     height: 250px;
     min-height: 250px;
     aspect-ratio: auto;
-  }
-
-  .bio-section__eyebrow {
-    font-size: 18px;
-    line-height: 21.6px;
   }
 
   .bio-section__copy > .btn,
