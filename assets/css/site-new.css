@@ -149,8 +149,7 @@ ul {
 .welcome h2,
 .declaration-copy h2,
 .change-grid h3,
-.slides h2,
-.cta h2 {
+.slides h2 {
   text-transform: uppercase;
 }
 
@@ -789,7 +788,6 @@ ul {
   pointer-events: none;
 }
 
-
 .change-grid {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1051,52 +1049,15 @@ ul {
   color: var(--dot-green);
 }
 
-/* ---------- cta ---------- */
-/* The live spreads the heading and the button to opposite ends of one 52px flex
-   row from 1200 up (justify-content: space-between, align-items: center).
-   Below that it stacks them, left-aligned, with a 16px gap — the row is 115px
-   at 390, 83px at 600/800 and 99px at 1000 purely because the heading wraps to
-   2 / 1 / 1.5 lines. */
-.cta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 16px;
-  margin-top: 96px;
-}
-
-/* Below 1200 the live puts the button on its own line, so the heading has to
-   claim a full line of the flex box even when the two would fit side by side
-   (at 600 the heading is 429 and the row is 552). */
-.cta h2 {
-  flex: 0 0 100%;
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: 52px;
-  line-height: 52px;
-}
-
-/* ---------- footer ---------- */
-.site-footer {
-  margin-top: 40px;
-  padding-bottom: 80px;
-}
-
+/* ---------- footer ----------
+   The page footer. ONE block on all five pages, and the single canonical
+   definition lives at the bottom of this file under "site footer" — the
+   `.site-footer` box, its 1px top rule and the CTA are all declared there,
+   because they are properties of the whole block rather than of one page's
+   markup. What follows are the pieces every page shares. */
 .footer-rule {
   width: 100%;
   height: 4px;
-}
-
-/* Below 810px the live stacks the links above the wordmark+copy column with a
-   32px gap, and leaves 40px between the rule and the links (measured: rule
-   bottom 8755, links 8795 at 390). The old 38px padding-top and the copy's
-   84px margin were both standing in for that structure. */
-.footer-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  padding-top: 40px;
 }
 
 /* The live footer mirrors the site header: a row of link groups —
@@ -1255,8 +1216,7 @@ ul {
 
   .welcome h2,
   .declaration-copy h2,
-  .slides h2,
-  .cta h2 {
+  .slides h2 {
     font-size: 32px;
     line-height: 32px;
   }
@@ -1315,20 +1275,6 @@ ul {
     margin-top: 80px;
   }
 
-  /* Mobile uses the base single column: each slide's copy above its content,
-     with the cards flowing as a one-column list. The old interleaved two-column
-     card stack and the scroll-driven variants are gone. */
-  .cta {
-    margin-top: 96px;
-    gap: 16px;
-  }
-
-  .cta .btn {
-    display: flex;
-    width: fit-content;
-    margin: 0;
-  }
-
   .site-footer {
     margin-top: 40px;
   }
@@ -1352,8 +1298,7 @@ ul {
 
   .welcome h2,
   .declaration-copy h2,
-  .slides h2,
-  .cta h2 {
+  .slides h2 {
     font-size: 48px;
     line-height: 48px;
   }
@@ -1402,28 +1347,12 @@ ul {
     padding: 48px 0 48px 32px;
   }
 
-  .cta {
-    margin-top: 96px;
-  }
-
-  .cta .btn {
-    margin-left: 0;
-  }
-
   /* At 810px and up the brand column goes left and the links right, and both
      columns are 66px tall so `center` and `flex-end` agree - the live uses
-     center. Measured: brand 144..461, links 989..1296, both top 7250. */
-  .footer-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 40px;
-  }
-
-  .site-footer {
-    margin-top: 40px;
-  }
-
+     center. Measured: brand 144..461, links 989..1296, both top 7250. The row
+     itself is `.site-footer__row` (flex-direction: row, align-items: center,
+     justify-content: space-between), declared with the rest of the footer
+     block; these two rules only re-order its two children. */
   .footer-links {
     order: 2;
     gap: 40px;
@@ -1482,32 +1411,13 @@ ul {
     gap: 24px;
   }
 
-  .cta {
-    margin-top: 96px;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .cta h2 {
-    flex: 0 1 auto;
-  }
-
-  /* 84px of clear space from the CTA row down to the footer rule at 1200 and
-     up (measured: row ends 7158, footer starts 7250 at 1440). */
-  .site-footer {
-    margin-top: 40px;
-  }
-
+  /* The gap from the content above down to the footer's top rule is the
+     footer's own `padding: 80px 24px` plus whatever margin the preceding
+     section carries - there is no separate `margin-top` on `.site-footer`. */
   /* At 810px and up the brand column goes left and the links right, and both
      columns are 66px tall so `center` and `flex-end` agree - the live uses
-     center. Measured: brand 144..461, links 989..1296, both top 7250. */
-  .footer-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 40px;
-  }
-
+     center. Measured: brand 144..461, links 989..1296, both top 7250. The row
+     itself is `.site-footer__row`; these two rules only re-order its children. */
   .footer-links {
     order: 2;
     gap: 40px;
@@ -1684,8 +1594,7 @@ ul {
   overflow: hidden;
 }
 
-.donate-footer__inner,
-.volunteer-footer__inner {
+.site-footer__inner {
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -1693,8 +1602,7 @@ ul {
   margin-inline: auto;
 }
 
-.donate-footer__inner::before,
-.volunteer-footer__inner::before {
+.site-footer__inner::before {
   content: "";
   height: 60px;
 }
@@ -1702,16 +1610,14 @@ ul {
 /* Above 1200 the live lays the heading and the button out on one row with
    space-between; below that they stack with a 16px gap and the button sits at
    the left edge. */
-.donate-cta,
-.volunteer-cta {
+.site-footer__cta {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
 }
 
-.donate-cta h2,
-.volunteer-cta h2 {
+.site-footer__cta h2 {
   font-family: var(--display);
   font-weight: 400;
   font-size: 32px;
@@ -1719,23 +1625,20 @@ ul {
   text-transform: uppercase;
 }
 
-.donate-footer__row,
-.volunteer-footer__row {
+.site-footer__row {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
-.donate-footer .footer-links li,
-.volunteer-footer .footer-links li {
+.site-footer .footer-links li {
   gap: 24px;
 }
 
 /* The live's social anchors are 20x23 (a 20x20 icon on a 19.2px line box that
    the icon's descender grows to 23), and that 23px is what makes the third
    group 66.2px tall. */
-.donate-footer .footer-social,
-.volunteer-footer .footer-social {
+.site-footer .footer-social {
   display: flex;
   gap: 24px;
   height: 23px;
@@ -1869,8 +1772,7 @@ ul {
     line-height: 32px;
   }
 
-  .donate-cta h2,
-  .volunteer-cta h2 {
+  .site-footer__cta h2 {
     width: 100%;
   }
 
@@ -1880,22 +1782,19 @@ ul {
     padding: 80px 24px 40px;
   }
 
-  .donate-footer__row,
-  .volunteer-footer__row {
+  .site-footer__row {
     gap: 32px;
   }
 
-  .donate-footer .footer-brand,
-  .volunteer-footer .footer-brand {
+  .site-footer .footer-brand {
     width: 100%;
   }
 }
 
 @media (min-width: 810px) and (max-width: 1199.98px) {
   .donate-hero__col h1,
-  .donate-cta h2,
   .volunteer-hero__col h1,
-  .volunteer-cta h2 {
+  .site-footer__cta h2 {
     font-size: 48px;
     line-height: 48px;
   }
@@ -1906,8 +1805,7 @@ ul {
     padding: 80px 24px 40px;
   }
 
-  .donate-footer__row,
-  .volunteer-footer__row {
+  .site-footer__row {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -1916,22 +1814,19 @@ ul {
 }
 
 @media (min-width: 1200px) {
-  .donate-cta,
-  .volunteer-cta {
+  .site-footer__cta {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 0;
   }
 
-  .donate-cta h2,
-  .volunteer-cta h2 {
+  .site-footer__cta h2 {
     font-size: 52px;
     line-height: 52px;
   }
 
-  .donate-footer__row,
-  .volunteer-footer__row {
+  .site-footer__row {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -2610,57 +2505,6 @@ ul {
   margin-top: 68px;
 }
 
-/* ---------- closing CTA ---------- */
-/* On the live this is not merely the CTA row: it is the page's closing block,
-   full-bleed, and it carries the CTA heading, the button, the 4px divider and
-   the footer link groups. Its top edge is a black 1px rule, and the heading sits
-   260.0px below the last value frame at EVERY width measured (1440, 1199, 810,
-   800, 390 - all 260.0 to the pixel).
-
-   That 260 is not one gap, though. Measured at all five widths it is the same
-   four numbers every time:
-     80  last value frame's bottom edge -> this section's top edge (the rule)
-     80  the section's own padding-top
-     60  an empty 60px group ("Group 133") heading the inner frame
-     40  the inner frame's flex gap
-   So the rule belongs 80px below the frames and the heading 180px below the
-   rule. Written as `margin-top` + `padding-top` rather than the single 260
-   padding this used to be, which is why the heading does not move at all and
-   the measured doc-height deltas are unaffected.
-
-   The live's footer links sit inside this same wrapper, 40px below the divider.
-   Ours keeps them in their own `<footer>`, which already reproduces that pitch
-   (`.site-footer` 40px margin-top, `.footer-rule`, `.footer-inner` 40px
-   padding-top), so nothing about the footer needs to move. */
-.about-cta {
-  position: relative;
-  margin-top: 80px;
-  padding-top: 180px;
-}
-
-/* The 1px black rule on the section's top edge, full-bleed (the live's wrapper
-   measures x=0..100vw at 1440, 1199, 810 and 390). Drawn as an `::after`
-   overlay, never a real `border`, so it adds no height - the same idiom as
-   `.welcome::after` above. */
-.about-cta::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-top: 1px solid #000;
-  pointer-events: none;
-}
-
-.cta-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-}
-
-.cta-row .about-display {
-  max-width: 697px;
-}
-
 /* =========================================================
    1200 – 1439.98
    ========================================================= */
@@ -2751,22 +2595,6 @@ ul {
      padding, i.e. `min(710px, 100% - 112px)`, where 112 = 48 + 64. */
   .about-hero-inner > * {
     max-width: min(710px, calc(100% - 112px));
-  }
-
-  /* The CTA row is a COLUMN from 810 up to 1200, not a row: measured live at
-     810/900/1000/1199 it is `flex-direction: column; gap: 16px;
-     align-items: flex-start` with the heading at 643x48 and the button below
-     it at 103x35, for a 99px row. At 1200 it becomes a row (`align-items:
-     center`, heading 697x52 beside the button) and the row drops back to 52px.
-     Getting this wrong is what made 1199 come up 37px short. */
-  .cta-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .cta-row .about-display {
-    max-width: 643px;
   }
 
   .decade-year {
@@ -3120,29 +2948,15 @@ ul {
     margin-top: 32px;
   }
 
-  /* No `.about-cta` override here either: the 80 + 80 + 60 + 40 that make up the
-     live's 260.0px frame-bottom -> CTA-heading gap are the same at 800 and 390,
-     so the base value serves every width. */
+  /* The 80 + 80 + 60 + 40 that make up the live's 260.0px frame-bottom ->
+     CTA-heading gap are the same at 800 and 390, and they are now the unified
+     `.site-footer`'s own padding rather than a rule in this band - see "site
+     footer" at the bottom of this file. */
 
-  .cta-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
-  }
-
-  /* The CTA heading spans the container at every width below 810: measured live
-     752@800, 652@700, 552@600, 452@500, 402@450, 342@390 (x=24 throughout). A
-     `max-width` is not enough - `.cta-row` is `align-items: flex-start`, so the
-     heading shrink-wraps its text (429px) instead of filling the row. */
-  .cta-row .about-display {
-    width: 100%;
-    max-width: 100%;
-  }}
+}
 /* =========================================================
    films.html
    ========================================================= */
-
-
 
 /* The live hero is a fixed-height box (581px from 810 up, 595px below it) whose
    text block is NOT vertically centred: it sits lower. Reproduced here as a
@@ -3244,8 +3058,7 @@ ul {
 
 .film-feature__intro h2,
 .press-section__heading h2,
-.bio-section__profile h2,
-.films-cta h2 {
+.bio-section__profile h2 {
   font-family: var(--display);
   font-size: 32px;
   font-weight: 400;
@@ -3619,22 +3432,6 @@ ul {
   object-fit: cover;
 }
 
-.films-cta {
-  padding: 80px 0 40px;
-}
-
-.films-cta__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-}
-
-.films-cta h2 {
-  max-width: 700px;
-  font-size: 52px;
-}
-
 /* Measured on the live: the icon row is a flex row with a 24px gap, and its top
    lands 22px under the "Privacy Policy" line (the live measures 23.2px to its
    inline anchor box). The 16px margin-top that used to sit here pushed the row
@@ -3688,9 +3485,7 @@ ul {
     padding: 32px;
   }
 
-  .films-cta h2 {
-    font-size: 48px;
-  }}
+}
 
 @media (max-width: 809.98px){
 
@@ -3853,20 +3648,7 @@ ul {
     margin-top: 40px;
   }
 
-  .films-cta {
-    padding: 80px 0 40px;
-  }
-
-  .films-cta__inner {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .films-cta h2 {
-    font-size: 32px;
-    line-height: 1;
-  }}
+}
 
 @media (prefers-reduced-motion: reduce){
   *,
@@ -3878,8 +3660,6 @@ ul {
 /* =========================================================
    donate.html
    ========================================================= */
-
-
 
 /* The logo is the live's own 290x290 sprite - a solid black square with the
    mark knocked out of it, which is why it hides the lattice rules underneath
@@ -4020,18 +3800,6 @@ ul {
    CTA + footer
    ========================================================= */
 
-/* On the live page these are a single component (`.framer-1q94kn`) with 80px
-   of padding, and it opens with an empty 60px spacer div before the CTA row.
-   The spacer paints nothing, but it is a flex item, so it also draws its own
-   40px gap - which is why the CTA's heading sits 180px below the section's top
-   rather than 80. It is reproduced as a pseudo-element rather than a filler
-   <div> so the markup stays clean while the boxes stay exact: the inner
-   measures 302.2 at 1200, 349.4 at 810 and 463.2 at 390, all matching the
-   live's own 302 / 349.41 / 463.2. */
-.donate-footer {
-  padding: 80px 24px;
-}
-
 /* -------------------------------------------------------------------------
    Footer metric correction.
 
@@ -4045,23 +3813,6 @@ ul {
    for this page only; site-new.css is shared with the other pages and is not
    edited here.
    ------------------------------------------------------------------------- */
-.donate-footer .footer-links {
-  line-height: 19.2px;
-}
-
-.donate-footer .footer-social a,
-.donate-footer .footer-social svg {
-  width: 20px;
-  height: 20px;
-}
-
-.donate-footer .footer-social svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
 
 /* =========================================================
    <= 809.98  (Framer 1wmt56v — mobile)
@@ -4131,8 +3882,6 @@ ul {
 /* =========================================================
    volunteer.html
    ========================================================= */
-
-
 
 /* The centre artwork is the live's own 1152x1152 PNG at a 290x290 box, centred
    on the viewport's centre line and one lattice row (145px) below the hero's
@@ -4358,25 +4107,48 @@ ul {
 }
 
 /* =========================================================
-   CTA + footer
+   site footer
    ========================================================= */
 
-/* On the live page these are a single component with 80px of padding, and it
-   opens with an empty 60px spacer div before the CTA row. The spacer paints
+/* THE canonical footer, used verbatim by all five pages (Oct 2026). Before that
+   there were two: a plain rule + links (index, about, films) and a CTA-bearing
+   one (donate, volunteer). The live site settles it - on all five pages the last
+   element of the document is a full-bleed wrapper (`div.framer-FtLI0`, "Desktop
+   2" / "Tablet" / "Phone") that carries the CTA heading, the button, the 4px
+   divider and the footer link groups. There is no `<footer>` element and no
+   separate CTA section anywhere on the live site. So this block IS the footer,
+   and the three pages that used to have their own CTA section lost it rather
+   than keeping a second identical heading.
+
+   The live's wrapper is `padding: 80px 24px` and opens with an empty 60px
+   spacer group ("Group 133", `html=""`) before the CTA. The spacer paints
    nothing, but it is a flex item, so it also draws its own 40px gap - which is
-   why the CTA's heading sits 180px below the section's top rather than 80. It
-   is reproduced as a pseudo-element rather than a filler <div> so the markup
+   why the CTA's heading sits 180px below the footer's top edge rather than 80.
+   It is reproduced as a pseudo-element rather than a filler <div> so the markup
    stays clean while the boxes stay exact: the inner measures 302.2 at 1200,
-   349.4 at 810 and 463.2 at 390, all matching the live's 302 / 349.41 / 463.2. */
-.volunteer-footer {
+   349.4 at 810 and 463.2 at 390, all matching the live's 302 / 349.41 / 463.2.
+
+   The same four numbers appear on the live /about, where the wrapper's top edge
+   is 260.0px below the last value frame at EVERY width measured (1440, 1199,
+   810, 800, 390 - all 260.0 to the pixel):
+     80  the preceding block's bottom edge -> this section's top edge (the rule)
+     80  the section's own padding-top
+     60  the empty "Group 133" heading the inner frame
+     40  the inner frame's flex gap
+   So the rule belongs 80px below the content above and the heading 180px below
+   the rule. There is deliberately NO `margin-top` here: that leading 80px is
+   the preceding section's own bottom spacing, and on the live it belongs to
+   that section, not to the footer. */
+.site-footer {
   position: relative;
   padding: 80px 24px;
 }
 
-/* The live paints a 1px black rule on the footer's first row, full-bleed
-   (measured: a 1px/0/0/0 #000 border on the section's own ::after at both 1440
-   and 390). Drawn as an overlay so it adds no height. */
-.volunteer-footer::after {
+/* The live paints a 1px black rule on the footer's top edge, full-bleed
+   (measured: a 1px/0/0/0 #000 border on the section's own ::after at 1440,
+   1199, 810 and 390; on /about at x=0 w=100vw at all four). Drawn as an
+   overlay so it adds no height - the same idiom as `.welcome::after`. */
+.site-footer::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -4393,7 +4165,7 @@ ul {
    390. These three rules restore the live's own numbers for this page only;
    site-new.css is shared with the other pages and is not edited here.
    ------------------------------------------------------------------------- */
-.volunteer-footer .footer-links {
+.site-footer .footer-links {
   line-height: 19.2px;
   /* The live's link row centres its groups rather than stretching them: the
      third group is 66.2px tall (Privacy Policy + the 23px social row) and the
@@ -4409,18 +4181,18 @@ ul {
    content width (measured on the live). That 0.8px only shows below 810, where
    the groups are left-aligned; above 810 the row is right-aligned, so it
    cancels out. */
-.volunteer-footer .footer-links li:first-child {
+.site-footer .footer-links li:first-child {
   width: 52px;
 }
 
-.volunteer-footer .footer-social a {
+.site-footer .footer-social a {
   display: flex;
   align-items: flex-start;
   width: 20px;
   height: 23px;
 }
 
-.volunteer-footer .footer-social svg {
+.site-footer .footer-social svg {
   display: block;
   width: 20px;
   height: 20px;
@@ -4496,7 +4268,7 @@ ul {
   /* Below 810 the live's link row switches back to top alignment: all three
      groups start on the same row (measured y=1934.98), unlike the centred row
      it uses from 810 up. */
-  .volunteer-footer .footer-links {
+  .site-footer .footer-links {
     align-items: flex-start;
   }}
 
