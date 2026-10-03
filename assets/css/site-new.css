@@ -890,8 +890,9 @@ ul {
    first. */
 .slides {
   padding-top: 0;
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
+  /* The section carries no rules of its own: they live on the first/last
+     slide, which are full-bleed (see below), so the live's edge-to-edge top
+     and bottom rules reproduce exactly. */
 }
 
 .slide {
@@ -899,10 +900,23 @@ ul {
   grid-template-columns: 1fr;
   gap: 64px;
   align-items: start;
-  /* Span the module edge to edge so the between-section rules line up with the
-     module's own top/bottom borders, keeping the content at the 24px inset. */
-  margin-inline: calc(-1 * var(--pad));
-  padding-inline: var(--pad);
+  /* Full-bleed like the live's slide row (measured: x=0 w=100vw at 1440): the
+     negative-margin/positive-padding pair stretches the element's box to the
+     viewport edges while the content box stays exactly the container's, so
+     text, cards and column geometry do not move a pixel. Below 1200px the
+     container is already viewport-width and the pair nets to the old 24px,
+     i.e. this is a no-op there. Only the element box - and with it the
+     between-slide rules - goes edge to edge. */
+  margin-inline: calc((100% - 100vw) / 2);
+  padding-inline: calc((100vw - 100%) / 2);
+}
+
+.slide:first-child {
+  border-top: 1px solid #000;
+}
+
+.slide:last-child {
+  border-bottom: 1px solid #000;
 }
 
 .slide + .slide {
@@ -929,15 +943,20 @@ ul {
    aside, the tint is per section: a translucent grey for the crisis slide, the
    solution blue and the voice green. The tint sits on the copy box itself and
    fills it edge to edge, so the block padding that insets the text is inside
-   the colour and the band runs flush to the section's top/bottom rules. The box
-   is bled left by the container inset (with matching left padding to keep the
-   text where it was) so the tint's left edge lines up with the horizontal rules
-   above and below the section. The right-hand clearance from the vertical rule
-   is added in the two-column breakpoints. */
+   the colour and the band runs flush to the section's top/bottom rules. The
+   copy box is bled left to the viewport edge (with matching left padding to
+   keep the text where it was) so the tint runs to the browser edge exactly
+   like the live's panel (measured crisis: x=0 w=720 at 1440, text at x=144).
+   Below 1200px the container is already viewport-width and the extra term is
+   zero, so this collapses to the old 24px inset there. The right-hand
+   clearance from the vertical rule is added in the two-column breakpoints. */
 .slide-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding-block: 48px;
-  margin-left: calc(-1 * var(--pad));
-  padding-left: var(--pad);
+  margin-left: calc(-1 * var(--pad) - (100vw - min(100vw, calc(var(--measure) + var(--pad) * 2))) / 2);
+  padding-left: calc(var(--pad) + (100vw - min(100vw, calc(var(--measure) + var(--pad) * 2))) / 2);
 }
 
 .slide--crisis .slide-copy {
@@ -1031,7 +1050,7 @@ ul {
   gap: 8px;
   font-family: var(--mono);
   font-weight: 500;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 17.6px;
 }
 
@@ -1042,7 +1061,7 @@ ul {
 /* The dash clause reads muted ("massive goal") on the first line and green
    ("easy") on the second, as on the live. */
 .tagline span:last-child {
-  color: rgba(0, 0, 0, 0.3);
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .tagline + .tagline span:last-child {
@@ -1580,6 +1599,44 @@ ul {
   text-transform: uppercase;
 }
 
+/* The live draws NO lattice lines inside the copy column: the cells there
+   keep `::after` borders only on the sides facing out of it (140 keeps
+   left, 575 keeps right, row 212 keeps top, row 357 keeps bottom), so the
+   grid stops at the column's edge - mask x=140..720, y=212..502, verified by
+   cell census on both /donate and /volunteer. The column itself already
+   measures exactly that box (141..721 x 216..506 at 1440), so the panel
+   follows the column: 1px inside its left edge (exposing the lattice's
+   vertical line at the mask boundary, which the live draws), flush right,
+   4px above its top, ending at 501 so the live's full-width 502 line still
+   paints (same 1px remnant convention as the about/films hero panels).
+
+   Reproduced the `.hero-video-box` way: an opaque `var(--bg)` panel over the
+   lattice, under the text. The `z-index: 1` is load-bearing, not decorative:
+   without a stacking context on the column, the `z-index: -1` panel would
+   drop below the grid (negative children paint before z-auto positioned
+   siblings) and the lines would show straight through. */
+.donate-hero__col,
+.volunteer-hero__col {
+  position: relative;
+  z-index: 1;
+}
+
+.donate-hero__col::before,
+.volunteer-hero__col::before {
+  content: "";
+  position: absolute;
+  /* Left starts 1px inside the column (not 1px outside it): the lattice's
+     vertical line at the mask's left edge belongs to the mask boundary, and
+     the live draws it - covering it was hiding a line the live shows. The
+     text starts 24px further in, so nothing readable is affected. */
+  left: 1px;
+  right: 0;
+  top: -4px;
+  height: 289px;
+  background: var(--bg);
+  z-index: -1;
+}
+
 /* The live's `.framer-bh4w14`: a centred row, items pinned to the top, 40px
    between the two columns, 80px/24px of padding, clipped (the left column
    carries a 47%-wide box whose contents overflow it at narrow widths). Below
@@ -1766,6 +1823,27 @@ ul {
     padding: 24px;
   }
 
+  /* Mobile masks full-bleed: the 390px cell census shows all four columns
+     borderless for rows 262 and 360, top-only at row 165 - i.e. the mask is
+     x=0..390, y=165..457. The column is already full-width min-content here,
+     so left/right stay 0 and the mask is the column inflated 50px top and
+     bottom (measured col 215..407 against mask 165..457). */
+  .donate-hero__col::before,
+  .volunteer-hero__col::before {
+    left: 0;
+    right: 0;
+    top: -50px;
+    bottom: -50px;
+    height: auto;
+  }
+
+  /* Donate's column is shorter (160 vs 192 at 390: single-line heading), so
+     the same 165..457 mask needs ±66px here, measured the same way. */
+  .donate-hero__col::before {
+    top: -66px;
+    bottom: -66px;
+  }
+
   .donate-hero__col h1,
   .volunteer-hero__col h1 {
     font-size: 32px;
@@ -1933,6 +2011,37 @@ ul {
 .about-hero-inner > * {
   width: 100%;
   max-width: 710px;
+}
+
+/* The live draws NO lattice lines inside the text panel: the cells behind the
+   copy carry `::after` borders only on the sides facing out of it (top row
+   keeps its top, middle row its bottom, the edges their outer side), so the
+   grid visibly stops at the panel's edge. Measured at 1440 and 1199 alike:
+   panel 870x290 at x=286 (viewport-centred), y=216..506 - i.e. band-relative
+   149..439, centred 3.5px below the band's centre exactly like the text. That
+   is the text bbox (h2 291..343, lead 353..431) inflated by 80px each side
+   and 75px top/bottom.
+
+   Reproduced the `.hero-video-box` way: an opaque `var(--bg)` panel over the
+   lattice, under the text. Cream on cream, so only the missing lines show.
+   `z-index: -1` keeps it inside `.about-hero-inner`'s own stacking context
+   (z-index: 2): above the grid (z-index: 1), below the in-flow copy.
+
+   The panel is 280 tall, not the live's 290: the live's row of cells BELOW
+   the text keeps its full borders, so its top edge - the horizontal lattice
+   line at y=501-502 - paints straight through the panel's bottom 5px. An opaque
+   290px panel would swallow that line; ending at 501 leaves it visible
+   exactly as the live draws it, and 5px of blank cream is invisible. */
+.about-hero-inner::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 3.5px);
+  width: 870px;
+  height: 280px;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  z-index: -1;
 }
 
 /* ---------- mission ----------
@@ -2303,15 +2412,13 @@ ul {
    The 12px between the timeline section's bottom (3973) and the volunteer row's
    top (3985) is the live's own; `padding-top: 12px` reproduces it exactly.
    The live also has a 10% --dot-green tint and 1px black rules top/bottom.
-   The BOTTOM border sits on the INNER container so the foot rail renders
-   below it, matching the live's flush placement. */
+   Both rules sit on the section itself, so both run full-bleed to the
+   viewport edges - the bottom one used to sit on the inner `.container`,
+   which inset it to the 1152px measure. */
 .about-volunteer {
   padding-top: 12px;
   background: rgba(0, 138, 23, 0.1);
   border-top: 1px solid #000;
-}
-
-.about-volunteer > .container {
   border-bottom: 1px solid #000;
 }
 
@@ -2692,6 +2799,11 @@ ul {
     display: none;
   }
 
+  /* No lattice below 810px, so the text needs no masking panel either. */
+  .about-hero-inner::before {
+    display: none;
+  }
+
   /* Below 810 the live drops the 710px cap entirely: the heading and the lead
      both measure the full 752px container at 800 (x=24, w=752), where 810px up
      centres a 710px block. Verified at 800/700/600/500/450/390. */
@@ -3020,6 +3132,33 @@ ul {
   margin-top: 32px;
 }
 
+/* The live draws NO lattice lines inside the text panel: the cells behind the
+   copy keep `::after` borders only on the sides facing out of it, so the grid
+   visibly stops at the panel's edge. Cell-border census at 1440: the 285..1155
+   columns keep top-only at row 212, bottom-only at row 357 and full borders
+   everywhere else - i.e. the mask is x=285..1155, y=212..502, the same rect as
+   the about hero's. The 502 line itself IS drawn full-width (the row below
+   keeps its top edge), straight through the last copy line's descenders - the
+   zoomed screenshot proves it - so the panel ends at 501, not 506.
+
+   Reproduced the `.hero-video-box` way: an opaque `var(--bg)` panel over the
+   lattice, under the text. `z-index: -1` keeps it inside
+   `.films-hero__content`'s own stacking context (z-index: 1): above the grid,
+   below the in-flow copy. The content's centre is height-independent (hero
+   581 + 15px top padding centres it at 298 hero-relative), and the panel's
+   centre is 291.5, hence the -6.5px. */
+.films-hero__content::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 6.5px);
+  width: 870px;
+  height: 285px;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  z-index: -1;
+}
+
 /* The hero is the one place this page uses a 1160px container with 80px of
    inset, where every section below it uses the shared 1152px/24px container.
    Live content widths: 650 at 810, 840 at 1000, then 1000 from 1199 up. */
@@ -3140,7 +3279,7 @@ ul {
 .film-feature__watch p {
   font-size: 17px;
   font-weight: 700;
-  line-height: 23.8px;
+  line-height: 28px;
 }
 
 /* The live breaks the credits copy across pre-split paragraphs, each one line
@@ -3310,28 +3449,33 @@ ul {
 }
 
 .bio-section__copy > p + p {
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
 .bio-section__copy > .btn {
-  margin-top: 24px;
+  margin-top: 40px;
 }
 
 .bio-section__note {
+  margin-top: 10px;
   color: var(--muted);
   font-size: 14px;
   line-height: 16.8px;
 }
 
 .film-donation {
-  margin-top: 24px;
+  margin-top: 40px;
   font-size: 15px;
   line-height: 16.8px;
 }
 
 .film-donation a {
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 2px;
+}
+
+.film-donation a:hover {
+  color: rgb(1, 107, 212)
 }
 
 .principle-section {
@@ -3508,6 +3652,21 @@ ul {
   .films-hero {
     min-height: 595px;
     padding-top: 52px;
+  }
+
+  /* Mobile masks full-bleed: the 390px cell census shows all four columns
+     borderless for rows 262 and 360, top-only at row 165 and full borders
+     elsewhere - i.e. the mask is x=0..390, y=165..458. `top: 50%` resolves
+     against the content's own height, whose centre is viewport 390.5
+     (hero 595 + 52px top padding centres it at 67 + 52 + 271.5); the mask's
+     centre is 311.5, hence the -79px. */
+  .films-hero__content::before {
+    left: 0;
+    right: 0;
+    top: calc(50% - 79px);
+    width: auto;
+    height: 293px;
+    transform: translateY(-50%);
   }
 
   .films-hero__title {
@@ -4141,7 +4300,7 @@ ul {
    that section, not to the footer. */
 .site-footer {
   position: relative;
-  padding: 80px 24px;
+  padding: 40px 24px;
 }
 
 /* The live paints a 1px black rule on the footer's top edge, full-bleed
