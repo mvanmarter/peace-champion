@@ -4545,8 +4545,8 @@ ul {
 
 .declaration-overlay__head svg {
   flex: none;
-  width: 127px;
-  height: 32px;
+  /* width: 127px;
+  height: 32px; */
 }
 
 .declaration-overlay__rule {
@@ -4570,7 +4570,7 @@ ul {
   line-height: 1.3;
 }
 
-.declaration-overlay__signature {
+.declaration-overlay__panel .declaration-overlay__signature {
   font-family: 'Seaweed Script', cursive;
   font-size: 28px;
   line-height: 1.2;
