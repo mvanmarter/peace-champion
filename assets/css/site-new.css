@@ -777,44 +777,20 @@ ul {
 
 .change-bg {
   background-color: #ddd;
+  background-color: rgba(0, 138, 23, 0.1);
 }
 
-/* ---------- change ---------- */
-/* The declaration band and the variant stack butt together on the live with no
-   gap, so the space in front of the change section is padding on the section
-   rather than a margin above it. The live's change block runs 3010..4234 at
-   1440 (1224 tall) and 3566..4589 at 390 (1023); with the grid, the embed and
-   the label fixed, that leaves 80px above at 1440/1000 and 89px at 390. */
 .change {
-  position: relative;
-  margin-top: 0;
-  padding-top: 80px;
-  /* The live's change area ends with 80px of flat space below the film's frame
-     before the first 900px variant box starts, and that 80px is *inside* the
-     full-bleed wrapper that carries the frame (padding-bottom on a box ending
-     at 4235, with the next section starting at 4234). Ours needs the same
-     80px, or the whole variant stack and everything below it rides 80px high.
-     Below 810px this was already set by the mobile override; the base rule
-     carried none, which is exactly what let the 127px label margin hide. */
-  padding-bottom: 80px;
+  border-top: 1px solid #222;
+  padding: 80px 24px;
+  background-color: rgba(0, 138, 23, 0.1);
 }
 
-/* The live closes the declaration band with a full-bleed 1px black rule at the
-   top of the change block. It is painted by the full-width section wrapper,
-   not by the 1200px `.container`, so it runs the whole viewport: row 3010 at
-   1440 and row 3566 at 390, black from x=0 to x=100vw, with the row above
-   still the white declaration band. `left: 50%` + `100vw` is exact because
-   `.container` is centred, so the pseudo's midpoint is the viewport's. An
-   overlay rather than a real border, for the reason given in B.8. */
-.change::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  border-top: 1px solid #000;
-  pointer-events: none;
+.change-inner {
+  /* max-width: 1000px; */
+  max-width: calc(var(--measure) + var(--pad) * 2);
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .change-grid {
@@ -829,7 +805,7 @@ ul {
   margin-top: 8px;
   font-family: var(--display);
   font-weight: 400;
-  font-size: 32px;
+  font-size: 50px;
   line-height: 32px;
 }
 
