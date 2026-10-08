@@ -1,4 +1,4 @@
-/* Global Peace Yes — static rebuild (index.html)
+/* Peace Champion — static rebuild (index.html)
    Design tokens and geometry measured from https://globalpeaceyes.org/
    Breakpoints mirror the Framer export: 809.98 / 1199.98 / 1439.98 / 1727.98 */
 
@@ -178,6 +178,17 @@ ul {
   cursor: pointer;
 }
 
+.btn-vote-now {
+  height: 50px;
+  font-size: 20px;
+  padding: 24px;
+}
+
+/* .btn-indigo {
+  margin: 20px 0 0 0;
+  background-color: #ad20a6;
+} */
+
 .embed {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -228,8 +239,8 @@ ul {
 
 .brand {
   flex: none;
-  width: 127px;
-  height: 32px;
+  /* width: 127px;
+  height: 32px; */
 }
 
 .brand svg {
@@ -654,10 +665,15 @@ ul {
   line-height: 52px;
 }
 
-.welcome p {
-  max-width: 800px;
-  margin: 16px auto 0;
-}
+  .welcome p {
+    max-width: 800px;
+    margin: 16px auto 0;
+  }
+
+  .welcome p.highlight {
+    padding-bottom: 16px;
+    max-width: 810px;
+  }
 
 .welcome .link {
   color: var(--accent);
@@ -748,6 +764,19 @@ ul {
   flex: none;
   width: 20px;
   height: 21px;
+}
+
+.declaration-link {
+  text-decoration: underline;
+}
+
+.declaration-link:hover {
+  color: #0099ff;
+  cursor: pointer;
+}
+
+.change-bg {
+  background-color: #ddd;
 }
 
 /* ---------- change ---------- */
@@ -1916,7 +1945,7 @@ ul {
    about.html
    ========================================================= */
 
-/* Global Peace Yes — about.html
+/* Peace Champion — about.html
    Static rebuild of https://globalpeaceyes.org/about.
    Loads after site-new.css, which supplies the fonts, tokens, reset,
    .container, .btn, the header and the footer. Everything here is
@@ -4439,3 +4468,36 @@ ul {
   .volunteer-aside {
     padding: 40px 0 0;
   }}
+
+  .peace-champion-app-container {
+    margin: 20px 0 0 0;
+  }
+
+  .peace-champion-app {
+  /* jborder: 1px #000 solid; */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 52px;
+    padding-inline: 16px;
+    border: 1px solid #999;
+    border-radius: 52px;
+    /* background: var(--btn); */
+    background: #fff;
+    color: var(--btn);
+    font-family: var(--sans);
+    width: 308px;
+    margin-inline: auto;
+  }
+
+.row {
+  display: flex;          /* puts the image and text side by side */
+  align-items: center;    /* vertically centers them (use flex-start to align to the top) */
+  gap: 12px;              /* space between image and text */
+}
+
+.row-img {
+  width: 40px;            /* the smaller size you want */
+  height: auto;           /* keeps the proportions */
+  flex-shrink: 0;         /* stops the image from being squeezed by long text */
+}

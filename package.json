@@ -2,7 +2,7 @@
   "name": "peace-champion",
   "version": "1.0.0",
   "private": true,
-  "description": "Static build for the Global Peace Yes rebuild: index.html from templates in src/.",
+  "description": "Static build for the Peace Champion rebuild: index.html from templates in src/.",
   "type": "module",
   "scripts": {
     "build": "eleventy && prettier --write index.html",
