@@ -323,8 +323,11 @@
                 All verified votes are registered anonymously and will work
                 together en masse as a single, unified voice to endorse and
                 activate
-                <a class="declaration-link">The Declaration for Global Peace</a
-                >.
+                <a class="declaration-link"
+                  id="declaration-open"
+                  tabindex="0"
+                  role="button"
+                  aria-haspopup="dialog">The Declaration for Global Peace</a>.
               </p>
               <p>
                 Become the Peace Champion our world needs by joining our
@@ -593,6 +596,88 @@
         </div>
       </div>
     </footer>
+
+    <div class="declaration-overlay" id="declaration-overlay" hidden>
+      <div
+        class="declaration-overlay__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="declaration-overlay-title"
+      >
+        <div class="declaration-overlay__head">
+          <svg viewBox="0 0 127 32" aria-hidden="true" focusable="false">
+            <use href="assets/svg/sprite.svg#svg-1141485548_13698"></use>
+          </svg>
+          <span class="declaration-overlay__rule" aria-hidden="true"></span>
+        </div>
+        <h2 id="declaration-overlay-title">The Declaration for Global Peace</h2>
+        <p>
+          We, the unified voters of GLOBAL PEACE YES, declare that Global Peace
+          is absolutely vital in the 21st Century for the human race to not only
+          survive, but thrive in balance with all living beings. With this
+          enduring commitment in mind, all GLOBAL PEACE YES verified votes
+          support the establishment of Ministries &amp; Departments of Peace in
+          governments worldwide to help resolve conflict before it leads to
+          violence. We understand that Global Peace ultimately comes from inner
+          peace. Therefore, we pledge to practice being peace every day in
+          rewarding service to the greater good and to promote peace education
+          as fundamental to our world’s well being. Furthermore, we recognize we
+          are blessed with the sacred gifts of Planet Earth and call for a
+          regenerative way of life that does no harm to nature so future
+          generations can benefit from nature’s gifts and our bountiful planet
+          as we have. Finally, we seek to help build Economies of Peace so we
+          “beat our swords into ploughshares” and bring forth a sustainable
+          human renaissance and lasting golden age of nonviolence. Thank you for
+          becoming the Peace Champions our world deserves and needs.
+        </p>
+        <p>Global Peace, yes we can.</p>
+        <p class="declaration-overlay__signature">Your Name Here</p>
+        <p class="declaration-overlay__voters">
+          + Other Global Peace Yes Voters
+        </p>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var trigger = document.getElementById("declaration-open");
+        var overlay = document.getElementById("declaration-overlay");
+        if (!trigger || !overlay) return;
+        var panel = overlay.querySelector(".declaration-overlay__panel");
+        function openOverlay() {
+          if (!overlay.hidden) return;
+          overlay.hidden = false;
+          document.body.style.overflow = "hidden";
+          if (panel) {
+            panel.setAttribute("tabindex", "-1");
+            panel.focus({ preventScroll: true });
+          }
+        }
+        function closeOverlay() {
+          if (overlay.hidden) return;
+          overlay.hidden = true;
+          document.body.style.overflow = "";
+          trigger.focus({ preventScroll: true });
+        }
+        trigger.addEventListener("click", function (e) {
+          e.preventDefault();
+          openOverlay();
+        });
+        trigger.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openOverlay();
+          }
+        });
+        overlay.addEventListener("click", function (e) {
+          if (panel && panel.contains(e.target)) return;
+          closeOverlay();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeOverlay();
+        });
+      })();
+    </script>
 
     <script>
       fetch("https://total-votes-rzszi6ndna-uc.a.run.app/")

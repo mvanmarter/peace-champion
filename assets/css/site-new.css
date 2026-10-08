@@ -4477,3 +4477,122 @@ ul {
   height: auto;           /* keeps the proportions */
   flex-shrink: 0;         /* stops the image from being squeezed by long text */
 }
+
+/* ---------- declaration overlay ----------
+   Static recreation of the live site's "Read the Declaration" overlay
+   (https://globalpeaceyes.org/). The live renders it as two fixed
+   elements: a full-viewport rgba(0, 0, 0, 0.8) backdrop and a centred
+   644px cream panel carrying the wordmark, a rule, the declaration text
+   and the signature block. The markup lives in src/pages/index.njk's
+   tail block (a direct child of <body>, after the footer) and starts
+   hidden; the script beside it opens it from #declaration-open and closes
+   it on any click outside the panel, plus Escape. The panel's faint
+   peace-mark watermark was deliberately not copied (decorative only). */
+@font-face {
+  font-family: 'Seaweed Script';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/bx6cNx6Tne2pxOATYE8C_Rsoe3WA8qY2VQ.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Seaweed Script';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/bx6cNx6Tne2pxOATYE8C_Rsoe3WO8qY.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.declaration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Author styles beat the UA [hidden] rule, so re-assert it. */
+.declaration-overlay[hidden] {
+  display: none;
+}
+
+.declaration-overlay__panel {
+  width: min(644px, 100%);
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 40px;
+  border: 1px solid #000;
+  background: var(--bg);
+}
+
+/* The panel takes programmatic focus on open so Escape and screen
+   readers land inside the dialog; it is never in the tab order. */
+.declaration-overlay__panel:focus {
+  outline: none;
+}
+
+.declaration-overlay__head {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.declaration-overlay__head svg {
+  flex: none;
+  width: 127px;
+  height: 32px;
+}
+
+.declaration-overlay__rule {
+  flex: 1;
+  border-top: 1px solid #000;
+}
+
+.declaration-overlay__panel h2 {
+  margin: 32px 0 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(38px, 6vw, 60px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.declaration-overlay__panel p {
+  margin: 20px 0 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.declaration-overlay__signature {
+  font-family: 'Seaweed Script', cursive;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.declaration-overlay__voters {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+@media (max-width: 809.98px) {
+  .declaration-overlay {
+    padding: 16px;
+  }
+  .declaration-overlay__panel {
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    padding: 28px 24px;
+  }
+  .declaration-overlay__head svg {
+    width: 104px;
+    height: 26px;
+  }
+}
