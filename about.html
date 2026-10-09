@@ -112,26 +112,6 @@
         </div>
     </header>
 
-    <script>
-      (function () {
-        var btn = document.querySelector(".nav-toggle");
-        var panel = document.getElementById("nav-panel");
-        if (!btn || !panel) return;
-        btn.addEventListener("click", function () {
-          var open = panel.hasAttribute("data-open");
-          if (open) {
-            panel.removeAttribute("data-open");
-            btn.setAttribute("aria-expanded", "false");
-            btn.setAttribute("aria-label", "Open menu");
-          } else {
-            panel.setAttribute("data-open", "");
-            btn.setAttribute("aria-expanded", "true");
-            btn.setAttribute("aria-label", "Close menu");
-          }
-        });
-      })();
-    </script>
-
     <main>
       <section class="hero about-hero">
         <div class="hero-grid" aria-hidden="true"></div>
@@ -738,5 +718,25 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      (function () {
+        var btn = document.querySelector(".nav-toggle");
+        var panel = document.getElementById("nav-panel");
+        if (!btn || !panel) return;
+        btn.addEventListener("click", function () {
+          var open = panel.hasAttribute("data-open");
+          if (open) {
+            panel.removeAttribute("data-open");
+            btn.setAttribute("aria-expanded", "false");
+            btn.setAttribute("aria-label", "Open menu");
+          } else {
+            panel.setAttribute("data-open", "");
+            btn.setAttribute("aria-expanded", "true");
+            btn.setAttribute("aria-label", "Close menu");
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
