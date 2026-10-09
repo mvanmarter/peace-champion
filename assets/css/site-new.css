@@ -178,10 +178,14 @@ ul {
   cursor: pointer;
 }
 
-.btn-vote-now {
+.btn-vote-now, .btn-donate {
   height: 50px;
   font-size: 20px;
   padding: 24px;
+}
+
+.btn-donate {
+  background-color: #000;
 }
 
 /* .btn-indigo {
@@ -2477,7 +2481,7 @@ ul {
 
 /* The live's "Get in Touch" is a button-shaped link with transparent
    background, black 1px border, 52px radius, and black text. */
-.volunteer-copy .btn--ghost {
+.volunteer-copy .btn-ghost {
   background: none;
   color: #000;
   border: 1px solid #000;
