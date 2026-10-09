@@ -1998,7 +1998,7 @@ ul {
 
 .about-hero-inner {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2030,7 +2030,7 @@ ul {
    Reproduced the `.hero-video-box` way: an opaque `var(--bg)` panel over the
    lattice, under the text. Cream on cream, so only the missing lines show.
    `z-index: -1` keeps it inside `.about-hero-inner`'s own stacking context
-   (z-index: 2): above the grid (z-index: 1), below the in-flow copy.
+   (z-index: 1): above the grid (z-index: 1, later in DOM so it wins the tie), below the in-flow copy.
 
    The panel is 280 tall, not the live's 290: the live's row of cells BELOW
    the text keeps its full borders, so its top edge - the horizontal lattice
