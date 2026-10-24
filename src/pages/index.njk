@@ -18,6 +18,48 @@ description: Join the journey to one billion people voting yes for global peace.
         })
         .catch(function () {});
     </script>
+    <script>
+      (function () {
+        var carousel = document.querySelector(".carousel");
+        if (!carousel) return;
+        var slides = Array.prototype.slice.call(
+          carousel.querySelectorAll(".carousel__slide"),
+        );
+        var dots = Array.prototype.slice.call(
+          carousel.querySelectorAll("[data-carousel-go]"),
+        );
+        var status = carousel.querySelector("[data-carousel-status]");
+        var previous = carousel.querySelector("[data-carousel-prev]");
+        var next = carousel.querySelector("[data-carousel-next]");
+        var current = 0;
+        if (!slides.length || !previous || !next) return;
+
+        function showSlide(index) {
+          current = (index + slides.length) % slides.length;
+          slides.forEach(function (slide, i) {
+            slide.hidden = i !== current;
+          });
+          dots.forEach(function (dot, i) {
+            dot.setAttribute("aria-pressed", String(i === current));
+          });
+          if (status) {
+            status.textContent = "Slide " + (current + 1) + " of " + slides.length;
+          }
+        }
+
+        previous.addEventListener("click", function () {
+          showSlide(current - 1);
+        });
+        next.addEventListener("click", function () {
+          showSlide(current + 1);
+        });
+        dots.forEach(function (dot) {
+          dot.addEventListener("click", function () {
+            showSlide(Number(dot.getAttribute("data-carousel-go")));
+          });
+        });
+      })();
+    </script>
 {% endblock %}
 {% block main %}
       <section class="hero">
@@ -205,6 +247,212 @@ description: Join the journey to one billion people voting yes for global peace.
               governments starting 2026</span
             >
           </p>
+        </div>
+      </section>
+
+      <section class="carousel" aria-label="Peace in action" aria-roledescription="carousel">
+        <div class="container">
+          <div class="carousel__slides" id="peace-carousel-slides">
+            <article
+              class="carousel__slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label="1 of 5"
+            >
+              <img
+                class="carousel__image"
+                src="https://images.unsplash.com/photo-1520881363902-a0ff4e722963?auto=format&amp;fit=crop&amp;w=1800&amp;h=760&amp;q=82"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+              <p class="eyebrow">A more peaceful world starts here</p>
+              <h2>Small acts can move us toward lasting peace</h2>
+              <p>
+                A thoughtful conversation, a helping hand, or a moment of
+                listening can create ripples of understanding in our communities.
+              </p>
+              <a
+                class="btn"
+                href="https://app.globalpeaceyes.org/"
+                target="_blank"
+                rel="noopener"
+                >Choose peace today</a
+              >
+            </article>
+            <article
+              class="carousel__slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label="2 of 5"
+              hidden
+            >
+              <img
+                class="carousel__image"
+                src="https://images.unsplash.com/photo-1651372381086-9861c9c81db5?auto=format&amp;fit=crop&amp;w=1800&amp;h=760&amp;q=82"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+              <p class="eyebrow">Lead with empathy</p>
+              <h2>Make room for every voice</h2>
+              <p>
+                When we meet differences with curiosity and compassion, we make
+                space for trust, connection, and solutions that include us all.
+              </p>
+              <a
+                class="btn"
+                href="https://app.globalpeaceyes.org/"
+                target="_blank"
+                rel="noopener"
+                >Share your yes</a
+              >
+            </article>
+            <article
+              class="carousel__slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label="3 of 5"
+              hidden
+            >
+              <img
+                class="carousel__image"
+                src="https://images.unsplash.com/photo-1788538812809-f22af3a6993a?auto=format&amp;fit=crop&amp;w=1800&amp;h=760&amp;q=82"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+              <p class="eyebrow">Peace grows in community</p>
+              <h2>Build bridges close to home</h2>
+              <p>
+                Neighbors working together can turn shared hopes into safer,
+                kinder places for everyone to live, learn, and belong.
+              </p>
+              <a
+                class="btn"
+                href="https://app.globalpeaceyes.org/"
+                target="_blank"
+                rel="noopener"
+                >Be part of the change</a
+              >
+            </article>
+            <article
+              class="carousel__slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label="4 of 5"
+              hidden
+            >
+              <img
+                class="carousel__image"
+                src="https://images.unsplash.com/photo-1784833506364-4226ce0d2b4e?auto=format&amp;fit=crop&amp;w=1800&amp;h=760&amp;q=82"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+              <p class="eyebrow">Hope becomes action</p>
+              <h2>Choose cooperation over conflict</h2>
+              <p>
+                Every peaceful choice helps shape a culture where people can
+                resolve challenges together and imagine a brighter future.
+              </p>
+              <a
+                class="btn"
+                href="https://app.globalpeaceyes.org/"
+                target="_blank"
+                rel="noopener"
+                >Take a step for peace</a
+              >
+            </article>
+            <article
+              class="carousel__slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label="5 of 5"
+              hidden
+            >
+              <img
+                class="carousel__image"
+                src="https://images.unsplash.com/photo-1774442479171-e10f0ff3af38?auto=format&amp;fit=crop&amp;w=1800&amp;h=760&amp;q=82"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+              <p class="eyebrow">One shared intention</p>
+              <h2>Together, our yes can be heard</h2>
+              <p>
+                Add your voice to a growing movement calling for peace to be a
+                priority in our homes, communities, and governments.
+              </p>
+              <a
+                class="btn"
+                href="https://app.globalpeaceyes.org/"
+                target="_blank"
+                rel="noopener"
+                >Join the movement</a
+              >
+            </article>
+          </div>
+          <div class="carousel__controls" aria-label="Carousel controls">
+            <button
+              class="carousel__arrow"
+              type="button"
+              data-carousel-prev
+              aria-label="Previous slide"
+              aria-controls="peace-carousel-slides"
+            >
+              &#8592;
+            </button>
+            <div class="carousel__dots" role="group" aria-label="Choose a slide">
+              <button
+                class="carousel__dot"
+                type="button"
+                data-carousel-go="0"
+                aria-label="Go to slide 1"
+                aria-pressed="true"
+              ></button>
+              <button
+                class="carousel__dot"
+                type="button"
+                data-carousel-go="1"
+                aria-label="Go to slide 2"
+                aria-pressed="false"
+              ></button>
+              <button
+                class="carousel__dot"
+                type="button"
+                data-carousel-go="2"
+                aria-label="Go to slide 3"
+                aria-pressed="false"
+              ></button>
+              <button
+                class="carousel__dot"
+                type="button"
+                data-carousel-go="3"
+                aria-label="Go to slide 4"
+                aria-pressed="false"
+              ></button>
+              <button
+                class="carousel__dot"
+                type="button"
+                data-carousel-go="4"
+                aria-label="Go to slide 5"
+                aria-pressed="false"
+              ></button>
+            </div>
+            <button
+              class="carousel__arrow"
+              type="button"
+              data-carousel-next
+              aria-label="Next slide"
+              aria-controls="peace-carousel-slides"
+            >
+              &#8594;
+            </button>
+            <span class="carousel__status" data-carousel-status aria-live="polite"
+              >Slide 1 of 5</span
+            >
+          </div>
         </div>
       </section>
 
