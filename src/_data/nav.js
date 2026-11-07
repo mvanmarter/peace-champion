@@ -74,7 +74,7 @@ const menus = [
   {
     id: "global-peace",
     label: "Global Peace",
-    href: "#",
+    href: "global-peace.html",
     subtitle:
       "Our initiatives, campaigns, and organized efforts to create peace in the world.",
     links: [
@@ -88,7 +88,7 @@ const menus = [
   {
     id: "peace-entertainment",
     label: "Peace Entertainment",
-    href: "#",
+    href: "peace-entertainment.html",
     subtitle:
       "Inspiring the world through creativity, culture, wisdom, and entertainment.",
     links: [
