@@ -321,6 +321,183 @@ ul {
   display: flex;
 }
 
+/* ---------- primary nav flyouts (index.html) ----------
+   Three top-level items (docs/main-nav.md), each opening a dropdown card on
+   hover or keyboard focus. Scoped to .nav--menus so the hand-written
+   sub-pages, which still use a plain .nav of links, are untouched.
+
+   All three cards share one position and width: exactly the right half of
+   the window. They are anchored to .site-header (position: fixed makes it the
+   containing block; .nav and .nav-item stay static), opening flush under the
+   bar from the centre line (left: 50%) to the browser edge (right: 0).
+   Square corners throughout, to match the site's ruled, boxy look. */
+/* Wider than the plain .nav's 24px: three labels, so they can breathe. */
+.nav--menus {
+  column-gap: 40px;
+}
+
+.nav--menus .nav-item {
+  display: block;
+}
+
+.nav--menus .nav-link {
+  display: block;
+  transition: color 0.15s ease;
+}
+
+.nav--menus .nav-item:hover > .nav-link,
+.nav--menus .nav-item:focus-within > .nav-link {
+  color: var(--btn);
+}
+
+.nav-flyout {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  right: 0;
+  z-index: 10;
+  padding: 32px 40px 40px;
+  background: #fff;
+  border-top: 3px solid var(--btn);
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 16px -4px rgba(0, 0, 0, 0.1),
+    0 24px 48px -12px rgba(0, 0, 0, 0.18);
+  visibility: hidden;
+  opacity: 0;
+  /* Closing waits 150ms so a diagonal move from the label into the card
+     does not flicker it shut. */
+  transition:
+    opacity 0.15s ease,
+    visibility 0s linear 0.15s;
+}
+
+/* Bridges the strip of bar between the labels and the card, so the pointer
+   never leaves the .nav-item on its way down. It spans the whole bar
+   (left: -100% = the other half), because at narrow widths a label can sit
+   left of the card's centre-line edge. 26px reaches up to just under the
+   labels (they end ~24px above the bar's bottom) without covering them. */
+.nav-flyout::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: -100%;
+  right: 0;
+  height: 26px;
+}
+
+.nav--menus .nav-item:hover > .nav-flyout,
+.nav--menus .nav-item:focus-within > .nav-flyout {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 0.15s ease,
+    visibility 0s;
+}
+
+.nav-flyout-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nav-flyout-sub {
+  max-width: 560px;
+  margin: 0;
+  padding: 0 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.nav-flyout-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 8px;
+  max-width: 640px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.nav .nav-flyout-links a {
+  position: relative;
+  display: block;
+  height: 100%;
+  padding: 10px 28px 10px 12px;
+  border-left: 2px solid transparent;
+  white-space: normal;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+/* Arrow that slides in on the hovered row. */
+.nav .nav-flyout-links a::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.nav .nav-flyout-links a:hover,
+.nav .nav-flyout-links a:focus-visible {
+  background: rgba(0, 107, 212, 0.08);
+  border-left-color: var(--btn);
+  color: var(--btn);
+}
+
+.nav .nav-flyout-links a:hover::after,
+.nav .nav-flyout-links a:focus-visible::after {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.nav .nav-flyout-links a:focus-visible {
+  outline-offset: 0;
+}
+
+/* Mobile panel: the same three sections, each label followed by its links.
+   The panel can now outgrow a phone screen, so it scrolls. */
+.js .nav-panel {
+  max-height: calc(100vh - 83px);
+  overflow-y: auto;
+}
+
+.nav-panel-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nav-panel-head {
+  font-weight: 600;
+}
+
+.nav-panel-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 16px;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-flyout,
+  .nav--menus .nav-link,
+  .nav .nav-flyout-links a,
+  .nav .nav-flyout-links a::after {
+    transition: none;
+  }
+}
+
 /* ---------- hero ----------
    `body` supplies the 67px below the fixed bar, so the hero's own padding is
    the live's hero padding measured from the content start (212 - 67 at 810px
