@@ -5310,3 +5310,763 @@ ul {
     height: 26px;
   }
 }
+
+/* =========================================================
+   about.html — content sections (Nov 2026)
+   Six sections built from docs/website-copy.md (## About), each with its own
+   layout so they can be iterated on independently. Shared across all six:
+   the .ab-head block (mono .about-label + .ab-title, one font and size), the
+   section rhythm, and a full-bleed 1px rule between sections. Everything is
+   namespaced .ab-* except Values, which reuses the existing .values/.value
+   framed grid.
+
+   Frames use two idioms already on this page: `::after { inset: 0; border }`
+   overlays for single boxes, and for grids a black background showing through
+   a 1px `gap` + 1px padding, so every cell edge is one hairline at any column
+   count.
+   ========================================================= */
+.ab-section {
+  position: relative;
+  padding-block: 112px;
+}
+
+.ab-section + .ab-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #000;
+  pointer-events: none;
+}
+
+.ab-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.ab-head--center {
+  align-items: center;
+  text-align: center;
+}
+
+/* The one heading style for all six sections. */
+.ab-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 44px;
+  text-transform: uppercase;
+}
+
+.ab-section a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- 01 Mission: framed, centred statement ---------- */
+.ab-mission__frame {
+  position: relative;
+  padding: 72px 64px 80px;
+  text-align: center;
+}
+
+.ab-mission__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.ab-mission .ab-head {
+  margin-bottom: 40px;
+}
+
+.ab-mission__statement {
+  max-width: 920px;
+  margin-inline: auto;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 42px;
+}
+
+/* ---------- 02 Strategy: sticky aside + copy, milestone strip ---------- */
+.ab-strategy__grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* Stays in view below the fixed 67px bar while the long copy scrolls. */
+.ab-strategy__aside {
+  position: sticky;
+  top: 107px;
+}
+
+.ab-strategy__lead {
+  color: var(--btn);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.ab-strategy__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 70px;
+}
+
+.ab-milestones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin: 96px 0 0;
+  padding: 1px;
+  background: #000;
+  list-style: none;
+}
+
+.ab-milestones li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 24px 32px;
+  background: var(--bg);
+}
+
+/* The tint deepens step by step; the billion is solid. */
+.ab-milestones li:nth-child(2) {
+  background: #eef3f8;
+}
+
+.ab-milestones li:nth-child(3) {
+  background: #dde8f3;
+}
+
+.ab-milestones li:nth-child(4) {
+  background: var(--btn);
+  color: #fff;
+}
+
+.ab-milestones__step {
+  margin-bottom: 24px;
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.ab-milestones__n {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 36px;
+  text-transform: uppercase;
+}
+
+.ab-milestones__l {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+/* ---------- 03 Vision: tinted split box + key figures ---------- */
+.ab-vision__box {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(0, 107, 212, 0.1);
+}
+
+.ab-vision__box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.ab-vision__media {
+  position: relative;
+  min-height: 480px;
+}
+
+.ab-vision__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: 1px solid #000;
+  pointer-events: none;
+}
+
+.ab-vision__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Carousel in the media slot. Manual only: a horizontal scroll-snap track
+   (touch swipe for free), stepped by the buttons in the corner nav. The
+   slot's own ::after frame line paints above the track. */
+.ab-carousel__track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.ab-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.ab-carousel__track:focus-visible {
+  outline-offset: -4px;
+}
+
+.ab-carousel__slide {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.ab-carousel__nav {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: stretch;
+  background: var(--bg);
+  border: 1px solid #000;
+}
+
+.ab-carousel__btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.ab-carousel__btn:hover {
+  background: var(--btn);
+  color: #fff;
+}
+
+.ab-carousel__btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ab-carousel__count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  white-space: nowrap;
+  min-width: 64px;
+  padding: 0 10px;
+  border-inline: 1px solid #000;
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Without the script the buttons can't work; the track still scrolls. */
+html:not(.js) .ab-carousel__nav {
+  display: none;
+}
+
+.ab-vision__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 48px;
+}
+
+.ab-vision__copy .ab-head {
+  margin-bottom: 16px;
+}
+
+.ab-vision__p {
+  font-size: 18px;
+  line-height: 27px;
+}
+
+/* Sits flush under the box; -1px so its top line and the box's bottom line
+   are the same hairline. */
+.ab-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: -1px 0 0;
+  padding: 1px;
+  background: #000;
+}
+
+.ab-facts > div {
+  padding: 32px;
+  background: var(--bg);
+}
+
+.ab-facts dt {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 48px;
+}
+
+.ab-facts dd {
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+/* ---------- 04 Theory of Change: quote panel + numbered journey ---------- */
+.ab-change__grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.ab-change__quote {
+  margin: 0;
+  padding: 48px 40px 56px;
+  background: var(--btn);
+  color: #fff;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 38px;
+}
+
+.ab-change__quote-2 {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.ab-journey {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-journey li {
+  position: relative;
+  padding: 0 0 40px 80px;
+  font-size: 18px;
+  line-height: 27px;
+}
+
+.ab-journey li:last-child {
+  padding-bottom: 0;
+}
+
+/* The rail: one segment per step, starting and ending on the number boxes. */
+.ab-journey li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 23.5px;
+  border-left: 1px solid #000;
+}
+
+.ab-journey li:first-child::before {
+  top: 24px;
+}
+
+.ab-journey li:last-child::before {
+  bottom: auto;
+  height: 24px;
+}
+
+.ab-journey__n {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #000;
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Arrival: the last step - unity - is filled. */
+.ab-journey li:last-child .ab-journey__n {
+  border-color: var(--btn);
+  background: var(--btn);
+  color: #fff;
+}
+
+.ab-journey li p {
+  padding-top: 10px;
+}
+
+/* ---------- 05 Values: existing .values grid, icons removed ----------
+   More air between each name and its copy, and four background variants in
+   a staggered order so no two neighbours match - in the 4x2 grid
+   horizontally or vertically, and in the one-column stack below 1200. */
+.ab-values .values {
+  margin-top: 0;
+}
+
+.ab-values .value {
+  padding: 28px 24px 36px;
+}
+
+.ab-values .value h3 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.ab-values .value p {
+  min-height: 0;
+  margin-top: 16px;
+}
+
+.ab-values .value:nth-child(1),
+.ab-values .value:nth-child(7) {
+  background: var(--bg);
+}
+
+.ab-values .value:nth-child(2),
+.ab-values .value:nth-child(8) {
+  background: #e6eef7;
+}
+
+.ab-values .value:nth-child(3),
+.ab-values .value:nth-child(5) {
+  background: #efece5;
+}
+
+.ab-values .value:nth-child(4),
+.ab-values .value:nth-child(6) {
+  background: #d4e3f2;
+}
+
+/* ---------- 06 Team: framed card grid ---------- */
+.ab-team__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  position: relative;
+  list-style: none;
+  /* open() keeps the clicked card in place itself; the browser's own
+     scroll anchoring would adjust a second time. */
+  overflow-anchor: none;
+}
+
+/* Hairlines per cell rather than the black-gap fill used by the other grids:
+   the last row can be short (9 cards at 2 per row), and with this scheme the
+   empty cell is just blank page instead of a black block. Each cell draws
+   its right and bottom edge; the grid draws the outer top and left. */
+.ab-team__grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  pointer-events: none;
+}
+
+.ab-person {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+}
+
+.ab-person::after,
+.ab-team__drawer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  pointer-events: none;
+}
+
+.ab-person__initials {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 24px;
+  background: rgba(0, 107, 212, 0.1);
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.ab-person__name {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.ab-person__role {
+  margin-top: 6px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.ab-person__role em {
+  font-style: normal;
+}
+
+/* Toggle sits at the foot of the card whatever the role's length. */
+.ab-person__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 24px 0 0;
+  border: 0;
+  background: none;
+  color: var(--btn);
+  font: inherit;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ab-person__toggle::after {
+  content: "+";
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+}
+
+.ab-person__toggle:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ab-person.is-open {
+  background: rgba(0, 107, 212, 0.08);
+}
+
+.ab-person.is-open .ab-person__toggle::after {
+  content: "−";
+}
+
+/* The per-card bios are the source the script copies into the drawer. With
+   no script they simply show inline under each card. */
+.js .ab-person__bio {
+  display: none;
+}
+
+.ab-person__bio {
+  padding-top: 16px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.ab-person__bio p + p {
+  margin-top: 12px;
+}
+
+/* The shared bio panel: a full row directly under the clicked card's row. */
+.ab-team__drawer {
+  position: relative;
+  grid-column: 1 / -1;
+  padding: 40px 32px 48px;
+  background: rgba(0, 107, 212, 0.08);
+  box-shadow: inset 0 3px 0 var(--btn);
+}
+
+.ab-team__drawer[hidden] {
+  display: none;
+}
+
+.ab-team__drawer-inner {
+  max-width: 760px;
+}
+
+.ab-team__drawer-name {
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.ab-team__drawer-body {
+  font-size: 17px;
+  line-height: 26px;
+}
+
+.ab-team__drawer-body p + p {
+  margin-top: 14px;
+}
+
+/* ---------- about sections: 810 - 1199.98 ---------- */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .ab-section {
+    padding-block: 96px;
+  }
+
+  .ab-strategy__grid,
+  .ab-change__grid {
+    gap: 48px;
+  }
+
+  .ab-milestones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ab-team__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- about sections: <= 809.98 ---------- */
+@media (max-width: 809.98px) {
+  .ab-section {
+    padding-block: 72px;
+  }
+
+  .ab-head {
+    margin-bottom: 32px;
+  }
+
+  .ab-title {
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  .ab-mission__frame {
+    padding: 48px 24px 56px;
+  }
+
+  .ab-mission .ab-head {
+    margin-bottom: 28px;
+  }
+
+  .ab-mission__statement {
+    font-size: 22px;
+    line-height: 30px;
+  }
+
+  .ab-strategy__grid,
+  .ab-change__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .ab-strategy__aside {
+    position: static;
+  }
+
+  .ab-strategy__lead {
+    font-size: 22px;
+    line-height: 29px;
+  }
+
+  .ab-strategy__copy {
+    padding-top: 0;
+  }
+
+  .ab-milestones {
+    grid-template-columns: 1fr;
+    margin-top: 56px;
+  }
+
+  .ab-milestones__step {
+    margin-bottom: 12px;
+  }
+
+  .ab-milestones__n {
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  .ab-vision__box {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-vision__media {
+    min-height: 260px;
+  }
+
+  .ab-vision__media::after {
+    border-right: 0;
+    border-bottom: 1px solid #000;
+  }
+
+  .ab-vision__copy {
+    padding: 32px 24px 40px;
+  }
+
+  .ab-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-facts > div {
+    padding: 24px;
+  }
+
+  .ab-facts dt {
+    font-size: 36px;
+    line-height: 36px;
+  }
+
+  .ab-change__quote {
+    padding: 32px 24px 40px;
+    font-size: 24px;
+    line-height: 31px;
+  }
+
+  .ab-journey li {
+    padding-left: 64px;
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .ab-team__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-person {
+    padding: 28px 24px;
+  }
+
+  .ab-team__drawer {
+    padding: 28px 24px 36px;
+  }
+
+  .ab-carousel__nav {
+    top: 12px;
+    right: 12px;
+  }
+}
