@@ -2692,17 +2692,20 @@ ul {
    581px tall at 810px up (not the homepage's 725px) with no video and no
    bleed illustrations, and below 810px it uses 98px cells in a 488px band
    with no upward shift. */
+/* Deliberately shorter than the live's 581px: one 145px lattice row less
+   (581 - 145 = 436), so the band still ends on a whole row while the copy
+   loses ~73px of space above and below. */
 .about-hero {
-  height: 581px;
+  height: 436px;
   padding-top: 0;
 }
 
 .about-hero .hero-grid {
-  height: 581px;
+  height: 436px;
 }
 
 .about-hero .hero-grid::before {
-  height: 581px;
+  height: 436px;
 }
 
 .about-hero-inner {
@@ -3501,12 +3504,14 @@ ul {
      block) and no 145px cells, no grid divs at all. And its height is `125vw`,
      not a fixed 488px - measured 1000@800, 875@700, 750@600, 625@500,
      563@450, 488@390, 400@320, i.e. h/width = 1.2500 at every width. */
+  /* ...but that left 137px above and below the copy at 390 and 444px at 800,
+     so ours deliberately sizes to the copy with a fixed 80px either side. */
   .about-hero {
-    height: 125vw;
+    height: auto;
   }
 
   .about-hero-inner {
-    padding-top: 0;
+    padding-block: 80px;
   }
 
   .about-hero .hero-grid {
