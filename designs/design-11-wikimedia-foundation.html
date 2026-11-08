@@ -95,8 +95,8 @@ html{scroll-padding-top:64px}
     </div>
     <p class="dz-current"><span class="dz-num">11</span>Wikimedia Foundation style</p>
     <div class="dz-step">
-      <a href="design-10-the-ocean-cleanup.html" aria-label="Previous design: 10 The Ocean Cleanup style">&larr;</a>
-      <a href="design-12-mozilla-foundation.html" aria-label="Next design: 12 Mozilla Foundation style">&rarr;</a>
+      <a href="design-10-the-ocean-cleanup.html" rel="prev" aria-label="Previous design: 10 The Ocean Cleanup style">&larr;</a>
+      <a href="design-12-mozilla-foundation.html" rel="next" aria-label="Next design: 12 Mozilla Foundation style">&rarr;</a>
     </div>
   </div>
 </nav>
@@ -134,7 +134,15 @@ html{scroll-padding-top:64px}
   document.addEventListener("click", function (e) {
     if (!e.target.closest(".dz-menu")) closeAll();
   });
+  // Left/right arrow keys step through the designs, like the nav arrows.
   document.addEventListener("keydown", function (e) {
+    if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      var t = e.target;
+      if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+      var a = document.querySelector(".dz-step a[rel=" + (e.key === "ArrowLeft" ? "prev" : "next") + "]");
+      if (a) { e.preventDefault(); location.href = a.href; }
+      return;
+    }
     if (e.key !== "Escape") return;
     closeAll();
     var a = document.activeElement;
