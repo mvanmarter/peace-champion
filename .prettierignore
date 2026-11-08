@@ -50,3 +50,6 @@
 # Generated.
 /package-lock.json
 node_modules/
+# Design explorations split out of reference/designs1/ (one page per design).
+# Generated, minified-style markup; not ours to reformat.
+/designs/
