@@ -6078,21 +6078,33 @@ html:not(.js) .ab-carousel__nav {
   }
 }
 
-/* about.html footer: the site's top-level links (matching the header nav) plus
-   Privacy Policy and Designs. The groups here are uneven (2 / 1 / 2 links) and
-   the labels are wider than the old "About / Music" pair, so top-align the
-   groups and let the first one size to its content instead of the fixed 52px
-   column the live footer used. Scoped by the modifier class so the other
-   pages' footers are unchanged. */
+/* about.html / global-peace.html footer: two rows of links, left to right.
+   Row 1 is the site sections (matching the header nav), row 2 is Designs and
+   Privacy Policy. Each <li> is one row; links inside it sit side by side and
+   wrap on narrow phones. Scoped by the modifier class so the other pages'
+   footers are unchanged. */
 .site-footer .footer-links--site {
+  flex-direction: column;
   align-items: flex-start;
-  /* Five longer labels do not fit one row at phone widths: wrap the groups. */
+  gap: 24px;
+}
+
+.site-footer .footer-links--site li {
+  flex-direction: row;
   flex-wrap: wrap;
-  row-gap: 24px;
+  gap: 24px 40px;
 }
 
 .site-footer .footer-links--site li:first-child {
   width: auto;
+}
+
+/* Phones: the three row-1 labels are 301px in a 342px column at 390, so a 20px gap
+   keeps them on one line; narrower phones wrap the row. */
+@media (max-width: 809.98px) {
+  .site-footer .footer-links--site li {
+    column-gap: 20px;
+  }
 }
 
 /* =========================================================
