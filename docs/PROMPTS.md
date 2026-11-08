@@ -42,3 +42,7 @@ Can you build a new page called donate2.html that is a mirror copy of the same p
 Can you build a new page called volunteer2.html that is a mirror copy of the same page found here:  https://globalpeaceyes.org/volunteer ? Please use all the .md files found in the /docs folder for reference (except for the PROMPTS.md file).  Please build the new volunteer2.html page as a static page that does NOT have any React or Framer scripts in it.  I want the simplest, most modern HTML page with the same breakpoints as the current index.html page.  It should be as simple as possible, with the least HTML possible, and everything rendered on the server.  You can exclude all scripts, including analytics scripts and anything else that does not help the page perform its most basic duties. Do NOT integrate this volunteer2.html with the Eleventy static site build.  We will do this task after we've nailed down the static HTML.  So, this file should contain its own header, footer, etc for now.
 
 ---
+
+
+Use this information:  Here is the URL:  https://mvanmarter.github.io/peace-champion/global-peace 
+Please use the attached folders for reference screenshots.  Can you please create different designs of the website found at the listed URL for each of these reference screenshots?  There are 11 reference screenshots in each of the two attached folders.  Do NOT use the Halfaversary design system.
