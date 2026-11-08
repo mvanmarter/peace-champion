@@ -45,8 +45,8 @@ html{scroll-padding-top:64px}
 }
 @media (max-width:700px){
 .dz-nav__inner{flex-wrap:wrap;padding:0 12px;gap:0 12px}
-.dz-current{order:5;flex-basis:100%;margin:0;padding:0 0 10px}
-.dz-step{margin-left:auto}
+.dz-current{order:5;flex:1 1 calc(100% - 92px);min-width:0;margin:0;padding:0 0 10px}
+.dz-step{order:6;margin-left:auto;padding-bottom:10px}
 .dz-menu__label{padding:0 12px;min-height:48px}
 .dz-menu{position:static}
 .dz-menu__list{top:100%;left:12px;right:12px;min-width:0}
@@ -106,11 +106,43 @@ html{scroll-padding-top:64px}
           <li><a href="design-22-un-peacekeeping.html" aria-current="page"><span class="dz-num">22</span>UN Peacekeeping style</a></li>
         </ul>
       </div>
+      <div class="dz-menu">
+        <a class="dz-menu__label" href="design-23-netflix.html" aria-haspopup="true" aria-expanded="false">Set 3</a>
+        <ul class="dz-menu__list">
+          <li><a href="design-23-netflix.html"><span class="dz-num">23</span>Netflix style</a></li>
+          <li><a href="design-24-spotify.html"><span class="dz-num">24</span>Spotify style</a></li>
+          <li><a href="design-25-disney.html"><span class="dz-num">25</span>Disney+ style</a></li>
+          <li><a href="design-26-pixar.html"><span class="dz-num">26</span>Pixar style</a></li>
+          <li><a href="design-27-a24.html"><span class="dz-num">27</span>A24 style</a></li>
+          <li><a href="design-28-marvel.html"><span class="dz-num">28</span>Marvel style</a></li>
+          <li><a href="design-29-coachella.html"><span class="dz-num">29</span>Coachella style</a></li>
+          <li><a href="design-30-twitch.html"><span class="dz-num">30</span>Twitch style</a></li>
+          <li><a href="design-31-nintendo.html"><span class="dz-num">31</span>Nintendo style</a></li>
+          <li><a href="design-32-eurovision.html"><span class="dz-num">32</span>Eurovision style</a></li>
+          <li><a href="design-33-olympics.html"><span class="dz-num">33</span>Olympics style</a></li>
+        </ul>
+      </div>
+      <div class="dz-menu">
+        <a class="dz-menu__label" href="design-34-apple.html" aria-haspopup="true" aria-expanded="false">Set 4</a>
+        <ul class="dz-menu__list">
+          <li><a href="design-34-apple.html"><span class="dz-num">34</span>Apple style</a></li>
+          <li><a href="design-35-stripe.html"><span class="dz-num">35</span>Stripe style</a></li>
+          <li><a href="design-36-linear.html"><span class="dz-num">36</span>Linear style</a></li>
+          <li><a href="design-37-vercel.html"><span class="dz-num">37</span>Vercel style</a></li>
+          <li><a href="design-38-tesla.html"><span class="dz-num">38</span>Tesla style</a></li>
+          <li><a href="design-39-spacex.html"><span class="dz-num">39</span>SpaceX style</a></li>
+          <li><a href="design-40-figma.html"><span class="dz-num">40</span>Figma style</a></li>
+          <li><a href="design-41-notion.html"><span class="dz-num">41</span>Notion style</a></li>
+          <li><a href="design-42-google-earth.html"><span class="dz-num">42</span>Google Earth style</a></li>
+          <li><a href="design-43-duolingo.html"><span class="dz-num">43</span>Duolingo style</a></li>
+          <li><a href="design-44-nvidia.html"><span class="dz-num">44</span>NVIDIA style</a></li>
+        </ul>
+      </div>
     </div>
     <p class="dz-current"><span class="dz-num">22</span>UN Peacekeeping style</p>
     <div class="dz-step">
       <a href="design-21-usip.html" rel="prev" aria-label="Previous design: 21 USIP style">&larr;</a>
-      <a href="design-01-charity-water.html" rel="next" aria-label="Next design: 01 charity: water style">&rarr;</a>
+      <a href="design-23-netflix.html" rel="next" aria-label="Next design: 23 Netflix style">&rarr;</a>
     </div>
   </div>
 </nav>
@@ -181,8 +213,14 @@ html{scroll-padding-top:64px}
 
   // The design's main nav: the first link reading "Global Peace", with its
   // About / Peace Entertainment siblings in the same row.
+  // Only a header nav counts: the link must come before the page's main
+  // headline, so a design whose header has no menu (e.g. the Netflix sign-up
+  // style) does not get flyouts hung off its footer links instead.
   var all = [].slice.call(design.querySelectorAll("a"));
-  var gp = all.filter(function (a) { return MENUS[1].re.test(txt(a)); })[0];
+  var h1 = design.querySelector("h1");
+  var gp = all.filter(function (a) {
+    return MENUS[1].re.test(txt(a)) && (!h1 || (a.compareDocumentPosition(h1) & Node.DOCUMENT_POSITION_FOLLOWING));
+  })[0];
   if (!gp) return;
   var row = gp.parentElement;
   while (row && row !== design && row.querySelectorAll("a").length < 3) row = row.parentElement;

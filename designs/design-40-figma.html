@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design 40 · Figma style — Peace Champion Global Peace</title>
+<!-- Generated from reference/designs3/ (set 4, originally #H07). Design exploration, not a production page. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:system-ui,sans-serif}
+html{scroll-padding-top:64px}
+.dz-nav{position:sticky;top:0;z-index:1000;background:#111;color:#fff;font:500 14px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 1px 0 rgba(255,255,255,.08),0 6px 18px rgba(0,0,0,.25)}
+.dz-nav *{box-sizing:border-box}
+.dz-nav a{color:#fff;text-decoration:none}
+.dz-nav__inner{display:flex;align-items:center;gap:8px 24px;min-height:52px;padding:0 24px;max-width:1440px;margin:0 auto}
+.dz-home{font-weight:600;white-space:nowrap;opacity:.85}
+.dz-home:hover{opacity:1}
+.dz-menus{display:flex;align-self:stretch}
+.dz-menu{position:relative;display:flex}
+.dz-menu__label{display:flex;align-items:center;padding:0 16px;font-weight:600;border-bottom:3px solid transparent;border-top:3px solid transparent}
+.dz-menu.is-current>.dz-menu__label{border-bottom-color:#4da3ff}
+.dz-menu:focus-within>.dz-menu__label,.dz-menu.is-open>.dz-menu__label{background:#222}
+.dz-menu__list{position:absolute;top:100%;left:0;min-width:300px;margin:0;padding:8px 0;list-style:none;background:#fff;color:#111;box-shadow:0 12px 32px rgba(0,0,0,.28),0 2px 6px rgba(0,0,0,.18);border-top:3px solid #4da3ff;visibility:hidden;opacity:0;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility 0s linear .15s}
+.dz-menu:focus-within>.dz-menu__list,.dz-menu.is-open>.dz-menu__list{visibility:visible;opacity:1;transform:none;transition:opacity .15s,transform .15s,visibility 0s}
+.dz-menu__list a{display:flex;gap:12px;padding:9px 18px;color:#111;border-left:3px solid transparent}
+.dz-menu__list a:hover,.dz-menu__list a:focus-visible{background:#f1f5fa;border-left-color:#006bd4;outline:none}
+.dz-menu__list a[aria-current=page]{font-weight:700;background:#eef4fb;border-left-color:#006bd4}
+.dz-num{font-variant-numeric:tabular-nums;opacity:.55;min-width:1.6em}
+.dz-current{display:flex;gap:8px;margin:0 0 0 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
+.dz-step{display:flex;gap:4px}
+.dz-step a{display:grid;place-items:center;width:32px;height:32px;font-size:16px}
+.dz-step a:hover{background:#222}
+@media (hover:hover){
+.dz-menu:hover>.dz-menu__label{background:#222}
+.dz-menu:hover>.dz-menu__list{visibility:visible;opacity:1;transform:none;transition:opacity .15s,transform .15s,visibility 0s}
+}
+@media (max-width:700px){
+.dz-nav__inner{flex-wrap:wrap;padding:0 12px;gap:0 12px}
+.dz-current{order:5;flex:1 1 calc(100% - 92px);min-width:0;margin:0;padding:0 0 10px}
+.dz-step{order:6;margin-left:auto;padding-bottom:10px}
+.dz-menu__label{padding:0 12px;min-height:48px}
+.dz-menu{position:static}
+.dz-menu__list{top:100%;left:12px;right:12px;min-width:0}
+}
+/* The About page's flyout menus (site-new.css .nav-flyout), for the design's own nav. */
+.pc-flyout{position:absolute;z-index:900;box-sizing:border-box;padding:32px 40px 40px;background:#fff;color:#111;text-align:left;text-transform:none;letter-spacing:normal;font-weight:400;border-top:3px solid #006bd4;border-left:1px solid rgba(0,0,0,.12);border-bottom:1px solid rgba(0,0,0,.12);box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 16px -4px rgba(0,0,0,.1),0 24px 48px -12px rgba(0,0,0,.18);visibility:hidden;opacity:0;transition:opacity .15s ease,visibility 0s linear .15s}
+.pc-flyout.is-open{visibility:visible;opacity:1;transition:opacity .15s ease,visibility 0s}
+.pc-flyout::before{content:"";position:absolute;bottom:100%;left:-100%;right:0;height:var(--pc-bridge,0px)}
+.pc-flyout__inner{display:flex;flex-direction:column;gap:16px}
+.pc-flyout__sub{max-width:560px;margin:0;padding:0 12px 16px;border-bottom:1px solid rgba(0,0,0,.08);color:rgba(0,0,0,.6);font-size:15px;line-height:1.45}
+.pc-flyout__links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 8px;max-width:640px;margin:0;padding:0;list-style:none;font-size:15px;line-height:1.3}
+.pc-flyout__links a{position:relative;display:block;height:100%;box-sizing:border-box;padding:10px 28px 10px 12px;border-left:2px solid transparent;color:#111 !important;text-decoration:none;transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+.pc-flyout__links a::after{content:"\2192";position:absolute;top:50%;right:10px;opacity:0;transform:translate(-4px,-50%);transition:opacity .12s ease,transform .12s ease}
+.pc-flyout__links a:hover,.pc-flyout__links a:focus-visible{background:rgba(0,107,212,.08);border-left-color:#006bd4;color:#006bd4 !important}
+.pc-flyout__links a:hover::after,.pc-flyout__links a:focus-visible::after{opacity:1;transform:translate(0,-50%)}
+.pc-flyout__links a:focus-visible{outline-offset:0}
+@media (max-width:809.98px){.pc-flyout{padding:24px 16px 28px;border-left:0}.pc-flyout__links{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.pc-flyout,.pc-flyout__links a,.pc-flyout__links a::after{transition:none}}
+#dH07 a{color:#000000} #dH07 a:hover{color:#4b2c99}
+.res-body p{margin:0 0 12px}.res-body ol,.res-body ul{margin:0 0 12px;padding-left:22px}.res-body li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<nav class="dz-nav" aria-label="Design explorations">
+  <div class="dz-nav__inner">
+    <a class="dz-home" href="../global-peace.html">&larr; Global Peace</a>
+    <div class="dz-menus">
+      <div class="dz-menu">
+        <a class="dz-menu__label" href="design-01-charity-water.html" aria-haspopup="true" aria-expanded="false">Set 1</a>
+        <ul class="dz-menu__list">
+          <li><a href="design-01-charity-water.html"><span class="dz-num">01</span>charity: water style</a></li>
+          <li><a href="design-02-givedirectly.html"><span class="dz-num">02</span>GiveDirectly style</a></li>
+          <li><a href="design-03-kiva.html"><span class="dz-num">03</span>Kiva style</a></li>
+          <li><a href="design-04-unicef.html"><span class="dz-num">04</span>UNICEF style</a></li>
+          <li><a href="design-05-feeding-america.html"><span class="dz-num">05</span>Feeding America style</a></li>
+          <li><a href="design-06-movember.html"><span class="dz-num">06</span>Movember style</a></li>
+          <li><a href="design-07-change-org.html"><span class="dz-num">07</span>Change.org style</a></li>
+          <li><a href="design-08-avaaz.html"><span class="dz-num">08</span>Avaaz style</a></li>
+          <li><a href="design-09-global-citizen.html"><span class="dz-num">09</span>Global Citizen style</a></li>
+          <li><a href="design-10-the-ocean-cleanup.html"><span class="dz-num">10</span>The Ocean Cleanup style</a></li>
+          <li><a href="design-11-wikimedia-foundation.html"><span class="dz-num">11</span>Wikimedia Foundation style</a></li>
+        </ul>
+      </div>
+      <div class="dz-menu">
+        <a class="dz-menu__label" href="design-12-mozilla-foundation.html" aria-haspopup="true" aria-expanded="false">Set 2</a>
+        <ul class="dz-menu__list">
+          <li><a href="design-12-mozilla-foundation.html"><span class="dz-num">12</span>Mozilla Foundation style</a></li>
+          <li><a href="design-13-amnesty-international.html"><span class="dz-num">13</span>Amnesty International style</a></li>
+          <li><a href="design-14-greenpeace.html"><span class="dz-num">14</span>Greenpeace style</a></li>
+          <li><a href="design-15-ican.html"><span class="dz-num">15</span>ICAN style</a></li>
+          <li><a href="design-16-vision-of-humanity.html"><span class="dz-num">16</span>Vision of Humanity style</a></li>
+          <li><a href="design-17-peace-one-day.html"><span class="dz-num">17</span>Peace One Day style</a></li>
+          <li><a href="design-18-nobel-peace-prize.html"><span class="dz-num">18</span>Nobel Peace Prize style</a></li>
+          <li><a href="design-19-search-for-common-ground.html"><span class="dz-num">19</span>Search for Common Ground style</a></li>
+          <li><a href="design-20-seeds-of-peace.html"><span class="dz-num">20</span>Seeds of Peace style</a></li>
+          <li><a href="design-21-usip.html"><span class="dz-num">21</span>USIP style</a></li>
+          <li><a href="design-22-un-peacekeeping.html"><span class="dz-num">22</span>UN Peacekeeping style</a></li>
+        </ul>
+      </div>
+      <div class="dz-menu">
+        <a class="dz-menu__label" href="design-23-netflix.html" aria-haspopup="true" aria-expanded="false">Set 3</a>
+        <ul class="dz-menu__list">
+          <li><a href="design-23-netflix.html"><span class="dz-num">23</span>Netflix style</a></li>
+          <li><a href="design-24-spotify.html"><span class="dz-num">24</span>Spotify style</a></li>
+          <li><a href="design-25-disney.html"><span class="dz-num">25</span>Disney+ style</a></li>
+          <li><a href="design-26-pixar.html"><span class="dz-num">26</span>Pixar style</a></li>
+          <li><a href="design-27-a24.html"><span class="dz-num">27</span>A24 style</a></li>
+          <li><a href="design-28-marvel.html"><span class="dz-num">28</span>Marvel style</a></li>
+          <li><a href="design-29-coachella.html"><span class="dz-num">29</span>Coachella style</a></li>
+          <li><a href="design-30-twitch.html"><span class="dz-num">30</span>Twitch style</a></li>
+          <li><a href="design-31-nintendo.html"><span class="dz-num">31</span>Nintendo style</a></li>
+          <li><a href="design-32-eurovision.html"><span class="dz-num">32</span>Eurovision style</a></li>
+          <li><a href="design-33-olympics.html"><span class="dz-num">33</span>Olympics style</a></li>
+        </ul>
+      </div>
+      <div class="dz-menu is-current">
+        <a class="dz-menu__label" href="design-34-apple.html" aria-haspopup="true" aria-expanded="false">Set 4</a>
+        <ul class="dz-menu__list">
+          <li><a href="design-34-apple.html"><span class="dz-num">34</span>Apple style</a></li>
+          <li><a href="design-35-stripe.html"><span class="dz-num">35</span>Stripe style</a></li>
+          <li><a href="design-36-linear.html"><span class="dz-num">36</span>Linear style</a></li>
+          <li><a href="design-37-vercel.html"><span class="dz-num">37</span>Vercel style</a></li>
+          <li><a href="design-38-tesla.html"><span class="dz-num">38</span>Tesla style</a></li>
+          <li><a href="design-39-spacex.html"><span class="dz-num">39</span>SpaceX style</a></li>
+          <li><a href="design-40-figma.html" aria-current="page"><span class="dz-num">40</span>Figma style</a></li>
+          <li><a href="design-41-notion.html"><span class="dz-num">41</span>Notion style</a></li>
+          <li><a href="design-42-google-earth.html"><span class="dz-num">42</span>Google Earth style</a></li>
+          <li><a href="design-43-duolingo.html"><span class="dz-num">43</span>Duolingo style</a></li>
+          <li><a href="design-44-nvidia.html"><span class="dz-num">44</span>NVIDIA style</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="dz-current"><span class="dz-num">40</span>Figma style</p>
+    <div class="dz-step">
+      <a href="design-39-spacex.html" rel="prev" aria-label="Previous design: 39 SpaceX style">&larr;</a>
+      <a href="design-41-notion.html" rel="next" aria-label="Next design: 41 Notion style">&rarr;</a>
+    </div>
+  </div>
+</nav>
+<div id="dH07">
+<div style="font-family: Inter, sans-serif; color: #000000; background: #ffffff">
+<header style="padding: 16px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 22px; font-size: 14px"><a href="https://mvanmarter.github.io/peace-champion/" aria-label="Peace Champion home"><img src="images/logo.png" loading="lazy" alt="" style="width: 26px; height: 26px"></a><nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 20px; flex: 1 1 auto"><a href="https://mvanmarter.github.io/peace-champion/about.html" style="color: #000000; text-decoration: none; ">About ⌄</a><a href="https://mvanmarter.github.io/peace-champion/global-peace.html" style="color: #000000; text-decoration: none; ">Global Peace ⌄</a><a href="https://mvanmarter.github.io/peace-champion/peace-entertainment.html" style="color: #000000; text-decoration: none; ">Peace Entertainment ⌄</a></nav><a href="https://apps.apple.com/us/app/peace-champion/id6746622214" style="border: 1px solid #000000; border-radius: 8px; padding: 8px 14px; color: #000000; text-decoration: none">Get the app</a><a href="https://app.globalpeaceyes.org/" style="display: inline-block; background: #000000; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 30px; border-radius: 10px;  padding: 9px 16px; font-size: 14px">Vote for free</a></header><section style="padding: 72px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px; max-width: 1360px; margin: 0 auto"><h1 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 56px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; flex: 1 1 260px; max-width: 360px; line-height: 1.05">Building Muscles of Peace</h1><div style="flex: 1 1 420px; position: relative; max-width: 520px; padding: 40px 30px; background: #4b2c99; border-radius: 6px"><div style="position: absolute; left: -14px; top: 80px; display: grid; grid-template-columns: repeat(2, 18px); gap: 6px"><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: #ffc700"></span></div><div style="background: #ffffff; border-radius: 14px; padding: 12px; box-shadow: 0 20px 40px rgba(0,0,0,.25)"><img src="images/meadow-2.jpg" loading="lazy" alt="Red poppies in a meadow" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px"><div style="display: flex; gap: 6px; margin-top: 10px"><img src="images/flag.jpg" loading="lazy" alt="" style="flex: 1 1 0; min-width: 0; height: 46px; object-fit: cover; border-radius: 6px"><img src="images/lawn-2.jpg" loading="lazy" alt="" style="flex: 1 1 0; min-width: 0; height: 46px; object-fit: cover; border-radius: 6px"><img src="images/pink-2.jpg" loading="lazy" alt="" style="flex: 1 1 0; min-width: 0; height: 46px; object-fit: cover; border-radius: 6px"><img src="images/temple-2.jpg" loading="lazy" alt="" style="flex: 1 1 0; min-width: 0; height: 46px; object-fit: cover; border-radius: 6px"></div><div style="height: 6px; background: #ffc700; border-radius: 3px; margin-top: 12px; width: 62%"></div></div></div><a href="https://app.globalpeaceyes.org/" style="display: inline-block; background: #000000; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 30px; border-radius: 10px;  font-size: 22px; padding: 18px 30px; border-radius: 12px">Vote yes</a></section><section style="background: transparent; padding: 40px 32px 80px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px"><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">Our seminal program is to inspire ONE BILLION people to vote in support of The Declaration for Global Peace.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">According to Tipping Point Theory, once ONE BILLION people have voted, we will pass the crucial threshold for this uplifting behavior to spread to the 8 billion-plus members of our global family.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">Your historic vote will remain anonymous but will be verified and officially counted, and you will receive a certificate commemorating your act of service and memorializing your official place and number in this seminal movement.</p></div></div></section><section id="dH07-declaration" style="background: #f5f3ff; padding: 96px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; "><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">The Declaration for Global Peace</h2><p style="margin: 0; font-size: 18px; line-height: 1.7; color: #000000; ">We, the unified voters of PEACE CHAMPION declare that Global Peace is absolutely vital in the 21st Century for our beloved global community to not only survive, but thrive. With this enduring commitment in mind, all PEACE CHAMPION verified votes support the establishment of Ministries &amp; Departments of Peace in governments worldwide to help resolve conflict before it leads to violence. We understand that Global Peace ultimately comes from inner peace. Therefore, we pledge to practice being peace every day in rewarding service to the greater good. Furthermore, we recognize we are blessed with the sacred gifts of Planet Earth and call for a regenerative way of life that does no harm to nature so future generations can benefit from nature's gifts and our beautiful world as we have. Finally, we seek to help build Economies of Peace so we "beat our swords into ploughshares" and bring forth a sustainable human renaissance and lasting golden age of nonviolence for humankind. Thank you for becoming the Peace Champions our world deserves and needs.</p><p style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 28px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">Global Peace, yes we can.</p><a href="https://app.globalpeaceyes.org/" style="display: inline-block; background: #000000; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 30px; border-radius: 10px;  ">Vote Yes</a></div></div></section><section style="background: #ffffff; padding: 96px 32px"><div style="max-width: 1200px; margin: 0 auto"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px"><figure style="margin: 0; background: #ffffff; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 16px; border: 1px solid #e6e6e6;"><blockquote style="margin: 0; font-size: 17px; line-height: 1.6; color: #000000">“The proposal that there should be a Ministry of Peace within governments is not merely admirable, but, if implemented, would represent serious indication of actual intent. I'm happy to give my support to such a body whose responsibility would include being a consistent voice for non-violent means of settling dispute.”</blockquote><figcaption style="margin-top: auto; font-size: 14px; color: #333333"><strong style="color: #000000">His Holiness the 14th Dalai Lama</strong><br>Nobel Peace Prize Laureate 1989</figcaption></figure><figure style="margin: 0; background: #ffffff; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 16px; border: 1px solid #e6e6e6;"><blockquote style="margin: 0; font-size: 17px; line-height: 1.6; color: #000000">“Every gun that is made, every warship launched, every rocket fired signifies, in the final sense, a theft from those who hunger and are not fed, those who are cold and are not clothed.”</blockquote><figcaption style="margin-top: auto; font-size: 14px; color: #333333"><strong style="color: #000000">General Dwight D. Eisenhower</strong><br>"Chance for Peace" Speech, 1953</figcaption></figure><figure style="margin: 0; background: #ffffff; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 16px; border: 1px solid #e6e6e6;"><blockquote style="margin: 0; font-size: 17px; line-height: 1.6; color: #000000">“Peace begins with a smile.”</blockquote><figcaption style="margin-top: auto; font-size: 14px; color: #333333"><strong style="color: #000000">Mother Teresa</strong><br></figcaption></figure></div></div></section><section id="dH07-departments" style="background: #ffffff; padding: 96px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: flex; flex-wrap: wrap; gap: 56px"><div style="flex: 1 1 360px; display: flex; flex-direction: column; gap: 22px"><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4b2c99">Muscles of Peace</p><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">Peace Departments</h2><img src="images/lawn-2.jpg" loading="lazy" alt="Peace Champion supporters gathered on a lawn" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px"><ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px"><li style="display: flex; gap: 18px; border-top: 2px solid #000000; padding-top: 14px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 28px; min-width: 76px">1793</span><span style="font-size: 15px; line-height: 1.6">Dr. Benjamin Rush calls for a Department of Peace on equal footing with the Department of War.</span></li><li style="display: flex; gap: 18px; border-top: 2px solid #000000; padding-top: 14px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 28px; min-width: 76px">2013</span><span style="font-size: 15px; line-height: 1.6">Peace Champion's inception, and its support for Ministries &amp; Departments of Peace begins.</span></li><li style="display: flex; gap: 18px; border-top: 2px solid #000000; padding-top: 14px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 28px; min-width: 76px">2023</span><span style="font-size: 15px; line-height: 1.6">The UN's “A New Agenda for Peace” recommends national infrastructures for peace.</span></li></ol></div><div style="flex: 1.3 1 440px; display: flex; flex-direction: column; gap: 20px"><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">Since our original inception in 2013, Peace Champion has strongly supported the establishment of Ministries &amp; Departments of Peace in governments worldwide, from the national down to the local level. We call this important effort building our world's "Muscles of Peace."</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">In the United States, this movement's earliest incarnations date back to 1793. In that year, Dr. Benjamin Rush, a founding father of the United States, called for the creation of a Department of Peace that would be on equal footing with the Department of War. At Peace Champion, we stand in joyful unity with all Peace Champions from the past, present and future and honor their noble efforts.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">In 2023, a huge step forward and great victory for this movement was achieved when the UN's "A New Agenda for Peace" under "Preventing Conflict and Violence and Sustaining Peace," made the official recommendation to all member states to "develop national prevention strategies and strengthen national infrastructures for peace."</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">When you generously cast your official verified vote, it makes an empowering statement of unity to peacebuilders and Global Citizens in every nation on earth. By contributing to this seminal effort, you are strengthening our world's Muscles of Peace, so in the great endeavor to build a better future for all people, the Muscles of Peace are victorious. This is how we accelerate the tipping point for Global Peace.</p></div></div></div></section><section id="dH07-summary" style="background: #f5f3ff; padding: 96px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: flex; flex-direction: column; gap: 36px"><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">Global Resolution Summary</h2><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px"><div style="border-top: 3px solid #000000; padding-top: 18px; display: flex; flex-direction: column; gap: 10px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 40px; color: #4b2c99">1</span><p style="margin: 0; font-size: 16px; line-height: 1.6"><span style="opacity: .75">The Muscles of Peace Global Resolution supports</span> the creation of Ministries &amp; Departments of Peace within all governments.</p></div><div style="border-top: 3px solid #000000; padding-top: 18px; display: flex; flex-direction: column; gap: 10px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 40px; color: #4b2c99">2</span><p style="margin: 0; font-size: 16px; line-height: 1.6"><span style="opacity: .75">The Muscles of Peace Global Resolution supports</span> peace education for schools, universities, and the world at large.</p></div><div style="border-top: 3px solid #000000; padding-top: 18px; display: flex; flex-direction: column; gap: 10px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 40px; color: #4b2c99">3</span><p style="margin: 0; font-size: 16px; line-height: 1.6"><span style="opacity: .75">The Muscles of Peace Global Resolution supports</span> peace economies and businesses that contribute to peace.</p></div><div style="border-top: 3px solid #000000; padding-top: 18px; display: flex; flex-direction: column; gap: 10px"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 40px; color: #4b2c99">4</span><p style="margin: 0; font-size: 16px; line-height: 1.6"><span style="opacity: .75">The Muscles of Peace Global Resolution supports</span> building a sustainable Culture of Peace, security, and well-being by preventing and resolving conflict through peaceful means, including trauma healing and peace professionalism.</p></div></div></div></div></section><section id="dH07-resolution" style="background: #ffffff; padding: 96px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: flex; flex-wrap: wrap; gap: 48px"><div style="flex: 1 1 300px"><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4b2c99">The full text</p><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 34px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; margin-top: 14px">“The Muscles of Peace Global Resolution in Support of Infrastructures for Peace in Governments Worldwide”</h2></div><div style="flex: 2 1 520px"><details open style="border-top: 1px solid #e6e6e6; padding: 18px 0"><summary style="cursor: pointer; font-family: Inter, sans-serif; font-weight: 500; font-size: 22px; text-transform: none">The call</summary><div class="res-body" style="margin-top: 14px; font-size: 16px; line-height: 1.7; color: #333333"><p>
+                  We, global citizen signatories from 192 Nations, respectfully
+                  in one voice, call upon the United Nations (UN) and all
+                  countries, both nationally and in collaboration with the
+                  community of nations, to create infrastructures in their
+                  governments and in civil society to develop and implement
+                  policies, programs and practices that:
+                </p></div></details><details style="border-top: 1px solid #e6e6e6; padding: 18px 0"><summary style="cursor: pointer; font-family: Inter, sans-serif; font-weight: 500; font-size: 22px; text-transform: none">Five principles</summary><div class="res-body" style="margin-top: 14px; font-size: 16px; line-height: 1.7; color: #333333"><ol class="gp-res__num">
+<li>
+                    Promote, establish, and maintain human and environmental
+                    security and justice in the social, economic, political,
+                    educational, and legal spheres, and thus generally the
+                    Culture of Peace;
+                  </li>
+<li>
+                    Create and expand Economies of Peace and "peacepreneurship"
+                    so as to "beat our swords into ploughshares and spears into
+                    pruning hooks;"
+                  </li>
+<li>
+                    Are accepted and supported by and have legitimacy with the
+                    people they serve, whether at the local, regional, national,
+                    or international level;
+                  </li>
+<li>Are sustainable, adaptive, and resilient;</li>
+<li>
+                    And may be in the form of, but not limited to, departments
+                    of peace, government ministries, peace academies,
+                    institutes, schools, councils, and private sector
+                    enterprises that help:
+                    <ul>
+<li>
+                        Establish peace as a primary organizing principle in
+                        society, both domestically and globally;
+                      </li>
+<li>
+                        Direct government policy towards non-violent resolution
+                        of conflict prior to escalation to violence and to seek
+                        peace by peaceful means in all conflict areas;
+                      </li>
+<li>
+                        Promote justice and democratic principles to expand
+                        human rights and the security of persons and their
+                        communities, consistent with the Universal Declaration
+                        of Human Rights, other related UN treaties and
+                        conventions, and the Declaration and Programme of Action
+                        on a Culture of Peace (1999);
+                      </li>
+<li>
+                        Promote disarmament and develop and strengthen
+                        non-military options for peacemaking, peacebuilding, and
+                        peace professionalism;
+                      </li>
+<li>
+                        Develop new approaches to non-violent intervention, and
+                        utilize constructive dialogue, mediation, and the
+                        peaceful resolution of conflict at home and abroad;
+                      </li>
+<li>
+                        Encourage the involvement in local, national, and global
+                        peace-building of local communities, faith groups, NGOs,
+                        and other civil society and business organizations;
+                      </li>
+<li>
+                        Facilitate the development of peace and reconciliation
+                        summits to promote non-violent communication and
+                        mutually beneficial solutions;
+                      </li>
+<li>
+                        Act as a resource for the creation and the gathering of
+                        best practices documents, lessons learned, and peace
+                        impact assessments;
+                      </li>
+<li>
+                        Provide for the training of all military, and civilian
+                        personnel who administer post-war reconstruction and
+                        demobilization in war-torn societies;
+                      </li>
+<li>
+                        Fund the development of peace education curriculum
+                        materials for use at all educational levels and to
+                        support university-level peace studies.
+                      </li>
+</ul>
+</li>
+</ol></div></details><details style="border-top: 1px solid #e6e6e6; padding: 18px 0"><summary style="cursor: pointer; font-family: Inter, sans-serif; font-weight: 500; font-size: 22px; text-transform: none">The UN’s work acknowledged</summary><div class="res-body" style="margin-top: 14px; font-size: 16px; line-height: 1.7; color: #333333"><p>
+                  Further, we call upon the UN General Assembly to reaffirm its
+                  pledge, as faithful representatives of the governments of the
+                  world, to join "We the Peoples" in creating a peaceful world
+                  in the spirit of the UN Charter, thus advancing the Culture of
+                  Peace within each nation, each culture, each religion, and
+                  each human being for the betterment of all humankind and
+                  future generations. In making this call, we gratefully
+                  acknowledge the long history of work already accomplished
+                  within the UN toward this end, including:
+                </p><ul class="gp-res__list">
+<li>
+                    All the UN documents written on the Culture of Peace since
+                    June 1945, in particular, the Charter of the United Nations,
+                    which is dedicated to saving succeeding generations from the
+                    scourge of armed conflict, calls for nations to live
+                    together in peace as good neighbours, and takes to heart its
+                    emphasis on the vital role "We the Peoples of the United
+                    Nations" are to play in "realizing a peaceful, just and
+                    compassionate neighbourhood;"
+                  </li>
+<li>
+                    Our Common Agenda (OCA), including the call in the 2021 OCA
+                    report by Secretary-General Gutterres for "a new agenda for
+                    peace" to accelerate the implementation of existing UN
+                    agreements;
+                  </li>
+<li>
+                    The Universal Declaration of Human Rights, which states that
+                    the foundation of freedom, justice, and peace is the
+                    recognition of the inherent rights of all members of the
+                    human family without exception and that all human beings
+                    should act towards one another peacefully and in the
+                    interest of the common good;
+                  </li>
+<li>
+                    The UN resolution 52/15 of 20 November 1997, proclaiming the
+                    year 2000 as the "International Year for the Culture of
+                    Peace," and A/RES/53/25 of 19 November 1998, proclaiming
+                    2001–2010 the "International Decade for a Culture of Peace
+                    and Nonviolence for the Children of the World;"
+                  </li>
+<li>
+                    The UN resolution 53/243 adopted by consensus on 13
+                    September 1999, and annually reaffirmed by the General
+                    Assembly High-Level Forum in which the UN Declaration and
+                    Program of Action for a Culture of Peace gives clear
+                    guidelines for governments, non-governmental organizations
+                    (NGOs), civil society and people from all walks of life to
+                    work together to strengthen the global Culture of Peace as
+                    we live through the 21st century;
+                  </li>
+<li>
+                    The Constitution of the UN Educational, Scientific and
+                    Cultural Organization (UNESCO), which states, "since wars
+                    begin in the minds of men, it is in the minds of men that
+                    the defenses of peace must be constructed", and the
+                    important role UNESCO is mandated to fulfill in promoting
+                    the global Culture of Peace;
+                  </li>
+<li>
+                    Security Council resolution 1325 of 31 October 2001 on
+                    Women, Peace, and Security, which acknowledges for the first
+                    time the crucial importance of women's participation in the
+                    peace processes, and the follow-up Security Council
+                    Resolution 1820 of 19 June 2008 by the same name; and
+                  </li>
+<li>
+                    The many other key UN Culture of Peace documents, including
+                    A/RES/52/13, 15 January 1998 Culture of Peace; A/RES/55/282,
+                    28 September 2001 International Day of Peace; and the 2005
+                    Mid-Decade Status Report on the International Decade for a
+                    Culture of Peace and Nonviolence for the Children of the
+                    World.
+                  </li>
+</ul></div></details><details style="border-top: 1px solid #e6e6e6; padding: 18px 0"><summary style="cursor: pointer; font-family: Inter, sans-serif; font-weight: 500; font-size: 22px; text-transform: none">Our affirmation</summary><div class="res-body" style="margin-top: 14px; font-size: 16px; line-height: 1.7; color: #333333"><p>
+                  In conclusion, we, global citizen signatories from 192
+                  Nations, respectfully in one voice, affirm that we:
+                </p><ul class="gp-res__list">
+<li>
+                    Are motivated by the recognition that human beings in the
+                    billions have suffered the atrocities of violent conflict,
+                    poverty, and human-induced environmental disasters, and are
+                    thus now, more than ever, committed to saving future
+                    generations from these scourges by living in peace and by
+                    building the Economies of Peace at the individual, national
+                    and global levels that will sustain these efforts;
+                  </li>
+<li>
+                    Stand in solidarity with all efforts to overcome the
+                    persistence of violent conflict in various parts of the
+                    world and the proliferation of nuclear, biological, and
+                    chemical weapons, which threaten the existence of our
+                    planet;
+                  </li>
+<li>
+                    Believe in the goodwill of all the Member States of the UN
+                    and in the increasing political will of each Member State to
+                    "promote social progress and better standards of life based
+                    on the growing freedoms and capabilities created by global
+                    peace"; and
+                  </li>
+<li>
+                    Acknowledge the urgent need to rebuild the trust of the
+                    world's citizens in governments, and to establish effective
+                    working relationships between and among nations through the
+                    cultivation of shared interests and common ground that form
+                    the foundation of global peace.
+                  </li>
+</ul></div></details></div></div></div></section><section id="dH07-nations" style="background: #ffffff; padding: 96px 32px"><div style="max-width: 1200px; margin: 0 auto"><div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-end; margin-bottom: 32px"><p style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 140px; line-height: .9; color: #000000">192</p><div><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4b2c99">nations, in one voice</p><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; margin-top: 10px">Nations Represented by Global Citizen Signatories</h2></div></div><ul style="margin: 0; padding: 0; list-style: none; columns: 6 160px; column-gap: 24px; font-size: 13px; line-height: 1.9"><li>Afghanistan</li><li>Albania</li><li>Algeria</li><li>American Samoa</li><li>Andorra</li><li>Angola</li><li>Antiqua &amp; Barbuda</li><li>Argentina</li><li>Armenia</li><li>Australia</li><li>Austria</li><li>Azerbaijan</li><li>Bahamas</li><li>Bahrain</li><li>Bangladesh</li><li>Barbados</li><li>Belarus</li><li>Belgium</li><li>Belize</li><li>Benin</li><li>Bhutan</li><li>Bolivia</li><li>Bosnia &amp; Herzegovina</li><li>Botswana</li><li>Brazil</li><li>Brunei Darussalam</li><li>Bulgari</li><li>Burkina Faso</li><li>Burundi</li><li>Cambodia</li><li>Cameroon</li><li>Canada</li><li>Cape Verde</li><li>Central African Republic</li><li>Chad</li><li>Chile</li><li>China</li><li>Columbia</li><li>Comoros</li><li>Costa Rica</li><li>Cote d'Ivoire</li><li>Croatia</li><li>Cyprus</li><li>Czech Republic</li><li>Democratic Republic of Congo</li><li>Denmark</li><li>Djibouti</li><li>Dominica</li><li>Dominican Republic</li><li>Ecuador</li><li>Egypt</li><li>El Salvador</li><li>Equatorial Guinea</li><li>Eritrea</li><li>Estonia</li><li>Ethiopia</li><li>Faroe Islands</li><li>Federated States of Micronesia</li><li>Fiji</li><li>Finland</li><li>France</li><li>Gabon</li><li>Gambia</li><li>Georgia</li><li>Germany</li><li>Ghana</li><li>Greece</li><li>Grenada</li><li>Guatemala</li><li>Guinea-Bissau</li><li>Guyana</li><li>Haiti</li><li>Honduras</li><li>Hungary</li><li>Iceland</li><li>India</li><li>Indonesia</li><li>Iran</li><li>Iraq</li><li>Ireland</li><li>Isle Man</li><li>Israel</li><li>Italy</li><li>Jamaica</li><li>Japan</li><li>Jordan</li><li>Kazakhstan</li><li>Kenya</li><li>Kiribati</li><li>Kurdistan</li><li>Kyrgyzstan</li><li>Laos</li><li>Latvia</li><li>Lebanon</li><li>Lesotho</li><li>Liberia</li><li>Libya</li><li>Liechtenstein</li><li>Lithuania</li><li>Luxembourg</li><li>Madagascar</li><li>Malawi</li><li>Marshall Islands</li><li>Mauritania</li><li>Mexico</li><li>Moldova</li><li>Monaco</li><li>Mongolia</li><li>Montenegro</li><li>Morocco</li><li>Mozambique</li><li>Myanmar</li><li>Namibia</li><li>Nauru</li><li>Nepal</li><li>Netherlands</li><li>New Zealand</li><li>Nicaragua</li><li>Niger</li><li>Nigeria</li><li>Norway</li><li>Oman</li><li>Pakistan</li><li>Palau</li><li>Palestine</li><li>Panama</li><li>Papua New Guinea</li><li>Paraguay</li><li>Peru</li><li>Philippines</li><li>Poland</li><li>Portugal</li><li>Puerto Rico</li><li>Republic of Macedonia</li><li>Romania</li><li>Russia</li><li>Rwanda</li><li>Sao Tome &amp; Principe</li><li>Saudi Arabia</li><li>Senegal</li><li>Serbia</li><li>Seychelles</li><li>Sierra Leone</li><li>Singapore</li><li>Slovakia</li><li>Solomon Islands</li><li>Somalia</li><li>South Africa</li><li>South Korea</li><li>South Sudan</li><li>Spain</li><li>Sri Lanka</li><li>St. Kitts &amp; Nevis</li><li>St. Lucia</li><li>St. Vincent &amp; the Grenadines</li><li>Sudan</li><li>Suriname</li><li>Swaziland</li><li>Sweden</li><li>Switzerland</li><li>Taiwan</li><li>Tajikistan</li><li>Tanzania</li><li>Thailand</li><li>Timor-Leste</li><li>Togo</li><li>Tonga</li><li>Trinidad &amp; Tobago</li><li>Tunisia</li><li>Turkey</li><li>Turkmenistan</li><li>Tuvalu</li><li>U.A.E.</li><li>U.S.A</li><li>Uganda</li><li>Ukraine</li><li>United Kingdom</li><li>Uruguay</li><li>Uzbekistan</li><li>Vanuatu</li><li>Venezuela</li><li>Vietnam</li><li>Yemen</li><li>Zambia</li><li>Zimbabwe</li></ul></div></section><section id="dH07-orgs" style="background: #f5f3ff; padding: 96px 32px"><div style="max-width: 1200px; margin: 0 auto"><div style="display: flex; flex-direction: column; gap: 28px"><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">Supporting Organizations</h2><ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px"><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">AGNT Association for Global New Thought</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Ashland Culture of Peace Commission</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">United States Department of Peacebuilding Campaign</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Children of the Earth</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Civilian Peace Service Canada</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Education For Global Peace</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Findhorn Foundation</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">GAIA Education</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Global Alliance for Ministries and Infrastructures for Peace</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Global Movement for the Culture of Peace</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Global Campaign for Peace Education</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">HOPE Coalition</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">House of Pax Culture Civil Association</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">International Cities of Peace</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">International Institute on Peace Education</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Kosmos Associates Inc.</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Lifebridge Foundation</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Love for Life</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Meditation Groups Inc</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">METTA Center</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">National Peace Academy USA</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Pathways to Peace</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Peace Crane Project</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Peace Day Philly</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">PeaceJam</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">PeaceNow.com</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Peace One Day</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Peace through Unity</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Rasur Foundation International</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">River Phoenix Center for Peacebuilding</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Source of Synergy Foundation</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Spiritual Caucus at the UN</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">The Center for Nonviolent Solutions</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">The Hygeia Foundation for Health, Science and the Environment</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">The National Association for Community Mediation-NAFCM</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">The Peace Alliance</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">The Peace Alliance Educational Institute</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">The Shift Network</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Uniting for Peace</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">We, The World</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">Wholeworld-view.org</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">World Beyond War</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">World Business Academy</li><li style="border: 1px solid #e6e6e6; border-radius: 999px; padding: 8px 14px; font-size: 14px">World Goodwill NGO</li></ul></div></div></section><section id="dH07-why" style="background: #ffffff; padding: 96px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: flex; flex-wrap: wrap; gap: 56px"><div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 24px"><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">Why do we need Peace Departments?</h2><p style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 26px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; color: #4b2c99">So everybody wins.</p><ul style="list-style: none; margin: 0; padding: 0"><li style="display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; border-top: 1px solid #e6e6e6; padding: 14px 0; font-size: 20px"><span style="opacity: .7">From separation</span><span aria-hidden="true">→</span><strong>to unity</strong></li><li style="display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; border-top: 1px solid #e6e6e6; padding: 14px 0; font-size: 20px"><span style="opacity: .7">From separate interests</span><span aria-hidden="true">→</span><strong>to shared interests</strong></li><li style="display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; border-top: 1px solid #e6e6e6; padding: 14px 0; font-size: 20px"><span style="opacity: .7">From isolation</span><span aria-hidden="true">→</span><strong>to common ground</strong></li><li style="display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; border-top: 1px solid #e6e6e6; padding: 14px 0; font-size: 20px"><span style="opacity: .7">From conflict</span><span aria-hidden="true">→</span><strong>to peace</strong></li></ul><div style="background: #4b2c99; color: #ffffff; padding: 28px; border-radius: 14px"><p style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 54px; line-height: 1">$17.5 trillion</p><p style="margin: 8px 0 0; font-size: 15px">cost of violent conflict globally in 2022</p></div></div><div style="flex: 1.4 1 460px; display: flex; flex-direction: column; gap: 18px"><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">Think of all the incredible human progress in the last 100 years; and yet, turmoil still exists on a grand scale. The problem is that we don't resolve conflict before it escalates to violence. As the current caretakers of Planet Earth, we owe it to ourselves to lessen this conflict that undermines all that is uplifting, unifying, and good about our world.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">Not through violence, because violence only begets more violence. Nor through retribution, revenge, racism, sectarianism, or hatred. We do it by inspiring and leading humankind on the latest pioneering adventure in human evolution, and our most important journey of all.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">As we take this rewarding journey together, it will become increasingly clear that hard power isn't the only way to ensure our enduring peace. Human history shows that soft power, in the form of compassionate dialogue and international diplomacy, is much more effective. After all, peace treaties are the result of parties in conflict sitting down in a room across a table, sharing their stories, and working out their differences.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">Listening is leadership and the simple act of giving the other side a chance to be heard is the critical first step in creating the common ground that is the foundation of humankind's collective well-being. Plus, soft power, which can also be thought of as true power, is a lot less expensive.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">For example, according to The World Peace Index, the cost of violent conflict globally in 2022 was 17.5 trillion dollars. The enormous size of the war debt that this creates for nations requires that new revenue be used to pay it down.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">This takes away funding in other areas that directly impact the quality of life, like clean drinking water, disease prevention, elimination of child labor, healthcare, climate change, and veteran services, all of which protect soldiers and citizens in ways no military can.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">By using too many resources on hard power in terms of military interventions and punishing sanctions, we create imbalances that make further conflict much more likely, while producing a traumatized generation that requires even more time and resources to heal. On the other hand, each Ministry, Department &amp; Infrastructure for Peace builds more Muscles of Peace in our world, which exponentially strengthens soft power and our ability to resolve disagreements before they become violent.</p><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #333333; ">This investment in peace will ultimately enable more people across our planet to live lives of peaceful non-violence while using our precious collective resources for positive means.</p></div></div></div></section><section id="dH07-commitments" style="background: #f5f3ff; padding: 96px 32px"><div style="max-width: 1200px; margin: 0 auto"><div style="display: flex; flex-direction: column; gap: 32px"><div><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4b2c99">20 commitments</p><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; margin-top: 10px">What will Peace Departments do for our world?</h2></div><ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px"><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">01</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Improve the quality of life for humankind.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">02</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Support and promote global peace.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">03</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Help build societies based on direct, structural, and cultural nonviolence.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">04</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Aid the transition from hard power to soft power governmental approaches.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">05</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Synergize with other Ministries of Peace to strengthen the global Culture of Peace and the peace activist networks that champion it by facilitating a productive, government-civil society partnership.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">06</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Conduct international diplomacy and conflict resolution strategies without duplicating the work of other departments.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">07</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Empower domestic diplomacy to heal tribalism within nations and head off disputes before they erupt into conflict.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">08</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Support International law and build on existing peace and arms treaties.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">09</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Innovate for conventional, chemical, biological, and nuclear weapons disarmament.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">10</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Generate realistic plans for incentive-based reinvestment of some military spending into the peace industrial complex.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">11</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Provide Peace Education that includes cultural exchanges, educational curricula in de-radicalization, and other peace-related topics.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">12</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Address the digital divide and the separation, misinformation, and violence perpetuated by social media, artificial intelligence, and mass media.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">13</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Promote the United Nations' Universal Declaration of Human Rights.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">14</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Advance gender equality and the greater involvement of women and youth in conflict resolution.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">15</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Link peace with environmental and social advances so all rise together as one.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">16</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Foster full democratic participation in elections and rebuild respect for national institutions and the rule of law.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">17</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Seed peacepreneurship to grow local, national, and international Economies of Peace.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">18</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Begin unburdening the world from the enormous destruction of war.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">19</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Supply progress reports for the country's cabinet on the UN Sustainable Development Goals (SDGs) and other domestic and international realities that impact global peace.</span></li><li style="background: #ffffff; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e6e6e6;"><span style="font-family: Inter, sans-serif; font-weight: 500; font-size: 24px; color: #4b2c99">20</span><span style="font-size: 15px; line-height: 1.55; color: #000000">Cultivate international partners to raise money and extend reach and power to build overwhelming global consensus for a peaceful, more equitable world.</span></li></ol><p style="margin: 0; font-size: 18px; line-height: 1.7; color: #333333; ">This is just the beginning of what Infrastructures for Peace can do for our world.</p></div></div></section><section id="dH07-un" style="background: #ffffff; padding: 96px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: flex; flex-direction: column; gap: 32px"><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">United Nations Official Consultative Status</h2><dl style="margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px"><div style="border-top: 2px solid #000000; padding-top: 12px"><dt style="font-family: Inter, sans-serif; font-weight: 500; font-size: 34px">1945</dt><dd style="margin: 6px 0 0; font-size: 14px; line-height: 1.5">The Economic and Social Council is established, one of the UN’s six main organs</dd></div><div style="border-top: 2px solid #000000; padding-top: 12px"><dt style="font-family: Inter, sans-serif; font-weight: 500; font-size: 34px">3,200+</dt><dd style="margin: 6px 0 0; font-size: 14px; line-height: 1.5">registered non-governmental organizations meet through ECOSOC</dd></div><div style="border-top: 2px solid #000000; padding-top: 12px"><dt style="font-family: Inter, sans-serif; font-weight: 500; font-size: 34px">2020</dt><dd style="margin: 6px 0 0; font-size: 14px; line-height: 1.5">PeaceNow.com recognized with official consultative status</dd></div></dl><div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start"><div style="flex: 1.4 1 440px; display: flex; flex-direction: column; gap: 16px"><p style="margin: 0; font-size: 16px; line-height: 1.7; color: #333333; ">The United Nations partners with non-governmental organizations to boost their range of capacities to further the mission established in the UN charter. With this in mind, the Economic and Social Council was established in 1945 as one of the six main organs of the United Nations.</p><p style="margin: 0; font-size: 16px; line-height: 1.7; color: #333333; ">The ECOSOC is at the heart of the United Nations system which endeavors to advance the three dimensions of sustainable development – economic, social, and environmental. It is the central platform for fostering healthy debate and innovative thinking, forging consensus on ways forward, and coordinating efforts to achieve internationally agreed-upon goals. It is also responsible for the follow-up to major UN conferences and summits.</p><p style="margin: 0; font-size: 16px; line-height: 1.7; color: #333333; ">Building on its coordination role within the UN system, ECOSOC has become a productive gateway for UN partnership and participation with the rest of the world. It offers a unique global meeting point for effective dialogues among policymakers, parliamentarians, academics, foundations, businesses, youth, and 3,200+ registered non-governmental organizations.</p></div><div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 16px"><img src="images/temple-2.jpg" loading="lazy" alt="The Bahá’í Lotus Temple in New Delhi" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px"><p style="margin: 0; font-size: 17px; line-height: 1.7; color: #000000; font-weight: 600">PeaceNow.com was recognized as having official consultative status with the Economic and Social Council in 2020. With our merger with PeaceNow.com complete, Peace Champion takes over this honor, duty, and ongoing service to humankind and the greater good.</p></div></div></div></div></section><section style="background: #ffc700; color: #000000; padding: 72px 32px"><div style="max-width: 1120px; margin: 0 auto"><div style="display: flex; gap: 22px; flex-direction: column; align-items: center; text-align: center"><h2 style="margin: 0; font-family: Inter, sans-serif; font-weight: 500; font-size: 48px; line-height: 1.12; letter-spacing: -.03em; text-transform: none; ">Vote yes for global peace</h2><a href="https://app.globalpeaceyes.org/" style="display: inline-block; background: #000000; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 30px; border-radius: 10px;  ">Vote Now</a></div></div></section><footer style="background: #000000; color: #ffffff; padding: 56px 32px"><div style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 24px 40px; justify-content: space-between; align-items: center; font-size: 14px"><a href="https://mvanmarter.github.io/peace-champion/" style="display: flex; align-items: center; gap: 10px; color: #ffffff; text-decoration: none; font-family: Inter, sans-serif; font-weight: 500; font-size: 18px"><img src="images/logow.png" loading="lazy" alt="" style="width: 32px; height: 32px">Peace Champion</a><nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="https://mvanmarter.github.io/peace-champion/about.html" style="color: #ffffff">About</a><a href="https://mvanmarter.github.io/peace-champion/global-peace.html" style="color: #ffffff">Global Peace</a><a href="https://mvanmarter.github.io/peace-champion/peace-entertainment.html" style="color: #ffffff">Peace Entertainment</a><a href="https://mvanmarter.github.io/peace-champion/films.html" style="color: #ffffff">Films</a><a href="https://mvanmarter.github.io/peace-champion/wisdom.html" style="color: #ffffff">Wisdom</a><a href="https://mvanmarter.github.io/peace-champion/donate.html" style="color: #ffffff">Donate</a><a href="https://mvanmarter.github.io/peace-champion/privacy-policy.html" style="color: #ffffff">Privacy Policy</a></nav><p style="margin: 0; flex-basis: 100%; font-size: 13px">© 2026 Peace Champion. All Rights Reserved.</p></div></footer>
+</div>
+</div>
+<script>
+(function () {
+  // Touch screens have no hover: the first tap on "Set N" opens its list, a
+  // second tap follows the link. Escape or a tap elsewhere closes it.
+  var menus = document.querySelectorAll(".dz-menu");
+  function closeAll(except) {
+    menus.forEach(function (m) {
+      if (m === except) return;
+      m.classList.remove("is-open");
+      m.querySelector(".dz-menu__label").setAttribute("aria-expanded", "false");
+    });
+  }
+  var touch = false;
+  document.addEventListener("pointerdown", function (e) { touch = e.pointerType !== "mouse"; }, true);
+  menus.forEach(function (m) {
+    var label = m.querySelector(".dz-menu__label");
+    m.addEventListener("mouseenter", function () { label.setAttribute("aria-expanded", "true"); });
+    m.addEventListener("mouseleave", function () { if (!m.classList.contains("is-open")) label.setAttribute("aria-expanded", "false"); });
+    label.addEventListener("click", function (e) {
+      if (!touch || m.classList.contains("is-open")) return;
+      e.preventDefault();
+      closeAll(m);
+      m.classList.add("is-open");
+      label.setAttribute("aria-expanded", "true");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".dz-menu")) closeAll();
+  });
+  // Left/right arrow keys step through the designs, like the nav arrows.
+  document.addEventListener("keydown", function (e) {
+    if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      var t = e.target;
+      if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+      var a = document.querySelector(".dz-step a[rel=" + (e.key === "ArrowLeft" ? "prev" : "next") + "]");
+      if (a) { e.preventDefault(); location.href = a.href; }
+      return;
+    }
+    if (e.key !== "Escape") return;
+    closeAll();
+    var a = document.activeElement;
+    if (a && a.closest(".dz-menu")) a.blur();
+  });
+})();
+(function () {
+  // The About page's three flyout menus (about.html, .nav--menus), attached to
+  // this design's own About / Global Peace / Peace Entertainment links.
+  var MENUS = [
+    { re: /^about\b/i, id: "about", sub: "Who we are, why we exist, and what we believe.",
+      links: [["Our mission and vision", "#"], ["The organization", "#"], ["Our philosophy and values", "#"], ["Leadership and team", "#"], ["Contact and support", "#"]] },
+    { re: /^global peace\b/i, id: "global-peace", sub: "Our initiatives, campaigns, and organized efforts to create peace in the world.",
+      links: [["Global Peace Initiatives", "#"], ["The Global Voting Campaign", "#"], ["The Peace Department Campaign", "#"], ["Global participation and partnerships", "#"], ["Take action", "#"]] },
+    { re: /^peace entertainment\b/i, id: "peace-entertainment", sub: "Inspiring the world through creativity, culture, wisdom, and entertainment.",
+      links: [["Peace Films", "../films.html"], ["Wisdom Campaigns", "../wisdom.html"], ["Peace Songs and Music", "#"], ["Peace App", "#"], ["Inspirational media and experiences", "#"]] },
+  ];
+  var design = document.querySelector("body > div[id^=\"d\"]");
+  if (!design) return;
+  var host = design.firstElementChild || design; // carries the design's font
+  var txt = function (a) { return a.textContent.replace(/\s+/g, " ").trim(); };
+
+  // The design's main nav: the first link reading "Global Peace", with its
+  // About / Peace Entertainment siblings in the same row.
+  // Only a header nav counts: the link must come before the page's main
+  // headline, so a design whose header has no menu (e.g. the Netflix sign-up
+  // style) does not get flyouts hung off its footer links instead.
+  var all = [].slice.call(design.querySelectorAll("a"));
+  var h1 = design.querySelector("h1");
+  var gp = all.filter(function (a) {
+    return MENUS[1].re.test(txt(a)) && (!h1 || (a.compareDocumentPosition(h1) & Node.DOCUMENT_POSITION_FOLLOWING));
+  })[0];
+  if (!gp) return;
+  var row = gp.parentElement;
+  while (row && row !== design && row.querySelectorAll("a").length < 3) row = row.parentElement;
+  var rowLinks = [].slice.call(row.querySelectorAll("a"));
+
+  // The bar the flyout hangs from: the tallest ancestor of the row that is
+  // still bar-shaped (under 140px tall), e.g. the design's <header>.
+  function barOf(el) {
+    var bar = el, p = el.parentElement;
+    while (p && p !== design && p.getBoundingClientRect().height < 140) { bar = p; p = p.parentElement; }
+    return bar;
+  }
+
+  var items = [];
+  MENUS.forEach(function (m) {
+    var label = rowLinks.filter(function (a) { return m.re.test(txt(a)); })[0];
+    if (!label) return;
+    var fly = document.createElement("div");
+    fly.className = "pc-flyout";
+    fly.id = "pc-flyout-" + m.id;
+    fly.innerHTML = '<div class="pc-flyout__inner"><p class="pc-flyout__sub"></p><ul class="pc-flyout__links"></ul></div>';
+    fly.querySelector(".pc-flyout__sub").textContent = m.sub;
+    var ul = fly.querySelector("ul");
+    m.links.forEach(function (l) {
+      var li = document.createElement("li"), a = document.createElement("a");
+      a.textContent = l[0]; a.href = l[1];
+      li.appendChild(a); ul.appendChild(li);
+    });
+    host.appendChild(fly);
+    label.classList.add("pc-flyout-label");
+    label.setAttribute("aria-haspopup", "true");
+    label.setAttribute("aria-expanded", "false");
+    label.setAttribute("aria-controls", fly.id);
+    items.push({ label: label, fly: fly, bar: barOf(label) });
+  });
+
+  var openItem = null, timer = 0, touch = false;
+  function place(it) {
+    var r = it.bar.getBoundingClientRect(), lr = it.label.getBoundingClientRect();
+    var vw = document.documentElement.clientWidth, narrow = vw < 810;
+    var hostR = it.fly.offsetParent ? it.fly.offsetParent.getBoundingClientRect() : { top: -scrollY, left: -scrollX };
+    it.fly.style.top = (r.bottom - hostR.top) + "px";
+    it.fly.style.left = ((narrow ? 0 : vw / 2) - hostR.left) + "px";
+    it.fly.style.width = (narrow ? vw : vw / 2) + "px";
+    // invisible bridge from the label down to the card
+    it.fly.style.setProperty("--pc-bridge", Math.max(0, r.bottom - lr.bottom) + "px");
+  }
+  function open(it) {
+    clearTimeout(timer);
+    if (openItem && openItem !== it) close(openItem);
+    place(it);
+    it.fly.classList.add("is-open");
+    it.label.setAttribute("aria-expanded", "true");
+    openItem = it;
+  }
+  function close(it) {
+    it.fly.classList.remove("is-open");
+    it.label.setAttribute("aria-expanded", "false");
+    if (openItem === it) openItem = null;
+  }
+  function later(it) { clearTimeout(timer); timer = setTimeout(function () { close(it); }, 300); }
+
+  document.addEventListener("pointerdown", function (e) { touch = e.pointerType !== "mouse"; }, true);
+  // Hover intent: while one card is open, crossing another label on the way
+  // down to the card must not swap menus, so a swap waits briefly and is
+  // cancelled if the pointer reaches the open card or leaves the label.
+  var swap = 0;
+  items.forEach(function (it) {
+    it.label.addEventListener("mouseenter", function () {
+      if (touch) return;
+      clearTimeout(swap);
+      if (openItem && openItem !== it) swap = setTimeout(function () { open(it); }, 120);
+      else open(it);
+    });
+    it.label.addEventListener("mouseleave", function () {
+      if (touch) return;
+      clearTimeout(swap);
+      if (openItem === it) later(it);
+    });
+    it.fly.addEventListener("mouseenter", function () { if (!touch) { clearTimeout(swap); open(it); } });
+    it.fly.addEventListener("mouseleave", function () { if (!touch) later(it); });
+    it.label.addEventListener("click", function (e) {
+      // touch: first tap opens the card, a second tap follows the link
+      if (touch && openItem !== it) { e.preventDefault(); open(it); }
+    });
+    it.label.addEventListener("focus", function () { if (!touch) open(it); });
+    // The card lives at the end of the design, so steer Tab through it.
+    it.label.addEventListener("keydown", function (e) {
+      if (e.key === "Tab" && !e.shiftKey && openItem === it) { e.preventDefault(); it.fly.querySelector("a").focus(); }
+    });
+    it.fly.addEventListener("keydown", function (e) {
+      var as = it.fly.querySelectorAll("a");
+      if (e.key === "Tab" && !e.shiftKey && document.activeElement === as[as.length - 1]) {
+        e.preventDefault(); close(it);
+        var next = rowLinks[rowLinks.indexOf(it.label) + 1];
+        (next || it.label).focus();
+      } else if (e.key === "Tab" && e.shiftKey && document.activeElement === as[0]) {
+        e.preventDefault(); it.label.focus();
+      }
+    });
+    it.fly.addEventListener("focusout", function (e) {
+      if (!it.fly.contains(e.relatedTarget) && e.relatedTarget !== it.label) later(it);
+    });
+    it.label.addEventListener("blur", function (e) {
+      if (!it.fly.contains(e.relatedTarget)) later(it);
+    });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && openItem) { var l = openItem.label; close(openItem); l.focus(); }
+  });
+  document.addEventListener("click", function (e) {
+    if (openItem && !openItem.fly.contains(e.target) && !openItem.label.contains(e.target)) close(openItem);
+  });
+  window.addEventListener("resize", function () { if (openItem) place(openItem); });
+})();
+</script>
+</body>
+</html>
