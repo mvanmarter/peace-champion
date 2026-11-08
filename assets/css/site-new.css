@@ -6077,3 +6077,20 @@ html:not(.js) .ab-carousel__nav {
     right: 12px;
   }
 }
+
+/* about.html footer: the site's top-level links (matching the header nav) plus
+   Privacy Policy and Designs. The groups here are uneven (2 / 1 / 2 links) and
+   the labels are wider than the old "About / Music" pair, so top-align the
+   groups and let the first one size to its content instead of the fixed 52px
+   column the live footer used. Scoped by the modifier class so the other
+   pages' footers are unchanged. */
+.site-footer .footer-links--site {
+  align-items: flex-start;
+  /* Five longer labels do not fit one row at phone widths: wrap the groups. */
+  flex-wrap: wrap;
+  row-gap: 24px;
+}
+
+.site-footer .footer-links--site li:first-child {
+  width: auto;
+}

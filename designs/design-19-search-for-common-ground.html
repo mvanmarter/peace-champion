@@ -51,6 +51,20 @@ html{scroll-padding-top:64px}
 .dz-menu{position:static}
 .dz-menu__list{top:100%;left:12px;right:12px;min-width:0}
 }
+/* The About page's flyout menus (site-new.css .nav-flyout), for the design's own nav. */
+.pc-flyout{position:absolute;z-index:900;box-sizing:border-box;padding:32px 40px 40px;background:#fff;color:#111;text-align:left;text-transform:none;letter-spacing:normal;font-weight:400;border-top:3px solid #006bd4;border-left:1px solid rgba(0,0,0,.12);border-bottom:1px solid rgba(0,0,0,.12);box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 16px -4px rgba(0,0,0,.1),0 24px 48px -12px rgba(0,0,0,.18);visibility:hidden;opacity:0;transition:opacity .15s ease,visibility 0s linear .15s}
+.pc-flyout.is-open{visibility:visible;opacity:1;transition:opacity .15s ease,visibility 0s}
+.pc-flyout::before{content:"";position:absolute;bottom:100%;left:-100%;right:0;height:var(--pc-bridge,0px)}
+.pc-flyout__inner{display:flex;flex-direction:column;gap:16px}
+.pc-flyout__sub{max-width:560px;margin:0;padding:0 12px 16px;border-bottom:1px solid rgba(0,0,0,.08);color:rgba(0,0,0,.6);font-size:15px;line-height:1.45}
+.pc-flyout__links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 8px;max-width:640px;margin:0;padding:0;list-style:none;font-size:15px;line-height:1.3}
+.pc-flyout__links a{position:relative;display:block;height:100%;box-sizing:border-box;padding:10px 28px 10px 12px;border-left:2px solid transparent;color:#111 !important;text-decoration:none;transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+.pc-flyout__links a::after{content:"\2192";position:absolute;top:50%;right:10px;opacity:0;transform:translate(-4px,-50%);transition:opacity .12s ease,transform .12s ease}
+.pc-flyout__links a:hover,.pc-flyout__links a:focus-visible{background:rgba(0,107,212,.08);border-left-color:#006bd4;color:#006bd4 !important}
+.pc-flyout__links a:hover::after,.pc-flyout__links a:focus-visible::after{opacity:1;transform:translate(0,-50%)}
+.pc-flyout__links a:focus-visible{outline-offset:0}
+@media (max-width:809.98px){.pc-flyout{padding:24px 16px 28px;border-left:0}.pc-flyout__links{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.pc-flyout,.pc-flyout__links a,.pc-flyout__links a::after{transition:none}}
 #d21 a{color:#2f62d6} #d21 a:hover{color:#1b2b4b}
 .sf-hero{background-image:linear-gradient(180deg,rgba(10,20,40,.55),rgba(10,20,40,.35)),url(images/lawn.jpg);background-size:cover;background-position:center}
 </style>
@@ -148,6 +162,141 @@ html{scroll-padding-top:64px}
     var a = document.activeElement;
     if (a && a.closest(".dz-menu")) a.blur();
   });
+})();
+(function () {
+  // The About page's three flyout menus (about.html, .nav--menus), attached to
+  // this design's own About / Global Peace / Peace Entertainment links.
+  var MENUS = [
+    { re: /^about\b/i, id: "about", sub: "Who we are, why we exist, and what we believe.",
+      links: [["Our mission and vision", "#"], ["The organization", "#"], ["Our philosophy and values", "#"], ["Leadership and team", "#"], ["Contact and support", "#"]] },
+    { re: /^global peace\b/i, id: "global-peace", sub: "Our initiatives, campaigns, and organized efforts to create peace in the world.",
+      links: [["Global Peace Initiatives", "#"], ["The Global Voting Campaign", "#"], ["The Peace Department Campaign", "#"], ["Global participation and partnerships", "#"], ["Take action", "#"]] },
+    { re: /^peace entertainment\b/i, id: "peace-entertainment", sub: "Inspiring the world through creativity, culture, wisdom, and entertainment.",
+      links: [["Peace Films", "../films.html"], ["Wisdom Campaigns", "../wisdom.html"], ["Peace Songs and Music", "#"], ["Peace App", "#"], ["Inspirational media and experiences", "#"]] },
+  ];
+  var design = document.querySelector("body > div[id^=\"d\"]");
+  if (!design) return;
+  var host = design.firstElementChild || design; // carries the design's font
+  var txt = function (a) { return a.textContent.replace(/\s+/g, " ").trim(); };
+
+  // The design's main nav: the first link reading "Global Peace", with its
+  // About / Peace Entertainment siblings in the same row.
+  var all = [].slice.call(design.querySelectorAll("a"));
+  var gp = all.filter(function (a) { return MENUS[1].re.test(txt(a)); })[0];
+  if (!gp) return;
+  var row = gp.parentElement;
+  while (row && row !== design && row.querySelectorAll("a").length < 3) row = row.parentElement;
+  var rowLinks = [].slice.call(row.querySelectorAll("a"));
+
+  // The bar the flyout hangs from: the tallest ancestor of the row that is
+  // still bar-shaped (under 140px tall), e.g. the design's <header>.
+  function barOf(el) {
+    var bar = el, p = el.parentElement;
+    while (p && p !== design && p.getBoundingClientRect().height < 140) { bar = p; p = p.parentElement; }
+    return bar;
+  }
+
+  var items = [];
+  MENUS.forEach(function (m) {
+    var label = rowLinks.filter(function (a) { return m.re.test(txt(a)); })[0];
+    if (!label) return;
+    var fly = document.createElement("div");
+    fly.className = "pc-flyout";
+    fly.id = "pc-flyout-" + m.id;
+    fly.innerHTML = '<div class="pc-flyout__inner"><p class="pc-flyout__sub"></p><ul class="pc-flyout__links"></ul></div>';
+    fly.querySelector(".pc-flyout__sub").textContent = m.sub;
+    var ul = fly.querySelector("ul");
+    m.links.forEach(function (l) {
+      var li = document.createElement("li"), a = document.createElement("a");
+      a.textContent = l[0]; a.href = l[1];
+      li.appendChild(a); ul.appendChild(li);
+    });
+    host.appendChild(fly);
+    label.classList.add("pc-flyout-label");
+    label.setAttribute("aria-haspopup", "true");
+    label.setAttribute("aria-expanded", "false");
+    label.setAttribute("aria-controls", fly.id);
+    items.push({ label: label, fly: fly, bar: barOf(label) });
+  });
+
+  var openItem = null, timer = 0, touch = false;
+  function place(it) {
+    var r = it.bar.getBoundingClientRect(), lr = it.label.getBoundingClientRect();
+    var vw = document.documentElement.clientWidth, narrow = vw < 810;
+    var hostR = it.fly.offsetParent ? it.fly.offsetParent.getBoundingClientRect() : { top: -scrollY, left: -scrollX };
+    it.fly.style.top = (r.bottom - hostR.top) + "px";
+    it.fly.style.left = ((narrow ? 0 : vw / 2) - hostR.left) + "px";
+    it.fly.style.width = (narrow ? vw : vw / 2) + "px";
+    // invisible bridge from the label down to the card
+    it.fly.style.setProperty("--pc-bridge", Math.max(0, r.bottom - lr.bottom) + "px");
+  }
+  function open(it) {
+    clearTimeout(timer);
+    if (openItem && openItem !== it) close(openItem);
+    place(it);
+    it.fly.classList.add("is-open");
+    it.label.setAttribute("aria-expanded", "true");
+    openItem = it;
+  }
+  function close(it) {
+    it.fly.classList.remove("is-open");
+    it.label.setAttribute("aria-expanded", "false");
+    if (openItem === it) openItem = null;
+  }
+  function later(it) { clearTimeout(timer); timer = setTimeout(function () { close(it); }, 300); }
+
+  document.addEventListener("pointerdown", function (e) { touch = e.pointerType !== "mouse"; }, true);
+  // Hover intent: while one card is open, crossing another label on the way
+  // down to the card must not swap menus, so a swap waits briefly and is
+  // cancelled if the pointer reaches the open card or leaves the label.
+  var swap = 0;
+  items.forEach(function (it) {
+    it.label.addEventListener("mouseenter", function () {
+      if (touch) return;
+      clearTimeout(swap);
+      if (openItem && openItem !== it) swap = setTimeout(function () { open(it); }, 120);
+      else open(it);
+    });
+    it.label.addEventListener("mouseleave", function () {
+      if (touch) return;
+      clearTimeout(swap);
+      if (openItem === it) later(it);
+    });
+    it.fly.addEventListener("mouseenter", function () { if (!touch) { clearTimeout(swap); open(it); } });
+    it.fly.addEventListener("mouseleave", function () { if (!touch) later(it); });
+    it.label.addEventListener("click", function (e) {
+      // touch: first tap opens the card, a second tap follows the link
+      if (touch && openItem !== it) { e.preventDefault(); open(it); }
+    });
+    it.label.addEventListener("focus", function () { if (!touch) open(it); });
+    // The card lives at the end of the design, so steer Tab through it.
+    it.label.addEventListener("keydown", function (e) {
+      if (e.key === "Tab" && !e.shiftKey && openItem === it) { e.preventDefault(); it.fly.querySelector("a").focus(); }
+    });
+    it.fly.addEventListener("keydown", function (e) {
+      var as = it.fly.querySelectorAll("a");
+      if (e.key === "Tab" && !e.shiftKey && document.activeElement === as[as.length - 1]) {
+        e.preventDefault(); close(it);
+        var next = rowLinks[rowLinks.indexOf(it.label) + 1];
+        (next || it.label).focus();
+      } else if (e.key === "Tab" && e.shiftKey && document.activeElement === as[0]) {
+        e.preventDefault(); it.label.focus();
+      }
+    });
+    it.fly.addEventListener("focusout", function (e) {
+      if (!it.fly.contains(e.relatedTarget) && e.relatedTarget !== it.label) later(it);
+    });
+    it.label.addEventListener("blur", function (e) {
+      if (!it.fly.contains(e.relatedTarget)) later(it);
+    });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && openItem) { var l = openItem.label; close(openItem); l.focus(); }
+  });
+  document.addEventListener("click", function (e) {
+    if (openItem && !openItem.fly.contains(e.target) && !openItem.label.contains(e.target)) close(openItem);
+  });
+  window.addEventListener("resize", function () { if (openItem) place(openItem); });
 })();
 </script>
 </body>
