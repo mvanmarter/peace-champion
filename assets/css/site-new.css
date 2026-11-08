@@ -6094,3 +6094,973 @@ html:not(.js) .ab-carousel__nav {
 .site-footer .footer-links--site li:first-child {
   width: auto;
 }
+
+/* =========================================================
+   global-peace.html — hero + content sections (Nov 2026)
+   Nine sections built from docs/global-peace-copy.md (one per ## heading),
+   each with its own layout so they can be iterated on independently. They
+   share the About page's section shell: .ab-section rhythm and full-bleed
+   rule between sections, and the .ab-head / .ab-title heading (one font and
+   size). Everything else is namespaced .gp-*.
+   ========================================================= */
+
+/* ---------- hero: the About lattice, taller, with an opaque panel ----------
+   Four lattice rows (581px, the live About's own height) because this copy
+   is longer. The panel replaces .about-hero-inner::before so it sizes to the
+   copy instead of a fixed 280px. */
+.gp-hero,
+.gp-hero .hero-grid,
+.gp-hero .hero-grid::before {
+  height: 581px;
+}
+
+@media (min-width: 810px) {
+  .gp-hero .about-hero-inner {
+    padding-top: 0;
+  }
+}
+
+.gp-hero .about-hero-inner::before {
+  display: none;
+}
+
+.gp-hero .about-hero-inner > .gp-hero__panel {
+  max-width: 870px;
+}
+
+.gp-hero__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 80px 52px;
+  background: var(--bg);
+}
+
+.gp-hero__panel > * {
+  max-width: 710px;
+}
+
+.gp-hero__lead {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.gp-hero__lead strong {
+  color: var(--btn);
+  font-weight: 700;
+}
+
+.gp-hero__p {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* ---------- 01 Declaration: ruled certificate ---------- */
+.gp-decl__frame {
+  position: relative;
+  max-width: 980px;
+  margin-inline: auto;
+  padding: 80px 88px 72px;
+  background: #fff;
+}
+
+/* Double rule: the outer hairline plus an inner one 8px in. */
+.gp-decl__frame::before,
+.gp-decl__frame::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.gp-decl__frame::after {
+  inset: 0;
+  border: 1px solid #000;
+}
+
+.gp-decl__frame::before {
+  inset: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.gp-decl__text {
+  font-size: 20px;
+  line-height: 34px;
+}
+
+.gp-decl__text::first-letter {
+  float: left;
+  margin: 6px 12px 0 0;
+  color: var(--btn);
+  font-family: var(--display);
+  font-size: 84px;
+  line-height: 64px;
+}
+
+.gp-decl__sign {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid #000;
+}
+
+.gp-decl__signoff {
+  color: var(--btn);
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: 36px;
+  text-transform: uppercase;
+}
+
+.gp-decl .btn {
+  text-decoration: none;
+}
+
+/* ---------- 02 Peace Departments: quote row + dates rail ---------- */
+.gp-pd__quotes {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 0.8fr;
+  gap: 1px;
+  padding: 1px;
+  background: #000;
+}
+
+.gp-pd__quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  margin: 0;
+  padding: 36px 32px;
+  background: var(--bg);
+}
+
+.gp-pd__quote blockquote {
+  margin: 0;
+  font-size: 18px;
+  line-height: 27px;
+}
+
+.gp-pd__quote--lead {
+  background: #e6eef7;
+}
+
+.gp-pd__quote--lead blockquote {
+  font-size: 21px;
+  line-height: 31px;
+}
+
+.gp-pd__quote:last-child blockquote {
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 38px;
+  text-transform: uppercase;
+}
+
+.gp-pd__quote figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.gp-pd__who {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.gp-pd__what {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.gp-pd__body {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 64px;
+  margin-top: 80px;
+}
+
+.gp-pd__dates {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 28px;
+  list-style: none;
+}
+
+
+.gp-pd__dates li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 40px;
+}
+
+.gp-pd__dates li::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: -28px;
+  width: 11px;
+  height: 11px;
+  border: 1px solid #000;
+  background: var(--bg);
+}
+
+/* Rail: one segment per date, from this marker down to the next one. */
+.gp-pd__dates li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  bottom: -9px;
+  left: -23px;
+  border-left: 1px solid #000;
+}
+
+.gp-pd__dates li:last-child {
+  padding-bottom: 0;
+}
+
+.gp-pd__dates li:last-child::before {
+  border-color: var(--btn);
+  background: var(--btn);
+}
+
+.gp-pd__year {
+  font-family: var(--display);
+  font-size: 36px;
+  line-height: 36px;
+}
+
+.gp-pd__event {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.gp-pd__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- 03 Resolution summary: full-bleed blue band ---------- */
+.gp-sum {
+  background: var(--btn);
+  color: #fff;
+}
+
+.gp-sum__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: rgba(255, 255, 255, 0.55);
+  list-style: none;
+  counter-reset: none;
+}
+
+.gp-sum__grid li {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 24px;
+  padding: 40px 40px 44px;
+  background: var(--btn);
+}
+
+.gp-sum__n {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid #fff;
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.gp-sum__grid p {
+  font-size: 22px;
+  line-height: 31px;
+}
+
+.gp-sum__lead {
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.75;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 17px;
+  text-transform: uppercase;
+}
+
+/* ---------- 04 Full resolution: sticky index + document sheet ---------- */
+.gp-res .ab-title {
+  max-width: 1000px;
+}
+
+.gp-res__grid {
+  display: grid;
+  grid-template-columns: 3fr 9fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.gp-res__index {
+  position: sticky;
+  top: 107px;
+}
+
+.gp-res__index ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #000;
+}
+
+.gp-res__index li {
+  border-bottom: 1px solid #000;
+}
+
+.gp-res .gp-res__index a {
+  display: block;
+  padding: 14px 4px;
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 18px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.gp-res__index a:hover,
+.gp-res__index a:focus-visible {
+  color: var(--btn);
+}
+
+.gp-res__doc {
+  position: relative;
+  padding: 56px 64px 64px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -12px rgba(0, 0, 0, 0.18);
+  font-size: 17px;
+  line-height: 27px;
+}
+
+.gp-res__doc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.gp-res__part {
+  scroll-margin-top: 100px;
+}
+
+.gp-res__part + .gp-res__part {
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.gp-res__part > p + p,
+.gp-res__part > p + ul,
+.gp-res__part > p + ol {
+  margin-top: 16px;
+}
+
+.gp-res__k {
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 17px;
+  text-transform: uppercase;
+}
+
+.gp-res__num {
+  margin: 0;
+  padding-left: 28px;
+}
+
+.gp-res__num > li + li {
+  margin-top: 12px;
+}
+
+.gp-res__num > li::marker {
+  color: var(--btn);
+  font-family: var(--mono);
+}
+
+.gp-res__sub,
+.gp-res__list {
+  margin: 12px 0 0;
+  padding-left: 22px;
+  list-style: square;
+}
+
+.gp-res__sub li + li,
+.gp-res__list li + li {
+  margin-top: 8px;
+}
+
+.gp-res__sub li::marker,
+.gp-res__list li::marker {
+  color: var(--btn);
+}
+
+/* ---------- 05 Nations: stat column + A-Z index ---------- */
+.gp-nations__grid {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.gp-nations__aside {
+  position: sticky;
+  top: 107px;
+}
+
+.gp-nations__stat {
+  color: var(--btn);
+  font-family: var(--display);
+  font-size: 160px;
+  line-height: 140px;
+}
+
+.gp-nations__cap {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+
+.gp-nations__index {
+  columns: 3;
+  column-gap: 40px;
+  column-rule: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.gp-nations__group {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  padding: 10px 0 14px;
+  border-top: 1px solid #000;
+  break-inside: avoid;
+}
+
+.gp-nations__letter {
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.gp-nations__group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* ---------- 06 Supporting organizations: ruled name wall ---------- */
+.gp-orgs__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each cell draws its right and bottom edge; the grid draws top and left,
+   so a short last row leaves blank page rather than a black block. */
+.gp-orgs__grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  pointer-events: none;
+}
+
+.gp-orgs__grid li {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 112px;
+  padding: 20px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.gp-orgs__grid li::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  pointer-events: none;
+}
+
+.gp-orgs__grid li:hover {
+  background: rgba(0, 107, 212, 0.08);
+  color: var(--btn);
+}
+
+/* ---------- 07 Why: answer, from/to table, two-column argument ---------- */
+.gp-why .ab-head {
+  margin-bottom: 24px;
+}
+
+.gp-why__answer {
+  color: var(--btn);
+  font-family: var(--display);
+  font-size: 64px;
+  line-height: 64px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.gp-why__intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  max-width: 1000px;
+  margin: 56px auto 0;
+}
+
+.gp-why__turns {
+  margin: 72px 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #000;
+}
+
+.gp-why__turns li {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid #000;
+  font-family: var(--display);
+  font-size: 36px;
+  line-height: 40px;
+  text-transform: uppercase;
+}
+
+.gp-why__from {
+  color: rgba(0, 0, 0, 0.45);
+  text-align: right;
+}
+
+.gp-why__arrow {
+  color: var(--btn);
+  text-align: center;
+}
+
+.gp-why__turns li:last-child {
+  background: rgba(0, 107, 212, 0.1);
+}
+
+.gp-why__cols {
+  columns: 2;
+  column-gap: 56px;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.gp-why__cols p {
+  margin-bottom: 20px;
+  break-inside: avoid-column;
+}
+
+.gp-why__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 24px;
+  padding: 28px 28px 32px;
+  background: var(--btn);
+  color: #fff;
+  break-inside: avoid;
+}
+
+.gp-why__fig {
+  font-family: var(--display);
+  font-size: 56px;
+  line-height: 56px;
+  text-transform: uppercase;
+}
+
+.gp-why__figcap {
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
+/* ---------- 08 What: intro column + numbered register ---------- */
+.gp-what__grid {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.gp-what__head {
+  position: sticky;
+  top: 107px;
+  margin-bottom: 0;
+}
+
+.gp-what__count {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+
+.gp-what__count span {
+  color: var(--btn);
+  font-family: var(--display);
+  font-size: 96px;
+  line-height: 80px;
+}
+
+.gp-what__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #000;
+}
+
+.gp-what__list li {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 8px;
+  padding: 18px 0 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  font-size: 16px;
+  line-height: 23px;
+}
+
+.gp-what__n {
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 23px;
+}
+
+.gp-what__close {
+  margin-top: 56px;
+  padding: 24px 0 0;
+  border-top: 1px solid #000;
+  font-size: 22px;
+  line-height: 30px;
+  text-align: center;
+}
+
+/* ---------- 09 UN status: figures strip, two-column copy, callout ---------- */
+.gp-un__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 0 64px;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.gp-un__facts > div {
+  padding: 32px 32px 36px 0;
+}
+
+.gp-un__facts > div + div {
+  padding-left: 32px;
+  border-left: 1px solid #000;
+}
+
+.gp-un__facts dt {
+  font-family: var(--display);
+  font-size: 72px;
+  line-height: 72px;
+}
+
+.gp-un__facts > div:last-child dt {
+  color: var(--btn);
+}
+
+.gp-un__facts dd {
+  max-width: 300px;
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.gp-un__body {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.gp-un__cols {
+  columns: 2;
+  column-gap: 40px;
+  font-size: 17px;
+  line-height: 27px;
+}
+
+.gp-un__cols p {
+  margin-bottom: 18px;
+}
+
+.gp-un__callout {
+  position: relative;
+  padding: 32px 28px 36px;
+  background: rgba(0, 107, 212, 0.1);
+  box-shadow: inset 0 3px 0 var(--btn);
+  font-size: 20px;
+  line-height: 29px;
+}
+
+/* ---------- global-peace: 810 - 1199.98 ---------- */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .gp-pd__quotes {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gp-pd__quote--lead {
+    grid-column: 1 / -1;
+  }
+
+  .gp-pd__body,
+  .gp-nations__grid,
+  .gp-what__grid {
+    gap: 48px;
+  }
+
+  .gp-res__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gp-res__index {
+    position: static;
+  }
+
+  .gp-res__index ol {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 16px;
+  }
+
+  .gp-nations__index {
+    columns: 2;
+  }
+
+  .gp-nations__stat {
+    font-size: 120px;
+    line-height: 108px;
+  }
+
+  .gp-orgs__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .gp-what__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gp-what__head {
+    position: static;
+  }
+
+  .gp-un__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- global-peace: below 810 ---------- */
+@media (max-width: 809.98px) {
+  .gp-hero,
+  .gp-hero .hero-grid,
+  .gp-hero .hero-grid::before {
+    height: auto;
+  }
+
+  .gp-hero__panel {
+    padding: 0;
+    background: none;
+  }
+
+  .gp-hero__lead {
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  .gp-decl__frame {
+    padding: 48px 24px 40px;
+  }
+
+  .gp-decl__text {
+    font-size: 18px;
+    line-height: 29px;
+  }
+
+  .gp-decl__signoff {
+    font-size: 26px;
+    line-height: 30px;
+  }
+
+  .gp-pd__quotes,
+  .gp-pd__body,
+  .gp-sum__grid,
+  .gp-res__grid,
+  .gp-nations__grid,
+  .gp-why__intro,
+  .gp-what__grid,
+  .gp-what__list,
+  .gp-un__body,
+  .gp-un__facts {
+    grid-template-columns: 1fr;
+  }
+
+  .gp-pd__body {
+    gap: 48px;
+    margin-top: 56px;
+  }
+
+  .gp-pd__quote:last-child blockquote {
+    font-size: 28px;
+    line-height: 32px;
+  }
+
+  .gp-sum__grid li {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 28px 24px 32px;
+  }
+
+  .gp-sum__grid p {
+    font-size: 19px;
+    line-height: 27px;
+  }
+
+  .gp-res__index,
+  .gp-nations__aside,
+  .gp-what__head {
+    position: static;
+  }
+
+  .gp-res__doc {
+    padding: 32px 20px 40px;
+    font-size: 16px;
+    line-height: 25px;
+  }
+
+  .gp-nations__grid {
+    gap: 32px;
+  }
+
+  .gp-nations__stat {
+    font-size: 96px;
+    line-height: 88px;
+  }
+
+  .gp-nations__index {
+    columns: 2;
+    column-gap: 20px;
+  }
+
+  .gp-orgs__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gp-orgs__grid li {
+    min-height: 88px;
+    padding: 16px 12px;
+    font-size: 14px;
+    line-height: 19px;
+  }
+
+  .gp-why__answer {
+    font-size: 40px;
+    line-height: 42px;
+  }
+
+  .gp-why__intro {
+    gap: 20px;
+    margin-top: 36px;
+  }
+
+  .gp-why__turns {
+    margin: 48px 0;
+  }
+
+  .gp-why__turns li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 16px 0;
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .gp-why__from {
+    text-align: left;
+  }
+
+  .gp-why__arrow {
+    display: none;
+  }
+
+  .gp-why__cols,
+  .gp-un__cols {
+    columns: 1;
+  }
+
+  .gp-what__grid {
+    gap: 32px;
+  }
+
+  .gp-what__list {
+    column-gap: 0;
+  }
+
+  .gp-un__facts > div,
+  .gp-un__facts > div + div {
+    padding: 24px 0;
+    border-left: 0;
+  }
+
+  .gp-un__facts > div + div {
+    border-top: 1px solid #000;
+  }
+
+  .gp-un__facts dt {
+    font-size: 56px;
+    line-height: 56px;
+  }
+}

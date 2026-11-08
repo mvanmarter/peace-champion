@@ -26,3 +26,31 @@
 22. [seedsofpeace.org](https://www.seedsofpeace.org): Youth-centered and hopeful, giving community voices room to speak for themselves.
 23. [usip.org](https://www.usip.org): Research-heavy and institutional, useful for organizing deep content, reports and regional pages.
 24. [peacekeeping.un.org](https://peacekeeping.un.org): The official UN blue system, showing how peace looks at a global, institutional scale.
+
+## Entertainment
+
+1. [Netflix](https://www.netflix.com)
+2. [Spotify](https://www.spotify.com)
+3. [Disney+](https://www.disneyplus.com)
+4. [Pixar](https://www.pixar.com)
+5. [A24](https://a24films.com)
+6. [Marvel](https://www.marvel.com)
+7. [Coachella](https://www.coachella.com)
+8. [Twitch](https://www.twitch.tv)
+9. [Nintendo](https://www.nintendo.com)
+10. [Eurovision](https://eurovision.tv)
+11. [Olympics](https://www.olympics.com)
+
+## High-tech
+
+1. [Apple](https://www.apple.com)
+2. [Stripe](https://stripe.com)
+3. [Linear](https://linear.app)
+4. [Vercel](https://vercel.com)
+5. [Tesla](https://www.tesla.com)
+6. [SpaceX](https://www.spacex.com)
+7. [Figma](https://www.figma.com)
+8. [Notion](https://www.notion.so)
+9. [Google Earth](https://earth.google.com)
+10. [Duolingo](https://www.duolingo.com)
+11. [NVIDIA](https://www.nvidia.com)
