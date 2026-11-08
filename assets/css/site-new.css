@@ -6155,7 +6155,12 @@ html:not(.js) .ab-carousel__nav {
   line-height: 34px;
 }
 
-.gp-decl__text::first-letter {
+.gp-decl__text + .gp-decl__text {
+  margin-top: 24px;
+}
+
+/* Drop cap on the declaration's opening paragraph only. */
+.gp-decl__text:first-of-type::first-letter {
   float: left;
   margin: 6px 12px 0 0;
   color: var(--btn);
@@ -6170,9 +6175,7 @@ html:not(.js) .ab-carousel__nav {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid #000;
+  margin-top: 24px;
 }
 
 .gp-decl__signoff {
@@ -6391,6 +6394,33 @@ html:not(.js) .ab-carousel__nav {
   inset: 0;
   border: 1px solid #000;
   pointer-events: none;
+}
+
+/* The Muscles of Peace mark, centred at the top of the sheet. The file is a
+   single-colour mark (light blue) on transparency, so it is used as a mask
+   over the band's own blue: the colour is exactly var(--btn) and its soft
+   edges are kept. The PNG is 426x227, shown at half size for sharp 2x. */
+.gp-res__logo {
+  width: 213px;
+  max-width: 100%;
+  aspect-ratio: 426 / 227;
+  margin: 0 auto 20px;
+  background: var(--btn);
+  -webkit-mask: url("../logo/muscles-of-peace-2.png") center / contain no-repeat;
+  mask: url("../logo/muscles-of-peace-2.png") center / contain no-repeat;
+}
+
+/* Subtitle under the mark: the resolution's full name, centred, in the same
+   ink as the sheet's copy and a step larger. */
+.gp-res__subtitle {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .gp-res__part {
@@ -6833,6 +6863,11 @@ html:not(.js) .ab-carousel__nav {
 
 /* ---------- global-peace: below 810 ---------- */
 @media (max-width: 809.98px) {
+  .gp-res__subtitle {
+    font-size: 17px;
+    line-height: 25px;
+  }
+
   .gp-intro__p {
     font-size: 16px;
     line-height: 25px;
