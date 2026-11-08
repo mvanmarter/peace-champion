@@ -6104,58 +6104,23 @@ html:not(.js) .ab-carousel__nav {
    size). Everything else is namespaced .gp-*.
    ========================================================= */
 
-/* ---------- hero: the About lattice, taller, with an opaque panel ----------
-   Four lattice rows (581px, the live About's own height) because this copy
-   is longer. The panel replaces .about-hero-inner::before so it sizes to the
-   copy instead of a fixed 280px. */
-.gp-hero,
-.gp-hero .hero-grid,
-.gp-hero .hero-grid::before {
-  height: 581px;
+/* ---------- opening module: the About page's Mission block ----------
+   Markup and styling are .ab-mission's own (frame, centred title, large
+   statement); only the intro's two follow-up paragraphs are added here. */
+.gp-intro .ab-mission__statement strong {
+  font-weight: 600;
 }
 
-@media (min-width: 810px) {
-  .gp-hero .about-hero-inner {
-    padding-top: 0;
-  }
-}
-
-.gp-hero .about-hero-inner::before {
-  display: none;
-}
-
-.gp-hero .about-hero-inner > .gp-hero__panel {
-  max-width: 870px;
-}
-
-.gp-hero__panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 48px 80px 52px;
-  background: var(--bg);
-}
-
-.gp-hero__panel > * {
-  max-width: 710px;
-}
-
-.gp-hero__lead {
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 500;
-}
-
-.gp-hero__lead strong {
-  color: var(--btn);
-  font-weight: 700;
-}
-
-.gp-hero__p {
+.gp-intro__p {
+  max-width: 760px;
+  margin: 24px auto 0;
   color: rgba(0, 0, 0, 0.7);
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.gp-intro .ab-mission__statement + .gp-intro__p {
+  margin-top: 40px;
 }
 
 /* ---------- 01 Declaration: ruled certificate ---------- */
@@ -6905,19 +6870,8 @@ html:not(.js) .ab-carousel__nav {
 
 /* ---------- global-peace: below 810 ---------- */
 @media (max-width: 809.98px) {
-  .gp-hero,
-  .gp-hero .hero-grid,
-  .gp-hero .hero-grid::before {
-    height: auto;
-  }
-
-  .gp-hero__panel {
-    padding: 0;
-    background: none;
-  }
-
-  .gp-hero__lead {
-    font-size: 18px;
+  .gp-intro__p {
+    font-size: 16px;
     line-height: 25px;
   }
 
