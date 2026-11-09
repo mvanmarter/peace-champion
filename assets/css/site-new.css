@@ -6108,6 +6108,192 @@ html:not(.js) .ab-carousel__nav {
 }
 
 /* =========================================================
+   about.html — Strategy variants (Nov 2026)
+   Two variants of 02 Strategy, stacked under the original for comparison.
+   02a is the original section (same markup, sticky aside, milestone strip)
+   plus a modifier that adds a background and recolours the lead; 02b is a
+   new layout of the same copy. Keep one and delete the others and their rules.
+   ========================================================= */
+
+/* `overflow: clip` (not hidden) so the backgrounds can't widen the page
+   without making the section a scroll container, which would break the
+   sticky aside. */
+.ab-strategy--tree,
+.ab-strat-bridge {
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* ---------- 02a Lone tree ---------- */
+.ab-strategy--tree {
+  background: linear-gradient(180deg, #f1f7f1 0%, var(--bg) 70%);
+}
+
+.ab-strategy--tree::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 58%;
+  background: url("../images/about-vision/09-lone-tree.jpg") 40% 70% / cover no-repeat;
+  opacity: 0.22;
+  -webkit-mask: linear-gradient(90deg, #000 20%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 25%, #000 75%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, #000 20%, transparent 100%) intersect, linear-gradient(180deg, transparent 0%, #000 25%, #000 75%, transparent 100%);
+  pointer-events: none;
+}
+
+.ab-strategy--tree .ab-strategy__lead {
+  color: #0e6b2c;
+}
+
+.ab-strategy--tree .ab-milestones li:nth-child(2) {
+  background: #eef5ee;
+}
+
+.ab-strategy--tree .ab-milestones li:nth-child(3) {
+  background: #dcebdc;
+}
+
+.ab-strategy--tree .ab-milestones li:nth-child(4) {
+  background: #0e6b2c;
+}
+
+/* ---------- 02b Bridge ---------- */
+.ab-strat-bridge {
+  padding-top: 0;
+  background: linear-gradient(180deg, #f0f5ef, var(--bg) 40%);
+}
+
+.ab-strat-bridge__banner {
+  padding: 120px 0 200px;
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(8, 30, 20, 0.82) 0%, rgba(8, 30, 20, 0.45) 55%, rgba(8, 30, 20, 0.15) 100%),
+    url("../images/about-vision/04-forest-bridge.jpg") center 60% / cover no-repeat;
+}
+
+.ab-strat-bridge__lead {
+  max-width: 640px;
+  font-size: 30px;
+  line-height: 40px;
+}
+
+.ab-strat-bridge__cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: -120px;
+}
+
+.ab-strat-bridge__card {
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #000;
+}
+
+.ab-strat-bridge__card:nth-child(1),
+.ab-strat-bridge__card:nth-child(4) {
+  background: #fdfcf8;
+}
+
+.ab-progress {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 80px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-progress::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #9cc7a4, var(--dot-green));
+}
+
+.ab-progress li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 16px;
+}
+
+.ab-progress__dot {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 14px;
+  border: 4px solid var(--bg);
+  border-radius: 50%;
+  background: var(--dot-green);
+  box-shadow: 0 0 0 1px var(--dot-green);
+}
+
+.ab-progress li:last-child .ab-progress__dot {
+  background: var(--btn);
+  box-shadow: 0 0 0 1px var(--btn), 0 0 0 8px rgba(0, 107, 212, 0.15);
+}
+
+.ab-progress__n {
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: 34px;
+  text-transform: uppercase;
+}
+
+.ab-progress__l {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Strategy variants: <= 809.98 ---------- */
+@media (max-width: 809.98px) {
+  .ab-strategy--tree::after {
+    width: 100%;
+    opacity: 0.14;
+  }
+
+  .ab-strat-bridge__lead {
+    font-size: 22px;
+    line-height: 30px;
+  }
+
+  .ab-strat-bridge__banner {
+    padding: 80px 0 160px;
+  }
+
+  .ab-strat-bridge__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-strat-bridge__card {
+    padding: 24px;
+  }
+
+  .ab-progress {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 32px;
+  }
+
+  .ab-progress::before {
+    display: none;
+  }
+
+  .ab-progress__n {
+    font-size: 24px;
+    line-height: 26px;
+  }
+}
+
+/* =========================================================
    about.html — Mission variants (Nov 2026)
    Five stacked treatments of the 01 Mission block, for comparison. Each is
    .ab-section.ab-mission plus one modifier, so the base frame, title and
