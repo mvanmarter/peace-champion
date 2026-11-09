@@ -6108,6 +6108,235 @@ html:not(.js) .ab-carousel__nav {
 }
 
 /* =========================================================
+   about.html — Mission variants (Nov 2026)
+   Five stacked treatments of the 01 Mission block, for comparison. Each is
+   .ab-section.ab-mission plus one modifier, so the base frame, title and
+   statement rules above still apply; these only add backgrounds and colour.
+   Keep one and delete the other four sections and their modifier rules.
+   ========================================================= */
+.ab-mission[class*="ab-mission--"] {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ---------- 01a Lattice ---------- */
+.ab-mission--lattice {
+  background:
+    radial-gradient(ellipse 45% 60% at 22% 30%, rgba(0, 107, 212, 0.16), transparent 70%),
+    radial-gradient(ellipse 40% 55% at 80% 75%, rgba(0, 138, 23, 0.14), transparent 70%),
+    var(--bg);
+}
+
+/* The homepage hero's lattice: 145px squares ruled in #e1e0dd, centred. */
+.ab-mission--lattice::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, #e1e0dd 2px, transparent 2px) calc(50% - 1px) 0 / 145px 145px,
+    linear-gradient(#e1e0dd 2px, transparent 2px) 0 -1px / 145px 145px;
+  -webkit-mask: radial-gradient(ellipse 70% 80% at 50% 50%, #000 40%, transparent 100%);
+  mask: radial-gradient(ellipse 70% 80% at 50% 50%, #000 40%, transparent 100%);
+  pointer-events: none;
+}
+
+.ab-mission--lattice .ab-mission__frame {
+  background: rgba(250, 249, 246, 0.92);
+  box-shadow: 0 30px 80px -40px rgba(0, 60, 130, 0.35);
+}
+
+.ab-mission__dots {
+  display: flex;
+  gap: 8px;
+}
+
+.ab-mission__dots i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--dot-blue);
+}
+
+.ab-mission__dots i + i {
+  background: var(--dot-green);
+}
+
+/* ---------- 01b Blue band ---------- */
+.ab-mission--blue {
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 0%, rgba(255, 255, 255, 0.16), transparent 70%),
+    linear-gradient(180deg, var(--btn), #0052a3);
+  color: #fff;
+}
+
+.ab-mission--blue .ab-mission__frame::after {
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.ab-mission__mark {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: min(1100px, 130vw);
+  aspect-ratio: 426 / 227;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-mask: url("../logo/muscles-of-peace-2.png") center / contain no-repeat;
+  mask: url("../logo/muscles-of-peace-2.png") center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* ---------- 01c Photo ---------- */
+.ab-mission--photo {
+  background:
+    linear-gradient(180deg, rgba(10, 20, 45, 0.55), rgba(10, 20, 45, 0.25) 45%, rgba(10, 20, 45, 0.7)),
+    url("../images/about-vision/01-mountains-above-clouds.jpg") center 40% / cover no-repeat;
+  color: #fff;
+  padding-block: 160px;
+}
+
+.ab-mission--photo .ab-mission__frame {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.ab-mission--photo .ab-mission__frame::after {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.ab-mission--photo .ab-mission__statement {
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- 01d Ripples ---------- */
+.ab-mission--ripples {
+  background:
+    repeating-radial-gradient(circle at 50% 30%, transparent 0 59px, rgba(0, 107, 212, 0.2) 59px 60px),
+    linear-gradient(135deg, #e6f0fb 0%, var(--bg) 50%, #e8f5ea 100%);
+}
+
+/* Fade the rings out towards the edges. */
+.ab-mission--ripples::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 70% at 50% 30%, transparent 30%, var(--bg) 100%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.ab-mission--ripples .ab-mission__frame::after {
+  border: 0;
+}
+
+.ab-mission--ripples .ab-title {
+  font-size: 64px;
+  line-height: 64px;
+  font-weight: 500;
+  background: linear-gradient(90deg, var(--dot-blue), var(--dot-green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- 01e Split ---------- */
+.ab-mission--split {
+  background: linear-gradient(160deg, #fdf3f6 0%, var(--bg) 45%, #eef4ec 100%);
+}
+
+.ab-mission__split {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  align-items: center;
+  gap: 72px;
+}
+
+.ab-mission__media {
+  position: relative;
+  margin: 0 16px 16px 0;
+}
+
+/* Offset blue frame behind the photo. */
+.ab-mission__media::before {
+  content: "";
+  position: absolute;
+  inset: 16px -16px -16px 16px;
+  border: 1px solid var(--btn);
+  pointer-events: none;
+}
+
+.ab-mission__media img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid #000;
+}
+
+.ab-mission__body {
+  position: relative;
+}
+
+.ab-mission__body::before {
+  content: "\201C";
+  position: absolute;
+  top: -96px;
+  left: -12px;
+  z-index: -1;
+  color: var(--btn);
+  font-family: Georgia, serif;
+  font-size: 220px;
+  line-height: 1;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.ab-mission--split .ab-mission__statement {
+  max-width: none;
+  text-align: left;
+}
+
+/* ---------- Mission variants: <= 1199.98 ---------- */
+@media (max-width: 1199.98px) {
+  .ab-mission__split {
+    gap: 48px;
+  }
+}
+
+/* ---------- Mission variants: <= 809.98 ---------- */
+@media (max-width: 809.98px) {
+  .ab-mission--photo {
+    padding-block: 96px;
+  }
+
+  .ab-mission--ripples .ab-title {
+    font-size: 44px;
+    line-height: 44px;
+  }
+
+  .ab-mission__split {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .ab-mission__media img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .ab-mission__body::before {
+    top: -30px;
+    font-size: 120px;
+  }
+}
+
+
+/* =========================================================
    global-peace.html — hero + content sections (Nov 2026)
    Nine sections built from docs/global-peace-copy.md (one per ## heading),
    each with its own layout so they can be iterated on independently. They
