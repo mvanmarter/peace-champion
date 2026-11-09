@@ -7036,6 +7036,11 @@ html:not(.js) .ab-carousel__nav {
   }
 }
 
+/* ---------- global-peace.html opening module: sky-to-meadow wash ---------- */
+.gp-wash {
+  background: linear-gradient(180deg, #eef5fd 0%, var(--bg) 55%, #eaf4eb 100%);
+}
+
 /* =========================================================
    global-peace.html — hero + content sections (Nov 2026)
    Nine sections built from docs/global-peace-copy.md (one per ## heading),
