@@ -7165,12 +7165,12 @@ html:not(.js) .ab-carousel__nav {
   line-height: 31px;
 }
 
-.gp-pd__quote:last-child blockquote {
+/* .gp-pd__quote:last-child blockquote {
   font-family: var(--display);
   font-size: 34px;
   line-height: 38px;
   text-transform: uppercase;
-}
+} */
 
 .gp-pd__quote figcaption {
   display: flex;
