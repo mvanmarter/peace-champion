@@ -6337,6 +6337,520 @@ html:not(.js) .ab-carousel__nav {
 
 
 /* =========================================================
+   global-peace.html — Global Peace intro variants (Nov 2026)
+   Five stacked treatments of the opening "Building Muscles of Peace" module,
+   for comparison. Each is .ab-section.gp-intro plus one modifier; the shared
+   .ab-title / .ab-mission__statement / .gp-intro__p rules still apply. Keep
+   one and delete the other four sections and their modifier rules.
+   ========================================================= */
+.gp-intro[class*="gp-intro--"] {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.gp-intro:where([class*="gp-intro--"]) .ab-mission__statement {
+  max-width: 920px;
+  margin-inline: auto;
+  font-size: 32px;
+  line-height: 42px;
+  text-align: center;
+}
+
+/* Three paragraphs side by side, each under a hairline. */
+.gp-intro__cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 64px;
+}
+
+.gp-intro__cols .gp-intro__p {
+  max-width: none;
+  margin: 0;
+  padding-top: 20px;
+  border-top: 1px solid currentColor;
+  font-size: 17px;
+  line-height: 27px;
+}
+
+
+/* ---------- 01a Photo strip ---------- */
+.gp-intro--strip {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0, 153, 255, 0.12), transparent 70%),
+    linear-gradient(180deg, #f3f8fd 0%, var(--bg) 60%);
+}
+
+.gp-intro__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--btn);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gp-intro__eyebrow i {
+  width: 32px;
+  height: 1px;
+  background: currentColor;
+}
+
+.gp-intro--strip .ab-mission__statement strong {
+  color: var(--btn);
+}
+
+/* Full-bleed strip; the track holds the photos twice and slides by half its
+   width, so the loop is seamless. */
+.gp-strip {
+  margin: 64px 0;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.gp-strip__track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  padding-block: 12px;
+  animation: gp-strip 70s linear infinite;
+}
+
+.gp-strip__track img {
+  width: 280px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 18px 30px -20px rgba(0, 40, 90, 0.45);
+}
+
+.gp-strip__track img:nth-child(even) {
+  transform: translateY(14px);
+}
+
+@keyframes gp-strip {
+  to {
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gp-strip__track {
+    animation: none;
+  }
+}
+
+.gp-intro__steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gp-intro__steps li span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border: 1px solid var(--btn);
+  border-radius: 50%;
+  color: var(--btn);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gp-intro__steps .gp-intro__p {
+  max-width: none;
+  margin: 0;
+  font-size: 17px;
+  line-height: 27px;
+}
+
+@media (max-width: 809.98px) {
+  .gp-strip {
+    margin: 40px 0;
+  }
+
+  .gp-strip__track img {
+    width: 200px;
+    height: 144px;
+    border-radius: 14px;
+  }
+
+  .gp-intro__steps {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ---------- 01b Globe ---------- */
+.gp-intro--globe {
+  background: linear-gradient(180deg, #e9f2fc 0%, #f4f8fb 55%, var(--bg) 100%);
+}
+
+.gp-intro__globe-grid {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.gp-intro--globe .ab-mission__statement {
+  margin: 0 0 32px;
+  text-align: left;
+}
+
+.gp-intro--globe .ab-mission__statement strong {
+  color: var(--btn);
+}
+
+.gp-intro--globe .gp-intro__p {
+  max-width: 620px;
+  margin: 16px 0 0;
+  padding-left: 20px;
+  border-left: 2px solid rgba(0, 107, 212, 0.35);
+}
+
+.gp-globe {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 1;
+  justify-self: center;
+}
+
+/* The Earth: an inline line-drawn globe (see the SVG in the markup). */
+.gp-globe__earth {
+  position: absolute;
+  inset: 6%;
+  width: 88%;
+  height: 88%;
+  filter: drop-shadow(0 30px 40px rgba(0, 107, 212, 0.28));
+}
+
+.gp-globe__orbit {
+  position: absolute;
+  inset: 32% -6%;
+  border: 1.5px solid rgba(0, 107, 212, 0.5);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.gp-globe__orbit::after {
+  content: "";
+  position: absolute;
+  top: 6%;
+  right: 12%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--dot-green);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.gp-globe__tag {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ---------- 01e Postcards ---------- */
+.gp-intro--cards {
+  background:
+    radial-gradient(circle, rgba(0, 0, 0, 0.12) 1px, transparent 1.5px) 0 0 / 22px 22px,
+    #fbf8f1;
+}
+
+.gp-intro--cards .ab-mission__statement strong {
+  color: var(--btn);
+}
+
+.gp-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 72px;
+}
+
+.gp-card {
+  position: relative;
+  margin: 0;
+  padding: 14px 14px 24px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 24px 40px -24px rgba(40, 30, 10, 0.35);
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease;
+}
+
+.gp-card:nth-child(2) {
+  transform: rotate(1.5deg) translateY(16px);
+}
+
+.gp-card:nth-child(3) {
+  transform: rotate(-1deg);
+}
+
+/* A strip of blue tape across the top edge. */
+.gp-card::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 96px;
+  height: 26px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: rgba(0, 107, 212, 0.22);
+  backdrop-filter: blur(1px);
+}
+
+.gp-card:nth-child(2)::before {
+  background: rgba(0, 138, 23, 0.22);
+  transform: translateX(-50%) rotate(4deg);
+}
+
+@media (hover: hover) {
+  .gp-card:hover {
+    transform: rotate(0deg) translateY(-6px);
+  }
+}
+
+.gp-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.gp-card .gp-intro__p {
+  max-width: none;
+  margin: 18px 6px 0;
+  font-size: 16px;
+  line-height: 25px;
+}
+
+
+/* ---------- 01c Blue duotone ---------- */
+.gp-intro--duotone {
+  color: #fff;
+  background: #00264d;
+  padding-block: 144px 96px;
+}
+
+.gp-intro--duotone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(0, 38, 77, 0.35) 0%, rgba(0, 38, 77, 0.55) 45%, rgba(0, 38, 77, 0.92) 78%),
+    linear-gradient(var(--btn), var(--btn)),
+    url("../images/about-vision/10-friends-together.jpg") center 30% / cover no-repeat;
+  background-blend-mode: normal, multiply, luminosity;
+  filter: saturate(1.1);
+  pointer-events: none;
+}
+
+.gp-intro--duotone .ab-title {
+  max-width: 640px;
+  font-size: 64px;
+  line-height: 64px;
+}
+
+.gp-intro--duotone .ab-mission__statement {
+  max-width: 760px;
+  margin-inline: 0;
+  text-align: left;
+}
+
+.gp-intro--duotone .gp-intro__cols {
+  margin-top: 96px;
+}
+
+.gp-intro--duotone .gp-intro__p {
+  color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- 01d Dawn ---------- */
+.gp-intro--dawn {
+  background: var(--bg);
+}
+
+.gp-intro__sky {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 500px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #5b8fd6 0%, #a9b9e6 38%, #f2b8b0 70%, #ffd7a3 100%);
+}
+
+.gp-intro__sun {
+  position: absolute;
+  left: 50%;
+  bottom: -120px;
+  width: 340px;
+  height: 340px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6dc 0%, #ffd27a 45%, rgba(255, 190, 110, 0) 72%);
+}
+
+/* Soft sun rays: a faint conic burst centred on the sun. */
+.gp-intro__sky::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -900px;
+  width: 1800px;
+  height: 1800px;
+  transform: translateX(-50%);
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.14) 0deg 4deg, transparent 4deg 12deg);
+  -webkit-mask: radial-gradient(circle, #000 20%, transparent 50%);
+  mask: radial-gradient(circle, #000 20%, transparent 50%);
+}
+
+.gp-intro--dawn .container {
+  position: relative;
+}
+
+.gp-intro--dawn .ab-head {
+  position: relative;
+  margin-bottom: 200px;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(70, 60, 120, 0.35);
+}
+
+.gp-intro__sheet {
+  position: relative;
+  max-width: 980px;
+  margin-inline: auto;
+  padding: 64px 80px 72px;
+  background: #fff;
+  border: 1px solid #000;
+  box-shadow: 0 40px 80px -50px rgba(60, 40, 90, 0.5);
+}
+
+.gp-intro--dawn .ab-mission__statement {
+  margin-bottom: 40px;
+}
+
+.gp-intro--dawn .ab-mission__statement strong {
+  color: #e0663f;
+}
+
+.gp-intro--dawn .gp-intro__p {
+  text-align: center;
+}
+
+/* ---------- Global Peace intro variants: 810 - 1199.98 ---------- */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+
+  .gp-intro__globe-grid {
+    gap: 40px;
+  }
+
+  .gp-cards {
+    gap: 24px;
+  }
+}
+
+/* ---------- Global Peace intro variants: <= 809.98 ---------- */
+@media (max-width: 809.98px) {
+  .gp-intro:where([class*="gp-intro--"]) .ab-mission__statement {
+    font-size: 22px;
+    line-height: 30px;
+  }
+
+  .gp-intro__cols {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-top: 48px;
+  }
+
+
+  .gp-intro--duotone {
+    padding-block: 96px 72px;
+  }
+
+  .gp-intro--duotone .ab-title {
+    font-size: 40px;
+    line-height: 42px;
+  }
+
+  .gp-intro--duotone .gp-intro__cols {
+    margin-top: 56px;
+  }
+
+  .gp-intro__sky {
+    height: 380px;
+  }
+
+  .gp-intro__sun {
+    width: 220px;
+    height: 220px;
+    bottom: -80px;
+  }
+
+  .gp-intro--dawn .ab-head {
+    margin-bottom: 140px;
+  }
+
+  .gp-intro__sheet {
+    padding: 40px 24px 48px;
+  }
+
+
+
+
+
+  .gp-intro__globe-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .gp-globe {
+    order: -1;
+    max-width: 300px;
+  }
+
+  .gp-cards {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-top: 48px;
+  }
+
+  .gp-card,
+  .gp-card:nth-child(2),
+  .gp-card:nth-child(3) {
+    transform: rotate(-1deg);
+  }
+
+  .gp-card:nth-child(2) {
+    transform: rotate(1deg);
+  }
+}
+
+/* =========================================================
    global-peace.html — hero + content sections (Nov 2026)
    Nine sections built from docs/global-peace-copy.md (one per ## heading),
    each with its own layout so they can be iterated on independently. They
