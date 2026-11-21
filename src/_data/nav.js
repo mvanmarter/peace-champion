@@ -92,11 +92,14 @@ const menus = [
     subtitle:
       "Inspiring the world through creativity, culture, wisdom, and entertainment.",
     links: [
-      { label: "Peace Films", href: "films.html" },
-      { label: "Wisdom Campaigns", href: "wisdom.html" },
-      { label: "Peace Songs and Music", href: "#" },
-      { label: "Peace App", href: "#" },
-      { label: "Inspirational media and experiences", href: "#" },
+      { label: "Admissions Short Film", href: "peace-entertainment.html#admissions" },
+      { label: "The Principle Short Film", href: "peace-entertainment.html#the-principle" },
+      { label: "Peace Champion Mobile App", href: "peace-entertainment.html#mobile-app" },
+      { label: "Mind Over Fabric Clothing", href: "peace-entertainment.html#mind-over-fabric" },
+      { label: "Muscles of Peace Wisdom Campaign", href: "peace-entertainment.html#muscles-of-peace" },
+      { label: "Mind Supplement Wisdom Campaign", href: "peace-entertainment.html#mind-supplement" },
+      { label: "PetTalk4Humanity Microshorts", href: "peace-entertainment.html#pettalk4humanity" },
+      { label: "Joy Scroll", href: "peace-entertainment.html#joy-scroll" },
     ],
   },
 ];
