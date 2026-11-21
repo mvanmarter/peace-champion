@@ -2,6 +2,7 @@
 
 Two things live in `C:\Dev\PeaceChampion`, and they are **not** interchangeable:
 
+
 | file                                                       | what it is                                                     | deploy it?                      |
 | ---------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------- |
 | `index.html`                                               | the rebuilt homepage, **generated** by Eleventy from `src/`     | **yes** — this is the good page |
