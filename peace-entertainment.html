@@ -395,9 +395,38 @@
             <span class="pe-mof__hole" aria-hidden="true"></span>
             <p class="about-label pe-eyebrow">Positive-message apparel</p>
             <h2 class="ab-title">Mind Over Fabric Clothing</h2>
-            <a class="btn" href="https://drive.google.com/file/d/1ezmEJEmsyoCp8quf-xBl_Qxhcv2-Yvx7/view?usp=sharing" target="_blank" rel="noopener">See the collection</a>
+            <button class="btn" type="button" aria-haspopup="dialog" aria-controls="mof-modal" data-mof-open>See the collection</button>
           </div>
         </div>
+        <!-- The collection: a native <dialog> (Escape, focus trap and backdrop
+             for free). Sticky title bar, the 16 pages stacked in a scrolling
+             body. Images are lazy, so nothing loads until it is opened. -->
+        <dialog class="pe-mof-modal" id="mof-modal" aria-labelledby="mof-modal-title">
+          <div class="pe-mof-modal__bar">
+            <h2 class="pe-mof-modal__title" id="mof-modal-title">Mind Over Fabric Clothing</h2>
+            <button class="pe-mof-modal__close" type="button" aria-label="Close" data-mof-close>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+            </button>
+          </div>
+          <div class="pe-mof-modal__body">
+              <img src="mof/page-01.png" alt="Mind Over Fabric collection, page 1 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-02.png" alt="Mind Over Fabric collection, page 2 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-03.png" alt="Mind Over Fabric collection, page 3 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-04.png" alt="Mind Over Fabric collection, page 4 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-05.png" alt="Mind Over Fabric collection, page 5 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-06.png" alt="Mind Over Fabric collection, page 6 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-07.png" alt="Mind Over Fabric collection, page 7 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-08.png" alt="Mind Over Fabric collection, page 8 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-09.png" alt="Mind Over Fabric collection, page 9 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-10.png" alt="Mind Over Fabric collection, page 10 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-11.png" alt="Mind Over Fabric collection, page 11 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-12.png" alt="Mind Over Fabric collection, page 12 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-13.png" alt="Mind Over Fabric collection, page 13 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-14.png" alt="Mind Over Fabric collection, page 14 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-15.png" alt="Mind Over Fabric collection, page 15 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+              <img src="mof/page-16.png" alt="Mind Over Fabric collection, page 16 of 16" width="1650" height="1275" loading="lazy" decoding="async" />
+          </div>
+        </dialog>
       </section>
 
       <!-- 05 Muscles of Peace: the Muscles of Peace mark at poster size beside
@@ -539,6 +568,33 @@
             btn.setAttribute("aria-expanded", "true");
             btn.setAttribute("aria-label", "Close menu");
           }
+        });
+      })();
+    </script>
+    <script>
+      // Mind Over Fabric collection modal.
+      (function () {
+        var dlg = document.getElementById("mof-modal");
+        var open = document.querySelector("[data-mof-open]");
+        if (!dlg || !open || typeof dlg.showModal !== "function") return;
+        var body = dlg.querySelector(".pe-mof-modal__body");
+        open.addEventListener("click", function () {
+          dlg.showModal();
+          body.scrollTop = 0;
+        });
+        dlg.querySelector("[data-mof-close]").addEventListener("click", function () {
+          dlg.close();
+        });
+        // A click on the backdrop lands on the <dialog> itself, outside the panel.
+        dlg.addEventListener("click", function (e) {
+          if (e.target !== dlg) return;
+          var r = dlg.getBoundingClientRect();
+          var inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+          if (!inside) dlg.close();
+        });
+        // Return focus to the button that opened it.
+        dlg.addEventListener("close", function () {
+          open.focus();
         });
       })();
     </script>
