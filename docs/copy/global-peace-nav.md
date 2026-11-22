@@ -5,5 +5,4 @@
 # Nations Represented
 # Supporting Organizations
 # Why Do We Need Peace Departments?
-# What Will Peace Departments Do
 # United Nations Official Consultative Status

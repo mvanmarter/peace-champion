@@ -78,11 +78,14 @@ const menus = [
     subtitle:
       "Our initiatives, campaigns, and organized efforts to create peace in the world.",
     links: [
-      { label: "Global Peace Initiatives", href: "#" },
-      { label: "The Global Voting Campaign", href: "#" },
-      { label: "The Peace Department Campaign", href: "#" },
-      { label: "Global participation and partnerships", href: "#" },
-      { label: "Take action", href: "#" },
+      { label: "Building Muscles of Peace", href: "global-peace.html#building-muscles-of-peace" },
+      { label: "The Declaration for Global Peace", href: "global-peace.html#declaration" },
+      { label: "Peace Departments", href: "global-peace.html#peace-departments" },
+      { label: "The Muscles of Peace Global Resolution", href: "global-peace.html#global-resolution" },
+      { label: "Nations Represented", href: "global-peace.html#nations" },
+      { label: "Supporting Organizations", href: "global-peace.html#supporting-organizations" },
+      { label: "Why Do We Need Peace Departments?", href: "global-peace.html#why-peace-departments" },
+      { label: "United Nations Official Consultative Status", href: "global-peace.html#un-consultative-status" },
     ],
   },
   {

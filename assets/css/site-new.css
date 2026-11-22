@@ -7673,6 +7673,19 @@ html:not(.js) .ab-carousel__nav {
   line-height: 23px;
 }
 
+/* No rule under the last row (items 19 and 20 in two columns): the list
+   ends open, with the quotes below set off by space alone. */
+.gp-what__list li:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+/* One column below 810px: item 19 is no longer in the last row. */
+@media (max-width: 809.98px) {
+  .gp-what__list li:nth-last-child(2) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  }
+}
+
 .gp-what__n {
   color: var(--btn);
   font-family: var(--mono);
@@ -7680,13 +7693,27 @@ html:not(.js) .ab-carousel__nav {
   line-height: 23px;
 }
 
-.gp-what__close {
-  margin-top: 56px;
-  padding: 24px 0 0;
-  border-top: 1px solid #000;
-  font-size: 22px;
-  line-height: 30px;
-  text-align: center;
+/* The What block now sits inside Peace Departments, directly under its
+   title: its heading is a step down from the section's, and the quotes that
+   follow are set off by space alone. */
+.gp-what__title {
+  font-size: 32px;
+  line-height: 36px;
+}
+
+.gp-pd .gp-what {
+  margin-bottom: 96px;
+}
+
+@media (max-width: 809.98px) {
+  .gp-what__title {
+    font-size: 26px;
+    line-height: 30px;
+  }
+
+  .gp-pd .gp-what {
+    margin-bottom: 56px;
+  }
 }
 
 /* ---------- 09 UN status: figures strip, two-column copy, callout ---------- */
