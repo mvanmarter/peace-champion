@@ -84,7 +84,6 @@ const menus = [
       { label: "The Muscles of Peace Global Resolution", href: "global-peace.html#global-resolution" },
       { label: "Nations Represented", href: "global-peace.html#nations" },
       { label: "Supporting Organizations", href: "global-peace.html#supporting-organizations" },
-      { label: "Why Do We Need Peace Departments?", href: "global-peace.html#why-peace-departments" },
       { label: "United Nations Official Consultative Status", href: "global-peace.html#un-consultative-status" },
     ],
   },
