@@ -97,7 +97,6 @@ const menus = [
       { label: "Peace Champion Mobile App", href: "peace-entertainment.html#mobile-app" },
       { label: "Mind Over Fabric Clothing", href: "peace-entertainment.html#mind-over-fabric" },
       { label: "Muscles of Peace Wisdom Campaign", href: "peace-entertainment.html#muscles-of-peace" },
-      { label: "Mind Supplement Wisdom Campaign", href: "peace-entertainment.html#mind-supplement" },
       { label: "PetTalk4Humanity Microshorts", href: "peace-entertainment.html#pettalk4humanity" },
       { label: "Joy Scroll", href: "peace-entertainment.html#joy-scroll" },
     ],

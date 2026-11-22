@@ -7951,3 +7951,812 @@ html:not(.js) .ab-carousel__nav {
     line-height: 56px;
   }
 }
+
+/* =========================================================
+   peace-entertainment.html — content sections (Nov 2026)
+   Six sections built from docs/copy/peace-entertainment-copy.md (one per #
+   heading), each with its own layout. They share the About page's section
+   shell (.ab-section rhythm + full-bleed rule, .ab-head / .ab-title) and its
+   palette: --bg, --btn blue, the blue tints, black hairline frames drawn as
+   `::after { inset: 0 }` overlays, and the 1px-gap black grid for ruled cells.
+   Everything else is namespaced .pe-*.
+   ========================================================= */
+
+/* Placeholders (#mind-supplement, #joy-scroll) take no space and draw no
+   rule until they have content; their anchors still resolve. */
+.pe-pending {
+  padding-block: 0;
+}
+
+.pe-pending::before {
+  display: none;
+}
+
+/* Mono kicker above a section title. */
+.pe-eyebrow {
+  color: var(--btn);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.ab-head .pe-eyebrow {
+  margin-bottom: -4px;
+}
+
+.pe-subhead {
+  margin-bottom: 16px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
+.pe-adm .btn,
+.pe-prn .btn,
+.pe-app .btn,
+.pe-mof .btn,
+.pe-mop .btn,
+.pe-pet .btn {
+  text-decoration: none;
+}
+
+/* ---------- 01 Admissions: title bar, framed still, facts grid ---------- */
+.pe-adm__head {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.pe-adm__head > div {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pe-adm__still {
+  position: relative;
+  margin: 0;
+}
+
+.pe-adm__still img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1224 / 688;
+  object-fit: cover;
+}
+
+.pe-adm__still::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.pe-adm__grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 64px;
+  align-items: start;
+  margin-top: 64px;
+}
+
+.pe-adm__facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: #000;
+}
+
+.pe-adm__facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 24px 32px;
+  background: var(--bg);
+}
+
+.pe-adm__facts > div:first-child {
+  background: var(--btn);
+  color: #fff;
+}
+
+.pe-adm__facts dt {
+  font-family: var(--display);
+  font-size: 48px;
+  line-height: 48px;
+  text-transform: uppercase;
+}
+
+.pe-adm__facts dt small {
+  margin-left: 4px;
+  font-size: 20px;
+}
+
+.pe-adm__facts dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.pe-adm__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pe-adm__venues {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #000;
+}
+
+.pe-adm__venues li {
+  position: relative;
+  padding: 14px 0 14px 28px;
+  border-bottom: 1px solid #000;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.pe-adm__venues li::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot-green);
+}
+
+.pe-adm__song {
+  padding: 20px 24px;
+  background: rgba(0, 107, 212, 0.1);
+  font-size: 17px;
+  line-height: 26px;
+}
+
+/* ---------- 02 The Principle: blue band, problem lead + film sheet ---------- */
+.pe-prn {
+  background: var(--btn);
+  color: #fff;
+}
+
+.pe-prn .pe-eyebrow {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pe-prn__grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* Stays in view below the fixed bar while the sheet scrolls past. */
+.pe-prn__problem {
+  position: sticky;
+  top: 107px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pe-prn__lead {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 26px;
+  line-height: 35px;
+}
+
+.pe-prn__p {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.pe-prn__sheet {
+  position: relative;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -12px rgba(0, 0, 0, 0.18);
+}
+
+.pe-prn__sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.pe-prn__sheet img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 610 / 347;
+  object-fit: cover;
+  border-bottom: 1px solid #000;
+}
+
+.pe-prn__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 40px 48px 48px;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.pe-prn__meta {
+  align-self: stretch;
+  margin: 0;
+  border-top: 1px solid #000;
+}
+
+.pe-prn__meta > div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #000;
+}
+
+.pe-prn__meta dt {
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+.pe-prn__meta dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* ---------- 03 Peace Champion App ---------- */
+.pe-app__tagline {
+  max-width: 720px;
+  margin-top: 8px;
+  color: var(--btn);
+  font-size: 28px;
+  line-height: 36px;
+}
+
+/* The three questions: a ruled row, each numbered, the last on a blue tint. */
+.pe-app__questions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: #000;
+  list-style: none;
+  counter-reset: pe-q;
+}
+
+.pe-app__questions li {
+  padding: 32px 28px 36px;
+  background: var(--bg);
+  font-size: 19px;
+  line-height: 28px;
+  counter-increment: pe-q;
+}
+
+.pe-app__questions li::before {
+  content: "Q" counter(pe-q, decimal-leading-zero);
+  display: block;
+  margin-bottom: 20px;
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.pe-app__questions li:last-child {
+  background: #dde8f3;
+}
+
+.pe-app__invite {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 48px;
+  align-items: center;
+  max-width: 920px;
+  margin: 80px auto 0;
+}
+
+.pe-app__logo {
+  display: block;
+  width: 160px;
+  height: 160px;
+  border-radius: 36px;
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+}
+
+.pe-app__invite > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.pe-app__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 96px;
+  border-top: 1px solid #000;
+}
+
+.pe-app__cols > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px 48px 0 0;
+  font-size: 17px;
+  line-height: 27px;
+}
+
+.pe-app__cols > div + div {
+  padding: 40px 0 0 48px;
+  border-left: 1px solid #000;
+}
+
+.pe-app__cols .pe-subhead {
+  margin-bottom: 4px;
+}
+
+.pe-app__figures {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin: 64px 0 0;
+  padding: 1px;
+  background: #000;
+  list-style: none;
+}
+
+.pe-app__figures li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 24px 28px;
+  background: var(--bg);
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.pe-app__figures span {
+  font-family: var(--display);
+  font-size: 40px;
+  line-height: 40px;
+  text-transform: uppercase;
+}
+
+/* Mandala: a tinted split panel, like the About page's Vision box. */
+.pe-mandala {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 112px;
+  background: rgba(0, 107, 212, 0.1);
+}
+
+.pe-mandala::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.pe-mandala__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  border-right: 1px solid #000;
+  background: radial-gradient(circle at 50% 50%, #fff 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.pe-mandala__art {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+}
+
+.pe-mandala__halo {
+  fill: none;
+  stroke: var(--btn);
+  stroke-width: 1;
+  stroke-dasharray: 2 6;
+}
+
+.pe-mandala__art use {
+  stroke: #000;
+  stroke-width: 0.4;
+}
+
+.pe-mandala__p3 {
+  fill: #eaf4eb;
+}
+
+.pe-mandala__p2 {
+  fill: #dde8f3;
+}
+
+.pe-mandala__art .pe-mandala__p1 {
+  fill: var(--btn);
+  stroke: #fff;
+}
+
+/* Golden Petals earned. */
+.pe-mandala__art .pe-mandala__gold {
+  fill: #f2d27a;
+}
+
+.pe-mandala__core {
+  fill: var(--dot-green);
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.pe-mandala__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 56px 56px 64px;
+  font-size: 17px;
+  line-height: 27px;
+}
+
+.pe-mandala__title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 36px;
+  text-transform: uppercase;
+}
+
+.pe-mandala__kicker {
+  margin-top: -8px;
+  color: var(--btn);
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.pe-mandala__tracks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: #000;
+  list-style: none;
+}
+
+.pe-mandala__tracks li {
+  padding: 12px 16px;
+  background: var(--bg);
+  font-size: 16px;
+  line-height: 22px;
+}
+
+/* ---------- 04 Mind Over Fabric: swing tag on a warm wash ---------- */
+.pe-mof {
+  background: linear-gradient(160deg, #fdf3f6 0%, var(--bg) 45%, #eef4ec 100%);
+}
+
+/* The tag shape is a clip-path, which would cut a real border off along the
+   angled corners, so the 1px black outline is the tag itself painted black
+   with a white copy of the shape 1px inside it (::before). */
+.pe-mof__tag {
+  --tag: polygon(14% 0, 86% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 560px;
+  margin-inline: auto;
+  padding: 96px 48px 64px;
+  background: #000;
+  text-align: center;
+  clip-path: var(--tag);
+}
+
+.pe-mof__tag {
+  isolation: isolate;
+}
+
+.pe-mof__tag::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: #fff;
+  clip-path: var(--tag);
+  pointer-events: none;
+}
+
+.pe-mof__hole {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #fdf3f6;
+  transform: translateX(-50%);
+}
+
+.pe-mof .btn {
+  margin-top: 16px;
+}
+
+/* ---------- 05 Muscles of Peace: poster-size mark beside the title ---------- */
+.pe-mop__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+/* Same mask idiom as .gp-res__logo: the single-colour PNG over --btn. */
+.pe-mop__mark {
+  width: 100%;
+  aspect-ratio: 426 / 227;
+  background: var(--btn);
+  -webkit-mask: url("../logo/muscles-of-peace-2.png") center / contain no-repeat;
+  mask: url("../logo/muscles-of-peace-2.png") center / contain no-repeat;
+}
+
+.pe-mop__grid > div:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding-left: 48px;
+  border-left: 1px solid #000;
+}
+
+.pe-mop .btn {
+  margin-top: 24px;
+}
+
+/* ---------- 06 PetTalk4Humanity: decorative film strip ---------- */
+.pe-pet__strip {
+  --hole: radial-gradient(circle, var(--bg) 0 4px, transparent 4.5px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding: 28px 12px;
+  background:
+    var(--hole) 0 4px / 20px 12px repeat-x,
+    var(--hole) 0 calc(100% - 4px) / 20px 12px repeat-x,
+    #000;
+}
+
+.pe-pet__strip span {
+  aspect-ratio: 9 / 16;
+  background: linear-gradient(180deg, #eef5fd 0%, #dde8f3 55%, #eaf4eb 100%);
+}
+
+.pe-pet__strip span:nth-child(2) {
+  background: linear-gradient(180deg, #fdf3f6 0%, var(--bg) 100%);
+}
+
+.pe-pet__strip span:nth-child(3) {
+  background: var(--btn);
+}
+
+.pe-pet__strip span:nth-child(4) {
+  background: linear-gradient(180deg, #eaf4eb 0%, #cfe6d2 100%);
+}
+
+.pe-pet__cta {
+  margin-top: 48px;
+  text-align: center;
+}
+
+/* ---------- peace-entertainment: 810 - 1199.98 ---------- */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .pe-adm__grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .pe-adm__facts {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .pe-prn__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .pe-prn__body {
+    padding: 32px 32px 40px;
+  }
+
+  .pe-app__figures {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pe-mandala__copy {
+    padding: 40px 36px 48px;
+  }
+
+  .pe-mandala__media {
+    padding: 32px;
+  }
+
+  .pe-mop__grid {
+    gap: 48px;
+  }
+
+  .pe-mop__grid > div:last-child {
+    padding-left: 40px;
+  }
+}
+
+/* ---------- peace-entertainment: <= 809.98 ---------- */
+@media (max-width: 809.98px) {
+  .pe-adm__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pe-adm__grid,
+  .pe-prn__grid,
+  .pe-app__cols,
+  .pe-mandala,
+  .pe-mop__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pe-adm__grid {
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .pe-adm__facts dt {
+    font-size: 36px;
+    line-height: 36px;
+  }
+
+  .pe-prn__grid {
+    gap: 40px;
+  }
+
+  .pe-prn__problem {
+    position: static;
+  }
+
+  .pe-prn__lead {
+    font-size: 21px;
+    line-height: 29px;
+  }
+
+  .pe-prn__body {
+    padding: 28px 24px 32px;
+  }
+
+  .pe-prn__meta > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .pe-app__tagline {
+    font-size: 22px;
+    line-height: 29px;
+  }
+
+  .pe-app__questions {
+    grid-template-columns: 1fr;
+  }
+
+  .pe-app__questions li {
+    padding: 24px 24px 28px;
+    font-size: 17px;
+    line-height: 26px;
+  }
+
+  .pe-app__invite {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-top: 56px;
+  }
+
+  .pe-app__logo {
+    width: 112px;
+    height: 112px;
+    border-radius: 26px;
+  }
+
+  .pe-app__cols {
+    margin-top: 64px;
+  }
+
+  .pe-app__cols > div,
+  .pe-app__cols > div + div {
+    padding: 32px 0;
+    border-left: 0;
+  }
+
+  .pe-app__cols > div + div {
+    border-top: 1px solid #000;
+  }
+
+  .pe-app__figures {
+    grid-template-columns: 1fr 1fr;
+    margin-top: 24px;
+  }
+
+  .pe-app__figures span {
+    font-size: 30px;
+    line-height: 30px;
+  }
+
+  .pe-mandala {
+    margin-top: 72px;
+  }
+
+  .pe-mandala__media {
+    padding: 32px 24px;
+    border-right: 0;
+    border-bottom: 1px solid #000;
+  }
+
+  .pe-mandala__copy {
+    padding: 32px 24px 40px;
+  }
+
+  .pe-mandala__title {
+    font-size: 26px;
+    line-height: 30px;
+  }
+
+  .pe-mandala__tracks {
+    grid-template-columns: 1fr;
+  }
+
+  .pe-mof__tag {
+    --tag: polygon(18% 0, 82% 0, 100% 9%, 100% 100%, 0 100%, 0 9%);
+    padding: 88px 24px 48px;
+  }
+
+  .pe-mop__grid {
+    gap: 40px;
+  }
+
+  .pe-mop__grid > div:last-child {
+    padding: 32px 0 0;
+    border-top: 1px solid #000;
+    border-left: 0;
+  }
+
+  .pe-pet__strip {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .pe-pet__strip span:nth-child(n + 4) {
+    display: none;
+  }
+}
