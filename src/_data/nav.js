@@ -64,11 +64,12 @@ const menus = [
     href: "about.html",
     subtitle: "Who we are, why we exist, and what we believe.",
     links: [
-      { label: "Our mission and vision", href: "#" },
-      { label: "The organization", href: "#" },
-      { label: "Our philosophy and values", href: "#" },
-      { label: "Leadership and team", href: "#" },
-      { label: "Contact and support", href: "#" },
+      { label: "Mission", href: "about.html#mission-split" },
+      { label: "Strategy", href: "about.html#strategy-tree" },
+      { label: "Vision", href: "about.html#vision" },
+      { label: "Theory of Change", href: "about.html#theory-of-change" },
+      { label: "Values", href: "about.html#values" },
+      { label: "Team", href: "about.html#team" },
     ],
   },
   {
