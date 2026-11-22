@@ -30,6 +30,7 @@ jobs:
           cp ./*.html _site/
           cp -R assets _site/assets
           cp -R designs _site/designs
+          cp -R mof _site/mof
           cp sitemap.xml _site/
 
       - name: Configure GitHub Pages

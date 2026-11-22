@@ -7594,41 +7594,274 @@ html:not(.js) .ab-carousel__nav {
   background: rgba(0, 107, 212, 0.1);
 }
 
-.gp-why__cols {
-  columns: 2;
-  column-gap: 56px;
+/* ---------- 07 Dedicated Infrastructures of Peace ----------
+   From docs/copy/dedicated-infrastructures.md. The five government bodies
+   are a ruled register (1px black gap grid): three cards across, then two
+   wider ones, on a 6-column track. GAMIP follows on the blue band, its copy
+   on the left and its activities on a white sheet on the right. */
+.gp-dip__label {
+  margin-bottom: 20px;
+  color: var(--btn);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.gp-dip__list {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: #000;
+  list-style: none;
+}
+
+.gp-dip__item {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px 32px 36px;
+  background: var(--bg);
+  font-size: 17px;
+  line-height: 26px;
+  transition: background-color 0.2s ease;
+}
+
+.gp-dip__item:nth-child(n + 4) {
+  grid-column: span 3;
+}
+
+.gp-dip__item:hover {
+  background: #eef3f8;
+}
+
+.gp-dip__n {
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.gp-dip__country {
+  margin-top: 8px;
+  font-family: var(--display);
+  font-size: 36px;
+  line-height: 38px;
+  text-transform: uppercase;
+}
+
+.gp-dip__name {
+  margin: -8px 0 0; /* h4: not covered by the reset */
+  padding-bottom: 16px;
+  border-bottom: 1px solid #000;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+/* "Particularly interesting…" lines: a green-dot aside. */
+.gp-dip__note {
+  position: relative;
+  padding-left: 20px;
+  color: rgba(0, 0, 0, 0.7);
+  font-style: italic;
+}
+
+.gp-dip__note::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot-green);
+}
+
+.gp-dip__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: auto 0 0;
+  padding-top: 8px;
+}
+
+.gp-dip__facts > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--btn);
+  border-radius: 52px;
+}
+
+.gp-dip__facts dt {
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+.gp-dip__facts dd {
+  margin: 0;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 16px;
+}
+
+/* GAMIP on the blue band. */
+.gp-dip__net {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 56px;
+  align-items: center;
+  margin-top: 80px;
+  padding: 56px;
+  background: var(--btn);
+  color: #fff;
+}
+
+.gp-dip__net .gp-dip__label {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.gp-dip__net-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   font-size: 18px;
   line-height: 28px;
 }
 
-.gp-why__cols p {
-  margin-bottom: 20px;
-  break-inside: avoid-column;
+.gp-dip__net-copy .gp-dip__label {
+  margin-bottom: 0;
 }
 
-.gp-why__stat {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 4px 0 24px;
-  padding: 28px 28px 32px;
-  background: var(--btn);
-  color: #fff;
-  break-inside: avoid;
-}
-
-.gp-why__fig {
+.gp-dip__net-name {
+  margin: 0; /* h4: not covered by the reset */
   font-family: var(--display);
-  font-size: 56px;
-  line-height: 56px;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 36px;
   text-transform: uppercase;
 }
 
-.gp-why__figcap {
+.gp-dip__net-name span {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.gp-dip__net-sheet {
+  position: relative;
+  padding: 32px 32px 24px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 32px -12px rgba(0, 0, 0, 0.3);
+}
+
+.gp-dip__net-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #000;
+  pointer-events: none;
+}
+
+.gp-dip__net-head {
+  margin-bottom: 8px;
+  color: var(--btn);
   font-family: var(--mono);
   font-size: 14px;
-  line-height: 18px;
+  line-height: 16px;
   text-transform: uppercase;
+}
+
+.gp-dip__does {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: gp-does;
+}
+
+.gp-dip__does li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  font-size: 17px;
+  line-height: 24px;
+  counter-increment: gp-does;
+}
+
+.gp-dip__does li:last-child {
+  border-bottom: 0;
+}
+
+.gp-dip__does li::before {
+  content: counter(gp-does, decimal-leading-zero);
+  color: var(--btn);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 24px;
+}
+
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .gp-dip__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gp-dip__item,
+  .gp-dip__item:nth-child(n + 4) {
+    grid-column: span 1;
+  }
+
+  /* Five in two columns: the last one runs the full width. */
+  .gp-dip__item:last-child {
+    grid-column: span 2;
+  }
+
+  .gp-dip__net {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 48px;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .gp-dip__list {
+    grid-template-columns: 1fr;
+  }
+
+  .gp-dip__item,
+  .gp-dip__item:nth-child(n + 4) {
+    grid-column: auto;
+    padding: 24px 24px 28px;
+  }
+
+  .gp-dip__country {
+    font-size: 28px;
+    line-height: 30px;
+  }
+
+  .gp-dip__net {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-top: 56px;
+    padding: 32px 24px;
+  }
+
+  .gp-dip__net-name {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .gp-dip__net-sheet {
+    padding: 24px 20px 16px;
+  }
 }
 
 /* ---------- 08 What: intro column + numbered register ---------- */
@@ -7964,7 +8197,6 @@ html:not(.js) .ab-carousel__nav {
     display: none;
   }
 
-  .gp-why__cols,
   .gp-un__cols {
     columns: 1;
   }
