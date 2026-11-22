@@ -7553,8 +7553,10 @@ html:not(.js) .ab-carousel__nav {
   gap: 24px;
 }
 
+/* Full width under the two-column grid. "From" is right-aligned and "to"
+   left-aligned around a fixed arrow column, so each row centres on it. */
 .gp-why__turns {
-  margin: 48px 0 0;
+  margin: 64px 0 0;
   padding: 0;
   list-style: none;
   border-top: 1px solid #000;
@@ -7562,13 +7564,13 @@ html:not(.js) .ab-carousel__nav {
 
 .gp-why__turns li {
   display: grid;
-  grid-template-columns: 1fr 56px 1fr;
+  grid-template-columns: 1fr 64px 1fr;
   align-items: center;
   padding: 18px 0;
   border-bottom: 1px solid #000;
   font-family: var(--display);
-  font-size: 28px;
-  line-height: 32px;
+  font-size: 24px;
+  line-height: 28px;
   text-transform: uppercase;
 }
 
@@ -7938,7 +7940,7 @@ html:not(.js) .ab-carousel__nav {
   }
 
   .gp-why__turns {
-    margin: 36px 0 0;
+    margin: 40px 0 0;
   }
 
   .gp-pd .gp-why-sub {
@@ -7949,12 +7951,13 @@ html:not(.js) .ab-carousel__nav {
     grid-template-columns: 1fr;
     gap: 2px;
     padding: 16px 0;
-    font-size: 24px;
-    line-height: 28px;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
   }
 
   .gp-why__from {
-    text-align: left;
+    text-align: center;
   }
 
   .gp-why__arrow {
